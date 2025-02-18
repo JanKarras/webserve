@@ -6,33 +6,11 @@
 /*   By: jkarras <jkarras@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:16:18 by jkarras           #+#    #+#             */
-/*   Updated: 2025/02/18 11:04:32 by jkarras          ###   ########.fr       */
+/*   Updated: 2025/02/18 14:31:02 by jkarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/webserv.hpp"
-
-void handle_sigint(int sig, siginfo_t *siginfo, void *context) {
-    ServerContext* serverContext = reinterpret_cast<ServerContext*>(context);
-	(void)sig;
-	(void)siginfo;
-    std::cout << "\nCTRL+C recived" << std::endl;
-
-    if (serverContext->serverFd != -1) {
-        close(serverContext->serverFd);
-        std::cout << "Server Socket closed." << std::endl;
-    }
-
-    if (serverContext->epollFd != -1) {
-        close(serverContext->epollFd);
-        std::cout << "epoll Instanz closed." << std::endl;
-    }
-    exit(0);
-}
-
-void startServerWithConfic(ConficData &data) {
-	data.nb = 0;
-}
 
 int setNonBlocking(int fd) {
 	int flags = fcntl(fd, F_GETFL, 0);
@@ -41,21 +19,12 @@ int setNonBlocking(int fd) {
 		return -1;
 	}
 
-	flags |= O_NONBLOCK;  // Setze den non-blocking Flag
+	flags |= O_NONBLOCK;
 	if (fcntl(fd, F_SETFL, flags) == -1) {
 		std::cerr << "Failed to set file descriptor to non-blocking." << std::endl;
 		return -1;
 	}
-
 	return 0;
-}
-
-void handleRequest(int clientFd, std::string req) {
-	if (clientFd == -1) {
-		return;
-	}
-	std::cout << "Received data: " << req << std::endl;
-	close(clientFd);
 }
 
 void startServer(void) {
@@ -132,7 +101,11 @@ void startServer(void) {
 					std::cerr << "Failed to accept client connection." << std::endl;
 					continue;
 				}
-				setNonBlocking(clientFd);
+				if (setNonBlocking(clientFd)) {
+					close(clientFd);
+					continue;
+				}
+
 				event.events = EPOLLIN;
 				event.data.fd = clientFd;
 				if (epoll_ctl(ServerContext.epollFd, EPOLL_CTL_ADD, clientFd, &event) == -1) {
@@ -140,18 +113,83 @@ void startServer(void) {
 					close(clientFd);
 					continue;
 				}
+				ServerContext.requests[clientFd] = HttpRequest();
+				ServerContext.requests[clientFd].startTime = getCurrentTime();
 			} else if (events[i].events & EPOLLIN) {
-				char buffer[1024];
+				char buffer[BUFFER_SIZE];
+				std::string data;
 				int bytesRead = recv(events[i].data.fd, buffer, sizeof(buffer) - 1, 0);
+
 				if (bytesRead == -1) {
 					std::cerr << "Failed to read from client.\n";
 					continue;
 				} else if (bytesRead == 0) {
 					close(events[i].data.fd);
+					ServerContext.requests.erase(events[i].data.fd);
+					epoll_ctl(ServerContext.epollFd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 				} else {
-					buffer[bytesRead] = '\0';
-					std::string req(buffer);
-					handleRequest(events[i].data.fd, req);
+					data.append(buffer, bytesRead);
+					parseHttpRequest(ServerContext.requests[events[i].data.fd], data);
+					if (ServerContext.requests[events[i].data.fd].state == COMPLETE) {
+						handleRequest(events[i].data.fd, ServerContext);
+					} else if (ServerContext.requests[events[i].data.fd].state == ERROR) {
+						handleErrorRequest(events[i].data.fd, ServerContext);
+					}
+				}
+			} else if (events[i].events & EPOLLOUT) {
+				HttpResponse &response = ServerContext.responses[events[i].data.fd];
+				if (response.state == SENDING_HEADERS) {
+					std::string headers;
+					headers.append(response.version);
+					headers.append(" ");
+					headers.append(toString(response.statusCode));
+					headers.append(" ");
+					headers.append(response.statusMessage);
+					headers.append("\r\n");
+					for (std::map<std::string, std::string>::iterator it = response.headers.begin(); it != response.headers.end(); ++it) {
+						headers.append(it->first);
+						headers.append(": ");
+						headers.append(it->second);
+						headers.append("\r\n");
+					}
+					headers.append("\r\n");
+
+					ssize_t bytesSent = send(events[i].data.fd, headers.c_str(), headers.size(), 0);
+					if (bytesSent == -1) {
+						std::cerr << "Error sending headers to client." << std::endl;
+						close(events[i].data.fd);
+						ServerContext.requests.erase(events[i].data.fd);
+						ServerContext.responses.erase(events[i].data.fd);
+						continue;
+					}
+					response.state = SENDING_BODY;
+				} else if (response.state == SENDING_BODY) {
+					size_t bodySize = response.body.size();
+					size_t offset = response.bodySent;
+					size_t chunkSize = CHUNK_SIZE;
+
+					while (offset < bodySize) {
+						size_t bytesToSend = std::min(chunkSize, bodySize - offset);
+						ssize_t bytesSent = send(events[i].data.fd, response.body.c_str() + offset, bytesToSend, 0);
+						if (bytesSent == -1) {
+							std::cerr << "Error sending body to client." << std::endl;
+							close(events[i].data.fd);
+							ServerContext.requests.erase(events[i].data.fd);
+							ServerContext.responses.erase(events[i].data.fd);
+							return;
+						}
+						offset += bytesSent;
+						response.bodySent = offset;
+
+						if (offset < bodySize) {
+							continue;
+						}
+					}
+					response.state = RESP_COMPLETE;
+					epoll_ctl(ServerContext.epollFd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
+        			close(events[i].data.fd);
+        			ServerContext.requests.erase(events[i].data.fd);
+        			ServerContext.responses.erase(events[i].data.fd);
 				}
 			}
 		}
@@ -160,21 +198,3 @@ void startServer(void) {
 	close(ServerContext.epollFd);
 }
 
-int main(int argc, char **argv) {
-
-	ConficData data;
-
-	if (argc > 2) {
-		std::cout << "Bad arg num\n";
-		return (1);
-	} else if (argc == 2) {
-		if (parseConfic(std::string(argv[1]), &data)) {
-			return (1);
-		} else {
-			startServerWithConfic(data);
-		}
-	} else {
-		startServer();
-	}
-	return (0);
-}
