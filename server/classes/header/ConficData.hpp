@@ -5,7 +5,8 @@
 #include "../../include/webserv.hpp"
 
 class ConficData {
-
+	public :
+		int nb;
 };
 
 #endif
