@@ -6,38 +6,30 @@
 /*   By: jkarras <jkarras@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 12:14:43 by jkarras           #+#    #+#             */
-/*   Updated: 2025/02/18 13:51:45 by jkarras          ###   ########.fr       */
+/*   Updated: 2025/02/19 12:01:15 by jkarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/webserv.hpp"
 
+bool running = true;
+
 void handle_sigint(int sig, siginfo_t *siginfo, void *context) {
-	ServerContext* serverContext = reinterpret_cast<ServerContext*>(context);
 	(void)sig;
 	(void)siginfo;
-	std::cout << "\nCTRL+C recived" << std::endl;
+	(void)context;
+	running = false;
+}
 
-	if (serverContext->serverFd != -1) {
-		close(serverContext->serverFd);
-		std::cout << "Server Socket closed." << std::endl;
+bool initSignal(void) {
+	struct sigaction sa;
+	sa.sa_sigaction = handle_sigint;
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+
+	if (sigaction(SIGINT, &sa, NULL) == -1) {
+		std::cerr << "SigInt error!" << std::endl;
+		return (false);
 	}
-
-	if (serverContext->epollFd != -1) {
-		close(serverContext->epollFd);
-		std::cout << "epoll Instanz closed." << std::endl;
-	}
-
-	if (serverContext->requests.empty()) {
-		std::cout << "No active clients to close." << std::endl;
-	} else {
-		for (std::map<int, HttpRequest>::iterator it = serverContext->requests.begin(); it != serverContext->requests.end(); ++it) {
-			close(it->first);
-			std::cout << "client " << it->first << " closed." << std::endl;
-		}
-	}
-
-	
-
-	exit(0);
+	return (true);
 }

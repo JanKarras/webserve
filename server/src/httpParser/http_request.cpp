@@ -1,48 +1,48 @@
-#include "../include/webserv.hpp"
+// #include "../../include/webserv.hpp"
 
-int parseHttpRequestLine(HttpRequest &req, const std::string &data)
-{
-	size_t p = req.pos;
-	req.buffer.append(data);
-	req.content_length = req.buffer.length();
-	
-	enum {
-		START,
-		METHOD,
-		URI,
-		VERSION,
-		DONE,
-		ERROR
-	} state;
-	state = req.parseState;
+// int parseHttpRequestLine(HttpRequest &req, const std::string &data)
+// {
+// 	size_t p = req.pos;
+// 	req.buffer.append(data);
+// 	req.content_length = req.buffer.length();
 
-	for (p; p < req.content_length; p++)
-	{
-		switch (state)
-		{
-			case START:
+// 	enum {
+// 		START,
+// 		METHOD,
+// 		URI,
+// 		VERSION,
+// 		DONE,
+// 		ERROR
+// 	} state;
+// 	state = req.parseState;
 
-			case METHOD:
+// 	for (p; p < req.content_length; p++)
+// 	{
+// 		switch (state)
+// 		{
+// 			case START:
 
-			case URI:
+// 			case METHOD:
 
-			case VERSION:
+// 			case URI:
 
-		}
-	}
-	req.pos = p;
-	req.parseState = state;
-	if (req.parseState == DONE)
-	{
-		req.parseState = START;
-		req.state = HEADERS;
-		return 0;
-	}
-	req.state = REQUEST_LINE;
-	return SUCCESS;
-}
+// 			case VERSION:
 
-void parseHttpHeaderLine(HttpRequest &req, const std::string &data)
-{
+// 		}
+// 	}
+// 	req.pos = p;
+// 	req.parseState = state;
+// 	if (req.parseState == DONE)
+// 	{
+// 		req.parseState = START;
+// 		req.state = HEADERS;
+// 		return 0;
+// 	}
+// 	req.state = REQUEST_LINE;
+// 	return SUCCESS;
+// }
 
-}
+// void parseHttpHeaderLine(HttpRequest &req, const std::string &data)
+// {
+
+// }

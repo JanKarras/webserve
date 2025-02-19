@@ -15,11 +15,13 @@
 #include <map>
 #include "../classes/header/ConficData.hpp"
 #include <sstream>
+#include <fstream>
 #include <cerrno>
 #include <sys/time.h>
 #include <ctime>
 #include <cstdlib>
 #include "http_request.hpp"
+#include <pthread.h>
 
 
 #define SUCCESS 0
@@ -32,6 +34,12 @@
 #define BUFFER_SIZE 1024
 
 #define HTTP_BAD_REQUEST 400
+#define HTTP_FORBIDDEN 403
+#define HTTP_NOT_FOUND 404
+#define HTTP_METHOD_N_ALLOWED 405
+#define HTTP_SERVER_ERROR 500
+
+extern bool running;
 
 enum ResponseState {
 	NOT_STARTED,
@@ -72,12 +80,13 @@ void startServer(void);
 void startServerWithConfic(ConficData &data);
 //SIG
 void handle_sigint(int sig, siginfo_t *siginfo, void *context);
-
+bool initSignal(void);
 //HANDLE REQ
 void handleRequest(int clientFd, ServerContext &ServerContext);
 void handleErrorRequest(int clientFd, ServerContext &ServerContext);
 //helper
-std::string toString(int number);
+std::string toStringInt(int number);
 std::string toString(long long number);
 long long getCurrentTime();
+std::string getFileContent(std::string filePath);
 #endif
