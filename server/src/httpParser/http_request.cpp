@@ -11,21 +11,21 @@ int parseHttpRequestLine(HttpRequest &req)
 	{
 		switch (state)
 		{
-			case START:
+			case RL_START:
 
-			case METHOD:
+			case RL_METHOD:
 
-			case URI:
+			case RL_URI:
 
-			case VERSION:
+			case RL_VERSION:
 
-			case DONE:
+			case RL_DONE:
 
 		}
 	}
 	req.pos = p;
 	req.parseState = static_cast<int>(state);
-	if (state == DONE)
+	if (state == RL_DONE)
 	{
 		req.parseState = 0;
 		req.state = HEADERS;
