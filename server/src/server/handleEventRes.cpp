@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   handleEventRes.cpp                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jkarras <jkarras@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/19 12:44:14 by jkarras           #+#    #+#             */
-/*   Updated: 2025/02/19 12:44:21 by jkarras          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../include/webserv.hpp"
 
 bool handleEventRes(ServerContext &ServerContext, struct epoll_event *events, int i) {

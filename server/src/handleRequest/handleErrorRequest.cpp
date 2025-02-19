@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   handleErrorRequest.cpp                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jkarras <jkarras@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/18 14:33:09 by jkarras           #+#    #+#             */
-/*   Updated: 2025/02/19 11:15:44 by jkarras          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../include/webserv.hpp"
 
 void handleErrorRequest(int clientFd, ServerContext &ServerContext) {
@@ -66,7 +54,7 @@ void handleErrorRequest(int clientFd, ServerContext &ServerContext) {
 	}
 	res.headers["Content-Type"] = "text/html";
 	res.headers["Content-Length"] = toStringInt(res.body.size());
-	
+
 	struct epoll_event event;
 	event.events = EPOLLOUT;
 	event.data.fd = clientFd;

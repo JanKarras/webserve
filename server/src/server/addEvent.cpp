@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   addEvent.cpp                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jkarras <jkarras@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/19 12:42:47 by jkarras           #+#    #+#             */
-/*   Updated: 2025/02/19 12:43:05 by jkarras          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../include/webserv.hpp"
 
 bool addEvent(ServerContext &ServerContext, struct epoll_event &event) {
