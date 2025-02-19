@@ -13,7 +13,6 @@
 #include <csignal>
 #include <cstdlib>
 #include <map>
-#include "../classes/header/ConficData.hpp"
 #include <sstream>
 #include <fstream>
 #include <cerrno>
@@ -22,6 +21,7 @@
 #include <cstdlib>
 #include "http_request.hpp"
 #include <pthread.h>
+
 
 
 #define SUCCESS 0
@@ -68,6 +68,17 @@ struct ServerContext {
 	std::map<int, HttpResponse> responses;
 };
 
+struct ConficServer {
+
+};
+
+
+struct ConficData {
+	ConficServer *server;
+	int nb;
+};
+
+
 //CONFIC
 bool parseConfic(std::string path, ConficData *data);
 
@@ -75,9 +86,12 @@ bool parseConfic(std::string path, ConficData *data);
 void printHttpRequest(const HttpRequest& request);
 void parseHttpRequest(HttpRequest &req, std::string &buffer);
 //SERVER
-void startServer(void);
-//SERVER CONFIC
-void startServerWithConfic(ConficData &data);
+void startServer(ConficData &conficData, bool conficFlag);
+bool initServer(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event);
+bool initServerConfic(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event, ConficData &conficData);
+bool addEvent(ServerContext &ServerContext, struct epoll_event &event);
+bool handleEventReq(ServerContext &ServerContext, struct epoll_event *events, int i);
+bool handleEventRes(ServerContext &ServerContext, struct epoll_event *events, int i);
 //SIG
 void handle_sigint(int sig, siginfo_t *siginfo, void *context);
 bool initSignal(void);
@@ -89,4 +103,6 @@ std::string toStringInt(int number);
 std::string toString(long long number);
 long long getCurrentTime();
 std::string getFileContent(std::string filePath);
+void closeAll(ServerContext ServerContext);
+int setNonBlocking(int fd);
 #endif
