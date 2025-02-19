@@ -17,8 +17,31 @@ enum RequestState {
 	ERROR
 };
 
+enum RequestLineState{
+	RL_START = 0,
+	RL_METHOD,
+	RL_URI,
+	RL_VERSION,
+	RL_DONE,
+	RL_ERROR
+};
+
+enum HeaderLineState{
+	HL_START = 0,
+	HL_NAME,
+	HL_VALUE,
+	HL_DONE,
+	HL_ERROR
+};
+
+enum BodyState{
+	B_START = 0,
+	B_DONE,
+	B_ERROR,
+};
+
 struct HttpRequest {
-	std::string method; /* perspektivisch  */
+	std::string method; /* perspektivisch type HttpMethod */
 	std::string uri;
 	std::string version;
 	std::map<std::string, std::string> headers;
