@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jkarras <jkarras@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/18 12:20:19 by jkarras           #+#    #+#             */
-/*   Updated: 2025/02/18 12:23:16 by jkarras          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../include/webserv.hpp"
 
 int main(int argc, char **argv) {
@@ -23,10 +11,16 @@ int main(int argc, char **argv) {
 		if (parseConfic(std::string(argv[1]), &data)) {
 			return (1);
 		} else {
-			startServerWithConfic(data);
+			if(!initSignal()) {
+				return (1);
+			}
+			startServer(data, true);
 		}
 	} else {
-		startServer();
+		if(!initSignal()) {
+			return (1);
+		}
+		startServer(data, false);
 	}
 	return (0);
 }
