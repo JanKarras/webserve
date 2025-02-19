@@ -19,6 +19,11 @@
 #include <sys/time.h>
 #include <ctime>
 #include <cstdlib>
+#include "http_request.hpp"
+
+
+#define SUCCESS 0
+#define FAILURE 1
 
 #define MAX_EVENTS 1024
 #define MAX_CLIENTS 1024
@@ -27,25 +32,6 @@
 #define BUFFER_SIZE 1024
 
 #define HTTP_BAD_REQUEST 400
-
-
-enum RequestState {
-	REQUEST_LINE,
-	HEADERS,
-	BODY,
-	COMPLETE,
-	ERROR
-};
-
-struct HttpRequest {
-	std::string method, uri, version;
-	std::map<std::string, std::string> headers;
-	std::string body;
-	RequestState state;
-	int exitStatus;
-	long long startTime;
-	HttpRequest() : state(REQUEST_LINE) {}
-};
 
 enum ResponseState {
 	NOT_STARTED,
@@ -66,7 +52,6 @@ struct HttpResponse {
 
 	HttpResponse() : version("HTTP/1.1"), statusCode(200), statusMessage("OK"), state(NOT_STARTED), bodySent(0), startTime(0) {}
 };
-
 
 struct ServerContext {
 	int serverFd;
