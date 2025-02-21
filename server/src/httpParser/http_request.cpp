@@ -12,16 +12,16 @@ static int parseHttpRequestLine(HttpRequest &req)
 	size_t p = req.pos;
 	size_t uriLength;
 	RequestLineState state = static_cast<RequestLineState>(req.parseState);
-	std::cout << "request section status: " << req.state << ",status: " << state << ", buffer: " << req.buffer << std::endl;
+	// std::cout << "request section status: " << req.state << ",status: " << state << ", buffer: " << req.buffer << std::endl;
 	size_t buffer_length = req.buffer.length();
-	std::cout << "Position: " << p << std::endl;
-	std::cout << "Buffer_length: " << buffer_length << std::endl;
+	// std::cout << "Position: " << p << std::endl;
+	// std::cout << "Buffer_length: " << buffer_length << std::endl;
 	for (; p < buffer_length; p++)
 	{
-		std::cout << "Status: " << state << std::endl;
-		std::cout << "Position: " << p << std::endl;
+		// std::cout << "Status: " << state << std::endl;
+		// std::cout << "Position: " << p << std::endl;
 		u_char c = req.buffer[p];
-		std::cout << "Character: " << c << std::endl;
+		// std::cout << "Character: " << c << std::endl;
 
 		switch (state)
 		{
@@ -69,8 +69,8 @@ static int parseHttpRequestLine(HttpRequest &req)
 				}
 				break;
 			case RL_VERSION:
-				std::cout << "buffer length: " << buffer_length << std::endl;
-				std::cout << "Position: " << p << std::endl;
+				// std::cout << "buffer length: " << buffer_length << std::endl;
+				// std::cout << "Position: " << p << std::endl;
 				if (buffer_length - p >= 10)
 				{
 					if (!req.buffer.compare(p, 10, "HTTP/1.1\r\n"))
