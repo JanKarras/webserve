@@ -12,12 +12,17 @@ static int parseHttpRequestLine(HttpRequest &req)
 	size_t p = req.pos;
 	size_t uriLength;
 	RequestLineState state = static_cast<RequestLineState>(req.parseState);
-
+	std::cout << "request section status: " << req.state << ",status: " << state << ", buffer: " << req.buffer << std::endl;
 	size_t buffer_length = req.buffer.length();
-
+	std::cout << "Position: " << p << std::endl;
+	std::cout << "Buffer_length: " << buffer_length << std::endl;
 	for (; p < buffer_length; p++)
 	{
+		std::cout << "Status: " << state << std::endl;
+		std::cout << "Position: " << p << std::endl;
 		u_char c = req.buffer[p];
+		std::cout << "Character: " << c << std::endl;
+
 		switch (state)
 		{
 			case RL_START:
@@ -34,11 +39,11 @@ static int parseHttpRequestLine(HttpRequest &req)
 				if (c == ' ')
 				{
 					/* check method with strcmp */
-					if (!req.buffer.compare(0, p, "GET "))
+					if (!req.buffer.compare(0, p, "GET"))
 						req.method = GET;
-					else if (!req.buffer.compare(0, p, "POST "))
+					else if (!req.buffer.compare(0, p, "POST"))
 						req.method = POST;
-					else if (!req.buffer.compare(0, p, "DELETE "))
+					else if (!req.buffer.compare(0, p, "DELETE"))
 						req.method = DELETE;
 					else
 					{
@@ -47,26 +52,28 @@ static int parseHttpRequestLine(HttpRequest &req)
 					}
 					state = RL_URI;
 				}
-				if (c < 'A' || c > 'Z' || p > 5)
+				else if (c < 'A' || c > 'Z' || p > 5)
 				{
 					setRequestError(req, HTTP_BAD_REQUEST);
 					return FAILURE;
 				}
 				break;
 			case RL_URI:
-				uriLength = req.buffer.find(' ', p + 1);
+				uriLength = req.buffer.find(' ', p) - p;
 				if (uriLength != std::string::npos)
 				{
-					req.uri = req.buffer.substr(p + 1, uriLength);
+					req.uri = req.buffer.substr(p, uriLength);
 					/* parse URI */
 					p += uriLength;
 					state = RL_VERSION;
 				}
 				break;
 			case RL_VERSION:
+				std::cout << "buffer length: " << buffer_length << std::endl;
+				std::cout << "Position: " << p << std::endl;
 				if (buffer_length - p >= 10)
 				{
-					if (!req.buffer.compare(p + 1, 10, "HTTP/1.1\r\n"))
+					if (!req.buffer.compare(p, 10, "HTTP/1.1\r\n"))
 					{
 						req.version = "HTTP/1.1";
 						p += 10;
@@ -81,7 +88,9 @@ static int parseHttpRequestLine(HttpRequest &req)
 				break;
 			default:
 				break;
-		}
+			}
+		if (state == RL_DONE)
+			break;
 	}
 	req.pos = p;
 	req.parseState = static_cast<int>(state);
@@ -89,7 +98,7 @@ static int parseHttpRequestLine(HttpRequest &req)
 	{
 		req.parseState = 0;
 		req.state = HEADERS;
-		req.buffer.erase(0, p + 1);
+		req.buffer.erase(0, p);
 		req.pos = 0;
 		return SUCCESS;
 	}
