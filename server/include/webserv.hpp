@@ -127,6 +127,7 @@ void handle404(HttpRequest &req, HttpResponse &res);
 void handle405(HttpRequest &req, HttpResponse &res);
 void handle500(HttpRequest &req, HttpResponse &res);
 void handleHome(HttpRequest &req, HttpResponse &res);
+void handleIndexSstyle(HttpRequest &req, HttpResponse &res);
 //DELETE CONTROLLER
 
 #endif
