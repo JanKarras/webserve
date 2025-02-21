@@ -105,4 +105,21 @@ long long getCurrentTime();
 std::string getFileContent(std::string filePath);
 void closeAll(ServerContext ServerContext);
 int setNonBlocking(int fd);
+//POST ROUTES
+void routeRequestPOST(HttpRequest &req, HttpResponse &res);
+//GET ROUTES
+void routeRequestGET(HttpRequest &req, HttpResponse &res);
+//DELETE ROUTES
+void routeRequestDELETE(HttpRequest &req, HttpResponse &res);
+//POST CONTROLLER
+void handleLogin(HttpRequest &req, HttpResponse &res);
+//GET CONTROLLER
+void handle400(HttpRequest &req, HttpResponse &res);
+void handle403(HttpRequest &req, HttpResponse &res);
+void handle404(HttpRequest &req, HttpResponse &res);
+void handle405(HttpRequest &req, HttpResponse &res);
+void handle500(HttpRequest &req, HttpResponse &res);
+void handleHome(HttpRequest &req, HttpResponse &res);
+//DELETE CONTROLLER
+
 #endif

@@ -7,13 +7,13 @@ void handleRequest(int clientFd, ServerContext &ServerContext) {
 	HttpRequest req = ServerContext.requests[clientFd];
 	HttpResponse &res = ServerContext.responses[clientFd];
 
-	res.version = req.version;
-	res.statusCode = 200;
-	res.statusMessage = "OK";
-	res.body = "<html><body><h1>Welcome to the server!</h1></body></html>";
-	res.headers["Content-Type"] = "text/html";
-
-	res.state = SENDING_HEADERS;
+	if (req.method == 0) {
+		routeRequestGET(req, res);
+	} else if (req.method == 1) {
+		routeRequestPOST(req, res);
+	} else if (req.method == 2) {
+		routeRequestDELETE(req, res);
+	}
 
 	struct epoll_event event;
 	event.events = EPOLLOUT;
