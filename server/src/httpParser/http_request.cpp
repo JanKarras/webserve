@@ -7,7 +7,7 @@ static void setRequestError(HttpRequest &req, int errType)
 	req.exitStatus = HTTP_BAD_REQUEST;
 }
 
-int parseHttpRequestLine(HttpRequest &req)
+static int parseHttpRequestLine(HttpRequest &req)
 {
 	size_t p = req.pos;
 	size_t uriLength;
@@ -94,7 +94,7 @@ int parseHttpRequestLine(HttpRequest &req)
 	return SUCCESS;
 }
 
-int parseHttpHeaderLine(HttpRequest &req)
+static int parseHttpHeaderLine(HttpRequest &req)
 {
 	size_t p;
 	while (!req.buffer.empty() && req.state != COMPLETE) {
@@ -122,7 +122,7 @@ int parseHttpHeaderLine(HttpRequest &req)
 
 /* parse URI ... */
 
-int parseHttpBody(HttpRequest &req)
+static int parseHttpBody(HttpRequest &req)
 {
 	req.body.append(req.buffer);
 	req.buffer.clear();
