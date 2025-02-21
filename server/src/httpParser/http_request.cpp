@@ -4,7 +4,7 @@ static void setRequestError(HttpRequest &req, int errType)
 {
 	req.buffer.clear();
 	req.state = ERROR;
-	req.exitStatus = HTTP_BAD_REQUEST;
+	req.exitStatus = errType;
 }
 
 static int parseHttpRequestLine(HttpRequest &req)
@@ -12,10 +12,10 @@ static int parseHttpRequestLine(HttpRequest &req)
 	size_t p = req.pos;
 	size_t uriLength;
 	RequestLineState state = static_cast<RequestLineState>(req.parseState);
-	
+
 	size_t buffer_length = req.buffer.length();
-	
-	for (p; p < buffer_length; p++)
+
+	for (; p < buffer_length; p++)
 	{
 		u_char c = req.buffer[p];
 		switch (state)
@@ -44,7 +44,7 @@ static int parseHttpRequestLine(HttpRequest &req)
 					{
 						setRequestError(req, HTTP_BAD_REQUEST);
 						return FAILURE;
-					}	
+					}
 					state = RL_URI;
 				}
 				if (c < 'A' || c > 'Z' || p > 5)
@@ -64,19 +64,22 @@ static int parseHttpRequestLine(HttpRequest &req)
 				}
 				break;
 			case RL_VERSION:
-
 				if (buffer_length - p >= 10)
+				{
 					if (!req.buffer.compare(p + 1, 10, "HTTP/1.1\r\n"))
 					{
 						req.version = "HTTP/1.1";
 						p += 10;
 						state = RL_DONE;
 					}
-					else 
+					else
 					{
 						setRequestError(req, HTTP_BAD_REQUEST);
 						return FAILURE;
 					}
+				}
+				break;
+			default:
 				break;
 		}
 	}
@@ -127,7 +130,7 @@ static int parseHttpBody(HttpRequest &req)
 	req.body.append(req.buffer);
 	req.buffer.clear();
 
-	if (req.headers.count("Content-Length")) 
+	if (req.headers.count("Content-Length"))
 	{
 		char *endptr = NULL;
 		unsigned long contentLength = strtoul(req.headers["Content-Length"].c_str(), &endptr, 10);
@@ -138,7 +141,7 @@ static int parseHttpBody(HttpRequest &req)
 			return FAILURE;
 		}
 
-		if (req.body.size() >= contentLength) 
+		if (req.body.size() >= contentLength)
 		{
 			req.state = COMPLETE;
 		}
@@ -161,6 +164,8 @@ void	parseHttpRequest(HttpRequest &req, std::string &data)
 				break;
 		case BODY:
 			parseHttpBody(req);
+			break;
+		default:
 			break;
 	}
 }
