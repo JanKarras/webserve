@@ -22,7 +22,8 @@
 #include "http_request.hpp"
 #include <pthread.h>
 
-
+#define CR (u_char) 'r'
+#define LF (u_char) 'n'
 
 #define SUCCESS 0
 #define FAILURE 1
