@@ -149,23 +149,16 @@ static int parseHttpBody(HttpRequest &req)
 	return SUCCESS;
 }
 
-void	parseHttpRequest(HttpRequest &req, std::string &data)
+void parseHttpRequest(HttpRequest &req, std::string &data)
 {
-	req.buffer.append(data);
-	switch (req.state)
-	{
-		case REQUEST_LINE:
-			parseHttpRequestLine(req);
-			if (req.state != HEADERS)
-				break;
-		case HEADERS:
-			parseHttpHeaderLine(req);
-			if (req.state != BODY)
-				break;
-		case BODY:
-			parseHttpBody(req);
-			break;
-		default:
-			break;
-	}
+    req.buffer.append(data);
+
+    if (req.state == REQUEST_LINE)
+        if (parseHttpRequestLine(req) == FAILURE) return;
+
+    if (req.state == HEADERS)
+        if (parseHttpHeaderLine(req) == FAILURE) return;
+
+    if (req.state == BODY)
+        parseHttpBody(req);
 }
