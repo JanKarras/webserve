@@ -1,7 +1,7 @@
 #include "../../include/webserv.hpp"
 
 void initGET(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &get) {
-	get.clear();
+	get["/"] = handleHome;
 }
 
 void initPOST(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &post) {

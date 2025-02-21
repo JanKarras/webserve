@@ -2,10 +2,9 @@
 
 
 std::string getFileContent(std::string filePath) {
-	std::string publicPath = "../../../";
-	publicPath.append(filePath);
-	std::ifstream file(publicPath.c_str());
-
+	// std::string publicPath = "../../../";
+	// publicPath.append(filePath);
+	std::ifstream file(filePath.c_str());
 	std::string body;
 
 	if (file) {
