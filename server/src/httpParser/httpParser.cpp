@@ -6,7 +6,7 @@
 /*   By: atoepper <atoepper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 12:15:23 by jkarras           #+#    #+#             */
-/*   Updated: 2025/02/19 13:44:26 by atoepper         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:23:46 by atoepper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void printHttpRequest(const HttpRequest& request) {
     std::cout << "========================" << std::endl;
 }
 
-void parseHttpRequest(HttpRequest &req, std::string &buffer) {
+/* void parseHttpRequest(HttpRequest &req, std::string &buffer) {
 	std::istringstream stream(buffer);
 	std::string line;
 
@@ -67,4 +67,4 @@ void parseHttpRequest(HttpRequest &req, std::string &buffer) {
 			}
 		}
 	}
-}
+} */

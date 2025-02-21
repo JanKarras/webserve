@@ -22,7 +22,8 @@
 #include "http_request.hpp"
 #include <pthread.h>
 
-
+#define CR (u_char) 'r'
+#define LF (u_char) 'n'
 
 #define SUCCESS 0
 #define FAILURE 1
@@ -87,7 +88,8 @@ bool parseConfic(std::string path, ConficData *data);
 
 //HTTPPARSER
 void printHttpRequest(const HttpRequest& request);
-void parseHttpRequest(HttpRequest &req, std::string &buffer);
+void parseHttpRequest(HttpRequest &req, std::string &data);
+
 //SERVER
 void startServer(ConficData &conficData, bool conficFlag);
 bool initServer(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event);
