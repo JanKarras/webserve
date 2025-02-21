@@ -7,13 +7,18 @@ void handleRequest(int clientFd, ServerContext &ServerContext) {
 	HttpRequest req = ServerContext.requests[clientFd];
 	HttpResponse &res = ServerContext.responses[clientFd];
 
-	if (req.method == 0) {
-		routeRequestGET(req, res);
-	} else if (req.method == 1) {
-		routeRequestPOST(req, res);
-	} else if (req.method == 2) {
-		routeRequestDELETE(req, res);
+	if (req.method == GET) {
+		routeRequestGET(req, res, ServerContext);
+	} else if (req.method == POST) {
+		routeRequestPOST(req, res, ServerContext);
+	} else if (req.method == DELETE) {
+		routeRequestDELETE(req, res, ServerContext);
+	} else {
+		handle405(req, res);
 	}
+
+	res.version = req.version;
+	res.state = SENDING_HEADERS;
 
 	struct epoll_event event;
 	event.events = EPOLLOUT;

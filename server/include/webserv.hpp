@@ -66,6 +66,9 @@ struct ServerContext {
 	int epollFd;
 	std::map<int, HttpRequest> requests;
 	std::map<int, HttpResponse> responses;
+	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> get;
+	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> post;
+	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> del;
 };
 
 struct ConficServer {
@@ -105,16 +108,18 @@ long long getCurrentTime();
 std::string getFileContent(std::string filePath);
 void closeAll(ServerContext ServerContext);
 int setNonBlocking(int fd);
+void initRoutes(ServerContext &serverContext);
 //POST ROUTES
-void routeRequestPOST(HttpRequest &req, HttpResponse &res);
+void routeRequestPOST(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //GET ROUTES
-void routeRequestGET(HttpRequest &req, HttpResponse &res);
+void routeRequestGET(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //DELETE ROUTES
-void routeRequestDELETE(HttpRequest &req, HttpResponse &res);
+void routeRequestDELETE(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //POST CONTROLLER
 void handleLogin(HttpRequest &req, HttpResponse &res);
 //GET CONTROLLER
 void handle400(HttpRequest &req, HttpResponse &res);
+void handle401(HttpRequest &req, HttpResponse &res);
 void handle403(HttpRequest &req, HttpResponse &res);
 void handle404(HttpRequest &req, HttpResponse &res);
 void handle405(HttpRequest &req, HttpResponse &res);

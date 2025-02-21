@@ -17,6 +17,8 @@ void startServer(ConficData &conficData, bool conficFlag) {
 		}
 	}
 
+	initRoutes(ServerContext);
+
 	while (running) {
 		int numEvents = epoll_wait(ServerContext.epollFd, events, MAX_EVENTS, -1);
 		if (numEvents == -1) {
