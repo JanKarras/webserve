@@ -10,7 +10,7 @@ enum HttpMethod
 };
 
 enum RequestState {
-	REQUEST_LINE,
+	REQUEST_LINE = 0,
 	HEADERS,
 	BODY,
 	COMPLETE,
@@ -53,5 +53,9 @@ struct HttpRequest {
 	RequestState state;
 	int exitStatus;
 	long long startTime;
-	HttpRequest() : state(REQUEST_LINE) {}
+	HttpRequest() : pos (0), parseState(0), state(REQUEST_LINE) {}
 };
+
+std::ostream& operator<<(std::ostream& os, const HttpMethod& method);
+std::ostream& operator<<(std::ostream& os, const RequestState& state);
+std::ostream& operator<<(std::ostream& os, const RequestLineState& state);
