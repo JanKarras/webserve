@@ -9,12 +9,32 @@ int parseHttpRequestLine(HttpRequest &req)
 	
 	for (p; p < buffer_length; p++)
 	{
+		u_char c = req.buffer[p];
 		switch (state)
 		{
 			case RL_START:
-
+				if (c == CR || c == LF)
+					break;
+				if (c < 'A' || c > 'Z')
+				{
+					req.buffer.clear();
+					req.state = ERROR;
+					req.exitStatus = HTTP_BAD_REQUEST;
+					return FAILURE;
+				}
+				state = RL_METHOD;
+				break;
 			case RL_METHOD:
-
+				if (c == ' ')
+					/* check method */
+				if (c < 'A' || c > 'Z')
+				{
+					req.buffer.clear();
+					req.state = ERROR;
+					req.exitStatus = HTTP_BAD_REQUEST;
+					return FAILURE;
+				}
+				break;
 			case RL_URI:
 
 			case RL_VERSION:

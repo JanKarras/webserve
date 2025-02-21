@@ -41,7 +41,7 @@ enum BodyState{
 };
 
 struct HttpRequest {
-	std::string method; /* perspektivisch type HttpMethod */
+	HttpMethod method;
 	std::string uri;
 	std::string version;
 	std::map<std::string, std::string> headers;
