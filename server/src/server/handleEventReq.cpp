@@ -13,8 +13,11 @@ bool handleEventReq(ServerContext &ServerContext, struct epoll_event *events, in
 		epoll_ctl(ServerContext.epollFd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 	} else {
 		data.append(buffer, bytesRead);
+		std::cout<< "parse\n";
 		parseHttpRequest(ServerContext.requests[events[i].data.fd], data);
+		printHttpRequest(ServerContext.requests[events[i].data.fd]);
 		if (ServerContext.requests[events[i].data.fd].state == COMPLETE) {
+			std::cout<< "handle\n";
 			handleRequest(events[i].data.fd, ServerContext);
 		} else if (ServerContext.requests[events[i].data.fd].state == ERROR) {
 			handleErrorRequest(events[i].data.fd, ServerContext);
