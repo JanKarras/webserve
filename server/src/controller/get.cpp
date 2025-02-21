@@ -1,6 +1,7 @@
 #include "../../include/webserv.hpp"
 
 void handle400(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
 	res.statusMessage = "Http bad request";
 	res.body = getFileContent("public/error/400.html");
 	if (res.body.size() == 0) {
@@ -12,6 +13,7 @@ void handle400(HttpRequest &req, HttpResponse &res) {
 }
 
 void handle401(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
 	res.statusMessage = "Http unauthorized";
 	res.body = getFileContent("public/error/401.html");
 	if (res.body.size() == 0) {
@@ -23,6 +25,7 @@ void handle401(HttpRequest &req, HttpResponse &res) {
 }
 
 void handle403(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
 	res.statusMessage = "Http frobidden";
 	res.body = getFileContent("public/error/403.html");
 	if (res.body.size() == 0) {
@@ -34,6 +37,7 @@ void handle403(HttpRequest &req, HttpResponse &res) {
 }
 
 void handle404(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
 	res.statusMessage = "Http not found";
 	res.body = getFileContent("public/error/404.html");
 	if (res.body.size() == 0) {
@@ -45,6 +49,7 @@ void handle404(HttpRequest &req, HttpResponse &res) {
 }
 
 void handle405(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
 	res.statusMessage = "Http method not allowed";
 	res.body = getFileContent("public/error/405.html");
 	if (res.body.size() == 0) {
@@ -56,6 +61,7 @@ void handle405(HttpRequest &req, HttpResponse &res) {
 }
 
 void handle500(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
 	res.statusMessage = "Http internl server error";
 	res.body = getFileContent("public/error/500.html");
 	if (res.body.size() == 0) {
@@ -67,6 +73,7 @@ void handle500(HttpRequest &req, HttpResponse &res) {
 }
 
 void handleHome(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
 	res.statusMessage = "OK";
 	res.body = getFileContent("public/index.html");
 	if (res.body.size() == 0) {
