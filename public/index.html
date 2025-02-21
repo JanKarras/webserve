@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Index</title>
+	<script src="./assets/js/index.js"></script>
+	<link rel="stylesheet" href="./assets/css/index_style.css">
+</head>
+<body>
+	<header>
+		<img src="./assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg" alt="Logo">
+		<div>
+			<button class="btn" onclick="togglePopup()">Login</button>
+			<button class="btn" onclick="togglePopup()">Account erstellen</button>
+		</div>
+	</header>
+
+	<!-- Popup -->
+	<div class="popup" id="loginPopup">
+		<div class="popup-content">
+			<h2>Login / Registrierung</h2>
+			<form>
+				<input type="email" placeholder="E-Mail" required><br><br>
+				<input type="password" placeholder="Passwort" required><br><br>
+				<button type="submit" class="btn">Einloggen</button>
+				<button type="button" class="btn" onclick="togglePopup()">Schließen</button>
+			</form>
+		</div>
+	</div>
+
+	<main>
+		<section id="content" style="padding: 20px;">
+			<h1>Willkommen auf unserer Index-Seite des Webserv-Projekts!</h1>
+			<p>Dies ist die Startseite unseres Webserv-Projekts. Die drei Mitwirkenden an diesem Projekt sind Alex, Rene und Jan. Um die Webseite zu testen, können Sie sich einloggen oder zunächst einen Account erstellen.</p>
+		</section>
+
+	</main>
+
+	<footer>
+		<div>
+			<button class="btn" onclick="window.location.href='impressum.html'">Impressum</button>
+			<button class="btn" onclick="window.location.href='datenschutz.html'">Datenschutz</button>
+			<p>&copy; 2025 Dein Unternehmen</p>
+		</div>
+	</footer>
+</body>
+</html>
