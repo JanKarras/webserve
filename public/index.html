@@ -16,14 +16,16 @@
 	<div class="popup" id="loginPopup" onclick="closePopup(event, 'loginPopup')">
 	    <div class="popup-content" onclick="event.stopPropagation()">
 	        <h2>Login</h2>
+	        <div id="error-message" style="color: red; display: none;"></div> <!-- Fehleranzeige -->
 	        <form>
-	            <input type="email" placeholder="E-Mail" required><br><br>
-	            <input type="password" placeholder="Passwort" required><br><br>
-	            <button onclick="login()" type="submit" class="btn">Einloggen</button>
+	            <input type="email" id="email" placeholder="E-Mail" required><br><br>
+	            <input type="password" id="password" placeholder="Passwort" required><br><br>
+	            <button onclick="login(event)" type="submit" class="btn">Einloggen</button>
 	            <button type="button" class="btn" onclick="togglePopup('loginPopup')">Schließen</button>
 	        </form>
 	    </div>
 	</div>
+
 
 	<!-- Register Popup -->
 	<div class="popup" id="registerPopup" onclick="closePopup(event, 'registerPopup')">

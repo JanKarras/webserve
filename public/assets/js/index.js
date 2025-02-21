@@ -22,7 +22,9 @@ function closePopup(event, popupId) {
     }
 }
 
-async function login() {
+async function login(event) {
+    event.preventDefault();
+
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
@@ -46,10 +48,12 @@ async function login() {
             handleError(errorData.message || "Login fehlgeschlagen");
         }
     } catch (error) {
-        handleError("Netzwerkfehler, bitte versuchen Sie es später erneut.");
+        handleError("Network error, please try again later");
     }
 }
 
 function handleError(message) {
-    alert(message);
+    const errorMessageDiv = document.getElementById('error-message');
+    errorMessageDiv.textContent = message;
+    errorMessageDiv.style.display = 'block';
 }
