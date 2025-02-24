@@ -8,6 +8,8 @@ void initGET(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &get
 	get["/assets/img/rmatthes.png"] = handleIndexImgRmathes;
 	get["/assets/css/index_style.css"] = handleIndexSstyle;
 	get["/assets/js/index.js"] = handleIndexJs;
+	get["/assets/js/remote_storage.js"] = handleRemoteStorageJs;
+	get["/dashboard"] = handleDashboard;
 }
 
 void initPOST(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &post) {

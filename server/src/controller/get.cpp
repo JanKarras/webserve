@@ -84,6 +84,18 @@ void handleHome(HttpRequest &req, HttpResponse &res) {
 	res.statusCode = 200;
 }
 
+void handleDashboard(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
+	res.statusMessage = "OK";
+	res.body = getFileContent("public/dashboard.html");
+	if (res.body.size() == 0) {
+		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
+	}
+	res.headers["Content-Type"] = "text/html";
+	res.headers["Content-Length"] = toStringInt(res.body.size());
+	res.statusCode = 200;
+}
+
 void handleIndexSstyle(HttpRequest &req, HttpResponse &res) {
 	res.statusCode = req.exitStatus;
 	res.statusMessage = "OK";
@@ -100,6 +112,18 @@ void handleIndexJs(HttpRequest &req, HttpResponse &res) {
 	res.statusCode = req.exitStatus;
 	res.statusMessage = "OK";
 	res.body = getFileContent("public/assets/js/index.js");
+	if (res.body.size() == 0) {
+		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
+	}
+	res.headers["Content-Type"] = "text/js";
+	res.headers["Content-Length"] = toStringInt(res.body.size());
+	res.statusCode = 200;
+}
+
+void handleRemoteStorageJs(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
+	res.statusMessage = "OK";
+	res.body = getFileContent("public/assets/js/remote_storage.js");
 	if (res.body.size() == 0) {
 		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
 	}

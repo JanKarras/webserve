@@ -38,34 +38,21 @@ async function login(event) {
 		return;
 	}
 
-	try {
-		const response = await fetch('/auth/login', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email, password })
-		});
-
-		if (response.ok) {
-			togglePopup('loginPopup');
-			console.log("Login erfolgreich");
-		} else {
-			const errorData = await response.json();
-			handleError(errorData.message || "Login fehlgeschlagen");
-		}
-	} catch (error) {
-		handleError("Network error, please try again later");
+	if(loginRoute(email, password)) {
+		togglePopup('loginPopup');
+		window.location.href = `/dashboard?email=${email}`;
 	}
 }
 
 async function register(event) {
 	event.preventDefault();
 
-	const email = document.getElementById('email').value;
-	const password = document.getElementById('password').value;
-	const confirmPassword = document.getElementById('confirmPassword').value;
+	const email = document.getElementById('emailReq').value;
+	const password = document.getElementById('passwordReq').value;
+	const confirmPassword = document.getElementById('confirmPasswordReq').value;
 
 	if (!email || !password || !confirmPassword) {
-		handleError("Please fill in all fields.");
+		handleErrorReq("Please fill in all fields.");
 		return;
 	}
 
@@ -74,27 +61,19 @@ async function register(event) {
 		return;
 	}
 
-	try {
-		const response = await fetch('/createAccount', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email, password })
-		});
-
-		if (response.ok) {
-			togglePopup('registerPopup');
-			console.log("Registration successful");
-		} else {
-			const errorData = await response.json();
-			handleError(errorData.message || "Registration failed");
-		}
-	} catch (error) {
-		handleError("Network error, please try again later.");
+	if(registerRoute(email, password)) {
+		togglePopup('registerPopup');
 	}
 }
 
 function handleError(message) {
 	const errorMessageDiv = document.getElementById('error-message');
+	errorMessageDiv.textContent = message;
+	errorMessageDiv.style.display = 'block';
+}
+
+function handleErrorReq(message) {
+	const errorMessageDiv = document.getElementById('error-messageReq');
 	errorMessageDiv.textContent = message;
 	errorMessageDiv.style.display = 'block';
 }

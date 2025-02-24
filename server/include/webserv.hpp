@@ -136,6 +136,8 @@ void handleIndexImgJkarras(HttpRequest &req, HttpResponse &res);
 void handleIndexImgAtoepper(HttpRequest &req, HttpResponse &res);
 void handleIndexImgRmathes(HttpRequest &req, HttpResponse &res);
 void handleIndexImgLogo(HttpRequest &req, HttpResponse &res);
+void handleRemoteStorageJs(HttpRequest &req, HttpResponse &res);
+void handleDashboard(HttpRequest &req, HttpResponse &res);
 //DELETE CONTROLLER
 
 #endif

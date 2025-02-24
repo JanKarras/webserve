@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Index</title>
 	<script src="./assets/js/index.js"></script>
+	<script src="./assets/js/remote_storage.js"></script>
 	<link rel="stylesheet" href="./assets/css/index_style.css">
 </head>
 <body>
@@ -31,11 +32,12 @@
 	<div class="popup" id="registerPopup" onclick="closePopup(event, 'registerPopup')">
 	    <div class="popup-content" onclick="event.stopPropagation()">
 	        <h2>Registrierung</h2>
+			<div id="error-messageReq" style="color: red; display: none;"></div> <!-- Fehleranzeige -->
 	        <form>
-	            <input type="email" placeholder="E-Mail" required><br><br>
-	            <input type="password" placeholder="Passwort" required><br><br>
-	            <input type="password" placeholder="Passwort bestätigen" required><br><br>
-	            <button type="submit" class="btn">Registrieren</button>
+	            <input id="emailReq" type="email" placeholder="E-Mail" required><br><br>
+	            <input id="passwordReq" type="password" placeholder="Password" required><br><br>
+	            <input id="confirmPasswordReq" type="password" placeholder="Confirm Password" required><br><br>
+	            <button onclick="register(event)" type="submit" class="btn">Registrieren</button>
 	            <button type="button" class="btn" onclick="togglePopup('registerPopup')">Schließen</button>
 	        </form>
 	    </div>

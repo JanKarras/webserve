@@ -1,0 +1,64 @@
+async function registerRoute(email, password) {
+	try {
+		const response = await fetch('/createAccount', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email, password })
+		});
+
+		if (response.ok) {
+			
+			console.log("Registration successful");
+			return true;
+		} else {
+			if (response.status === 400) {
+				handleErrorReq("Bad request")
+			} else if (response.status === 500) {
+				handleErrorReq("Internl server error. Please try again later")
+			} else if (response.status === 401) {
+				handleErrorReq("No account for this credentials")
+			} else if (response.status === 404) {
+				handleErrorReq("Route not found")
+			} else if (response.status === 409) {
+				handleErrorReq("Conflict : Emial already exists")
+			}
+			return false;
+		}
+	} catch (error) {
+		console.log(response);
+		return false;
+	}
+}
+
+async function loginRoute(email, password) {
+	try {
+		const response = await fetch('/auth/login', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email, password })
+		});
+
+		if (response.ok) {
+			togglePopup('loginPopup');
+			console.log("Login erfolgreich");
+			return true;
+		} else {
+			console.log(response.status)
+			if (response.status === 400) {
+				handleError("Bad request")
+			} else if (response.status === 500) {
+				handleError("Internl server error. Please try again later")
+			} else if (response.status === 501) {
+				handleError("No account for this credentials")
+			} else if (response.status === 404) {
+				handleError("Route not found")
+			} else if (response.status === 401) {
+				handleError("No account for this credentials")
+			}
+			return false;
+		}
+	} catch (error) {
+		console.log(response);
+		return false;
+	}
+}
