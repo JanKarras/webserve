@@ -40,6 +40,7 @@
 #define HTTP_METHOD_N_ALLOWED 405
 #define HTTP_SERVER_ERROR 500
 
+
 extern bool running;
 
 enum ResponseState {
@@ -111,6 +112,7 @@ std::string getFileContent(std::string filePath);
 void closeAll(ServerContext ServerContext);
 int setNonBlocking(int fd);
 void initRoutes(ServerContext &serverContext);
+std::map<std::string, std::string> parseSimpleJSON(const std::string& body);
 //POST ROUTES
 void routeRequestPOST(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //GET ROUTES
@@ -119,6 +121,7 @@ void routeRequestGET(HttpRequest &req, HttpResponse &res, ServerContext serverCo
 void routeRequestDELETE(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //POST CONTROLLER
 void handleLogin(HttpRequest &req, HttpResponse &res);
+void handleCreateAccount(HttpRequest &req, HttpResponse &res);
 //GET CONTROLLER
 void handle400(HttpRequest &req, HttpResponse &res);
 void handle401(HttpRequest &req, HttpResponse &res);
@@ -128,6 +131,11 @@ void handle405(HttpRequest &req, HttpResponse &res);
 void handle500(HttpRequest &req, HttpResponse &res);
 void handleHome(HttpRequest &req, HttpResponse &res);
 void handleIndexSstyle(HttpRequest &req, HttpResponse &res);
+void handleIndexJs(HttpRequest &req, HttpResponse &res);
+void handleIndexImgJkarras(HttpRequest &req, HttpResponse &res);
+void handleIndexImgAtoepper(HttpRequest &req, HttpResponse &res);
+void handleIndexImgRmathes(HttpRequest &req, HttpResponse &res);
+void handleIndexImgLogo(HttpRequest &req, HttpResponse &res);
 //DELETE CONTROLLER
 
 #endif

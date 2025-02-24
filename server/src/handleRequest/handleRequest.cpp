@@ -2,7 +2,7 @@
 
 void handleRequest(int clientFd, ServerContext &ServerContext) {
 
-	printHttpRequest(ServerContext.requests[clientFd]);
+	//printHttpRequest(ServerContext.requests[clientFd]);
 
 	HttpRequest req = ServerContext.requests[clientFd];
 	HttpResponse &res = ServerContext.responses[clientFd];

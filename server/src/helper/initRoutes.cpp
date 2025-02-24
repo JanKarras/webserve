@@ -2,16 +2,17 @@
 
 void initGET(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &get) {
 	get["/"] = handleHome;
-	get["/assets/img/42Wolfsburg_Logo_ver_pos_black.pdf"] = handleHome;
-	get["/assets/img/atoepper"] = handleHome;
-	get["/assets/img/jkarras"] = handleHome;
-	get["/assets/img/rmatthes"] = handleHome;
+	get["/assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg"] = handleIndexImgLogo;
+	get["/assets/img/atoepper.png"] = handleIndexImgAtoepper;
+	get["/assets/img/jkarras.png"] = handleIndexImgJkarras;
+	get["/assets/img/rmatthes.png"] = handleIndexImgRmathes;
 	get["/assets/css/index_style.css"] = handleIndexSstyle;
-	get["/assets/js/index.js"] = handleHome;
+	get["/assets/js/index.js"] = handleIndexJs;
 }
 
 void initPOST(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &post) {
 	post["/auth/login"] = handleLogin;
+	post["/createAccount"] = handleCreateAccount;
 }
 
 void initDEL(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &del) {

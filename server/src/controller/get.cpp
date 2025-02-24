@@ -95,3 +95,64 @@ void handleIndexSstyle(HttpRequest &req, HttpResponse &res) {
 	res.headers["Content-Length"] = toStringInt(res.body.size());
 	res.statusCode = 200;
 }
+
+void handleIndexJs(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
+	res.statusMessage = "OK";
+	res.body = getFileContent("public/assets/js/index.js");
+	if (res.body.size() == 0) {
+		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
+	}
+	res.headers["Content-Type"] = "text/js";
+	res.headers["Content-Length"] = toStringInt(res.body.size());
+	res.statusCode = 200;
+}
+
+void handleIndexImgJkarras(HttpRequest &req, HttpResponse &res) {
+
+	res.statusCode = req.exitStatus;
+	res.statusMessage = "OK";
+	res.body = getFileContent("public/assets/img/jkarras.png");
+	if (res.body.size() == 0) {
+		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
+	}
+	res.headers["Content-Type"] = "image/png";
+	res.headers["Content-Length"] = toStringInt(res.body.size());
+	res.statusCode = 200;
+}
+
+void handleIndexImgAtoepper(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
+	res.statusMessage = "OK";
+	res.body = getFileContent("public/assets/img/atoepper.png");
+	if (res.body.size() == 0) {
+		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
+	}
+	res.headers["Content-Type"] = "image/png";
+	res.headers["Content-Length"] = toStringInt(res.body.size());
+	res.statusCode = 200;
+}
+
+void handleIndexImgRmathes(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
+	res.statusMessage = "OK";
+	res.body = getFileContent("public/assets/img/rmatthes.png");
+	if (res.body.size() == 0) {
+		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
+	}
+	res.headers["Content-Type"] = "image/png";
+	res.headers["Content-Length"] = toStringInt(res.body.size());
+	res.statusCode = 200;
+}
+
+void handleIndexImgLogo(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
+	res.statusMessage = "OK";
+	res.body = getFileContent("public/assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg");
+	if (res.body.size() == 0) {
+		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
+	}
+	res.headers["Content-Type"] = "image/jpg";
+	res.headers["Content-Length"] = toStringInt(res.body.size());
+	res.statusCode = 200;
+}
