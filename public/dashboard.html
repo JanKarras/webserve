@@ -4,8 +4,35 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Dashboard</title>
+	<script src="./assets/js/dashboard.js"></script>
+	<script src="./assets/js/remote_storage.js"></script>
+	<link rel="stylesheet" href="./assets/css/dashboard_style.css">
 </head>
-<body>
-	Dash
+<body onload="initDashboard()">
+	<header>
+		<img src="./assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg" alt="Logo">
+	</header>
+
+	<main>
+		<section id="welcome-section" style="padding: 20px;">
+			<h1>Welcome <span id="username"></span> to your Dashboard!</h1>
+			<p>Here you can view, upload, and delete your files.</p>
+			<p>Allowed file types: <strong>JPG, PNG, SH</strong></p> <!-- Anzeige der erlaubten Dateiformate -->
+			<button class="btn" onclick="openUploadDialog()">Upload</button>
+			<input type="file" id="file-input" style="display: none;" accept=".jpg, .png, .sh" onchange="handleFileUpload(event)"> <!-- Upload-Input -->
+		</section>
+
+		<section id="file-container" style="padding: 20px; overflow-y: auto; max-height: 400px;">
+			<!-- This will be dynamically populated with user files -->
+		</section>
+	</main>
+
+	<footer>
+		<div>
+			<a href="/">Impressum</a>
+			<a href="/">Datenschutz</a>
+			<p>&copy; YSL Club</p>
+		</div>
+	</footer>
 </body>
 </html>

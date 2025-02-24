@@ -180,3 +180,27 @@ void handleIndexImgLogo(HttpRequest &req, HttpResponse &res) {
 	res.headers["Content-Length"] = toStringInt(res.body.size());
 	res.statusCode = 200;
 }
+
+void handleDashboardStyle(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
+	res.statusMessage = "OK";
+	res.body = getFileContent("public/assets/css/dashboard_style.css");
+	if (res.body.size() == 0) {
+		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
+	}
+	res.headers["Content-Type"] = "text/css";
+	res.headers["Content-Length"] = toStringInt(res.body.size());
+	res.statusCode = 200;
+}
+
+void handleDashboardJs(HttpRequest &req, HttpResponse &res) {
+	res.statusCode = req.exitStatus;
+	res.statusMessage = "OK";
+	res.body = getFileContent("public/assets/js/dashboard.js");
+	if (res.body.size() == 0) {
+		res.body = "<html><body><h1>" + res.statusMessage + "</h1></body></html>";
+	}
+	res.headers["Content-Type"] = "text/js";
+	res.headers["Content-Length"] = toStringInt(res.body.size());
+	res.statusCode = 200;
+}

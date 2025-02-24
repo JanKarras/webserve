@@ -7,6 +7,8 @@ void initGET(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &get
 	get["/assets/img/jkarras.png"] = handleIndexImgJkarras;
 	get["/assets/img/rmatthes.png"] = handleIndexImgRmathes;
 	get["/assets/css/index_style.css"] = handleIndexSstyle;
+	get["/assets/js/dashboard.js"] = handleDashboardJs;
+	get["/assets/css/dashboard_style.css"] = handleDashboardStyle;
 	get["/assets/js/index.js"] = handleIndexJs;
 	get["/assets/js/remote_storage.js"] = handleRemoteStorageJs;
 	get["/dashboard"] = handleDashboard;
@@ -15,6 +17,7 @@ void initGET(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &get
 void initPOST(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &post) {
 	post["/auth/login"] = handleLogin;
 	post["/createAccount"] = handleCreateAccount;
+	post["/uploadFile"] = uploadFile;
 }
 
 void initDEL(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &del) {

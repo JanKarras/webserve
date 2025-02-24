@@ -122,6 +122,7 @@ void routeRequestDELETE(HttpRequest &req, HttpResponse &res, ServerContext serve
 //POST CONTROLLER
 void handleLogin(HttpRequest &req, HttpResponse &res);
 void handleCreateAccount(HttpRequest &req, HttpResponse &res);
+void uploadFile(HttpRequest &req, HttpResponse &res);
 //GET CONTROLLER
 void handle400(HttpRequest &req, HttpResponse &res);
 void handle401(HttpRequest &req, HttpResponse &res);
@@ -138,6 +139,8 @@ void handleIndexImgRmathes(HttpRequest &req, HttpResponse &res);
 void handleIndexImgLogo(HttpRequest &req, HttpResponse &res);
 void handleRemoteStorageJs(HttpRequest &req, HttpResponse &res);
 void handleDashboard(HttpRequest &req, HttpResponse &res);
+void handleDashboardStyle(HttpRequest &req, HttpResponse &res);
+void handleDashboardJs(HttpRequest &req, HttpResponse &res);
 //DELETE CONTROLLER
 
 #endif

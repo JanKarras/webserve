@@ -106,3 +106,33 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 	res.body = "Account created successfully";
 	res.headers["Content-Type"] = "application/json";
 }
+
+void uploadFile(HttpRequest &req, HttpResponse &res) {
+	printHttpRequest(req);
+	res.statusCode = req.exitStatus;
+	std::string boundary;
+	std::string contentType;
+	std::string email;
+	std::string file;
+	std::string fileName;
+
+	contentType = req.headers["Content-Type"];
+
+	if (contentType.find("multipart/form-data") == std::string::npos) {
+		handle400(req, res);
+		return;
+	}
+
+	size_t pos = contentType.find("boundary=");
+	if (pos != std::string::npos) {
+		boundary = contentType.substr(pos + 9);
+	} else {
+		std::cerr << "No boundary found in Content-Type!" << std::endl;
+		handle400(req, res);
+		return;
+	}
+
+	
+
+
+}

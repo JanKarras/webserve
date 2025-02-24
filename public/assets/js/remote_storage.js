@@ -7,7 +7,7 @@ async function registerRoute(email, password) {
 		});
 
 		if (response.ok) {
-			
+
 			console.log("Registration successful");
 			return true;
 		} else {
@@ -59,6 +59,29 @@ async function loginRoute(email, password) {
 		}
 	} catch (error) {
 		console.log(response);
+		return false;
+	}
+}
+
+async function uploadFile(file, email) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('email', email);
+
+    try {
+        const response = await fetch('/uploadFile', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            console.log("File upload successful");
+            return true;
+        } else {
+			console.log(response);
+            return false;
+        }
+	} catch (error) {
 		return false;
 	}
 }
