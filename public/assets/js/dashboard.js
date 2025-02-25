@@ -1,6 +1,5 @@
 function getEmailFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-	return "jkarras@42wolfsburg.com";
     return urlParams.get('email');
 }
 
@@ -14,29 +13,11 @@ async function initDashboard() {
     }
 }
 
-async function renderFiles(email) {
-    const files = [
-        { name: 'File1.txt', size: '1MB' },
-        { name: 'File2.png', size: '2MB' },
-        { name: 'File3.pdf', size: '500KB' }
-    ];
-
-    const fileContainer = document.getElementById('file-container');
-    fileContainer.innerHTML = '';
-
-    files.forEach(file => {
-        const fileDiv = document.createElement('div');
-        fileDiv.classList.add('file-item');
-        fileDiv.innerHTML = `<p>${file.name} - ${file.size}</p>`;
-        fileContainer.appendChild(fileDiv);
-    });
-}
-
 function openUploadDialog() {
     document.getElementById('file-input').click();
 }
 
-function handleFileUpload(event) {
+async function handleFileUpload(event) {
     const file = event.target.files[0];
 
     if (!file) {
@@ -51,7 +32,90 @@ function handleFileUpload(event) {
         return;
     }
 
-    alert(`File uploaded: ${file.name}`);
+	await uploadFile(file, getEmailFromURL());
+	renderFiles(getEmailFromURL())
+}
 
-	uploadFile(file, getEmailFromURL());
+async function renderFiles(email) {
+    const fileNames = await getFileNames(email);
+    const fileContainer = document.getElementById('file-container');
+    fileContainer.innerHTML = '';
+
+    for (let i = 0; i < fileNames.length; i++) {
+        const fileName = fileNames[i];
+        const file = await getFile(fileName, email);
+
+        const card = document.createElement('div');
+        card.classList.add('card');
+
+        const trashIcon = document.createElement('span');
+        trashIcon.classList.add('trash-icon');
+        trashIcon.innerHTML = '&times;';
+        trashIcon.onclick = (event) => {
+            event.stopPropagation();
+            deleteFile(fileName, email);
+        };
+
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+
+        const title = document.createElement('h5');
+        title.classList.add('card-title');
+        title.textContent = fileName;
+
+        const preview = document.createElement('p');
+        preview.classList.add('card-text');
+
+        if (fileName.endsWith('.sh')) {
+            const fileContent = file.slice(0, 100);
+            preview.textContent = fileContent;
+        } else if (file instanceof Blob && file.type.startsWith('image')) {
+            const image = document.createElement('img');
+            image.src = URL.createObjectURL(file);
+            preview.appendChild(image);
+        }
+
+        cardBody.appendChild(title);
+        cardBody.appendChild(preview);
+        card.appendChild(trashIcon);
+        card.appendChild(cardBody);
+
+        fileContainer.appendChild(card);
+
+        card.onclick = () => openFileModal(fileName, file, email);
+    }
+}
+
+function openFileModal(fileName, file, email) {
+    const modal = $('#fileModal');
+    const fileContentDiv = $('#fileContent');
+    fileContentDiv.empty();
+    const executeBtn = $('#executeBtn');
+
+    if (fileName.endsWith('.sh')) {
+        const scriptContent = document.createElement('pre');
+        scriptContent.textContent = file;
+        fileContentDiv.append(scriptContent);
+
+        executeBtn.show();
+    } else if (file instanceof Blob && file.type.startsWith('image')) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.width = '100%';
+        fileContentDiv.append(img);
+
+        executeBtn.hide();
+    }
+
+    modal.modal('show');
+}
+
+function executeFile(fileName, email) {
+    console.log('Executing script:', fileName);
+
+}
+
+async function deleteFile(fileName, email) {
+	await deleteFileRoute(fileName, email);
+	await renderFiles(email);
 }

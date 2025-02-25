@@ -12,6 +12,8 @@ void initGET(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &get
 	get["/assets/js/index.js"] = handleIndexJs;
 	get["/assets/js/remote_storage.js"] = handleRemoteStorageJs;
 	get["/dashboard"] = handleDashboard;
+	get["/getFile"] = handleGetFile;
+	get["/getFileNames"] = getFileNames;
 }
 
 void initPOST(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &post) {
@@ -21,11 +23,16 @@ void initPOST(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &po
 }
 
 void initDEL(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &del) {
-	del.clear();
+	del["/deleteFile"] = delteFile;
+}
+
+void initCGI(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &cgi) {
+	cgi["/ls"] = handleLs;
 }
 
 void initRoutes(ServerContext &serverContext) {
 	initGET(serverContext.get);
 	initPOST(serverContext.post);
 	initDEL(serverContext.del);
+	initCGI(serverContext.cgi);
 }
