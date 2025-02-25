@@ -7,6 +7,53 @@ static void setRequestError(HttpRequest &req, int errType)
 	req.exitStatus = errType;
 }
 
+static int parseQueryString(HttpRequest &req)
+{
+	size_t startPos = 0;
+	size_t endPos;
+	size_t queryLen = req.queryString.length();
+	std::string key, value;
+
+	while (startPos < queryLen)
+	{
+		endPos = req.queryString.find('=', startPos);
+		if (endPos == std::string::npos)
+			break;
+		key = req.queryString.substr(startPos, endPos - startPos);
+		startPos = endPos + 1;
+		endPos = req.queryString.find('&', startPos);
+
+		if (endPos == std::string::npos)
+			value = req.queryString.substr(startPos); // Last key=value pair
+		else
+			value = req.queryString.substr(startPos, endPos - startPos);
+
+		req.query[key] = value;
+
+		startPos = (endPos == std::string::npos) ? req.queryString.length() : endPos + 1;
+	}
+	return SUCCESS;
+}
+
+static int parseUri(HttpRequest &req)
+{
+	size_t pos = req.uri.find('?');
+	if (pos != std::string::npos)
+	{
+		req.path = req.uri.substr(0, pos);
+		req.queryString = req.uri.substr(pos + 1);
+		parseQueryString (req);
+	}
+	else
+	{
+		req.path = req.uri;
+		req.queryString = "";
+	}
+	if (req.path.rfind(".py") != std::string::npos || req.path.rfind(".sh") != std::string::npos)
+		req.cgi = true;
+	return SUCCESS;
+}
+
 static int parseHttpRequestLine(HttpRequest &req)
 {
 	size_t p = req.pos;
@@ -63,7 +110,7 @@ static int parseHttpRequestLine(HttpRequest &req)
 				if (uriLength != std::string::npos)
 				{
 					req.uri = req.buffer.substr(p, uriLength);
-					/* parse URI */
+					parseUri(req);
 					p += uriLength;
 					state = RL_VERSION;
 				}
@@ -131,52 +178,7 @@ static int parseHttpHeaderLine(HttpRequest &req)
 }
 
 /* parse URI ... */
-int parseUri(HttpRequest &req)
-{
-	size_t pos = req.uri.find('?');
-	if (pos != std::string::npos)
-	{
-		req.path = req.uri.substr(0, pos);
-		req.queryString = req.uri.substr(pos + 1);
-		parseQueryString (req);
-	}
-	else
-	{
-		req.path = req.uri;
-		req.queryString = "";
-	}
-	if (req.path.rfind(".py") != std::string::npos || req.path.rfind(".sh") != std::string::npos)
-		req.cgi = true;
-	return SUCCESS;	
-}
 
-int parseQueryString(HttpRequest &req)
-{
-	size_t startPos = 0;
-	size_t endPos;
-	size_t queryLen = req.queryString.length();
-	std::string key, value;
-
-	while (startPos < queryLen)
-	{
-		endPos = req.queryString.find('=', startPos);
-		if (endPos == std::string::npos)
-			break;
-		key = req.queryString.substr(startPos, endPos - startPos);
-		startPos = endPos + 1;
-		endPos = req.queryString.find('&', startPos);
-
-		if (endPos == std::string::npos)
-			value = req.queryString.substr(startPos); // Last key=value pair
-		else
-			value = req.queryString.substr(startPos, endPos - startPos);
-		
-		req.query[key] = value;
-
-		startPos = (endPos == std::string::npos) ? req.queryString.length() : endPos + 1;
-	}
-	return SUCCESS;
-}
 
 static int parseHttpBody(HttpRequest &req)
 {

@@ -21,6 +21,7 @@
 #include <cstdlib>
 #include "http_request.hpp"
 #include <pthread.h>
+#include <sys/stat.h>
 
 #define CR (u_char) 'r'
 #define LF (u_char) 'n'
@@ -106,6 +107,7 @@ void handleRequest(int clientFd, ServerContext &ServerContext);
 void handleErrorRequest(int clientFd, ServerContext &ServerContext);
 //helper
 std::string toStringInt(int number);
+int toIntString(const std::string &str);
 std::string toString(long long number);
 long long getCurrentTime();
 std::string getFileContent(std::string filePath);

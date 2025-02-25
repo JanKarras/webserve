@@ -40,7 +40,7 @@ async function login(event) {
 
 	if(loginRoute(email, password)) {
 		togglePopup('loginPopup');
-		window.location.href = `/dashboard?email=${email}`;
+		window.location.href = `/dashboard?email=${email}`; //
 	}
 }
 

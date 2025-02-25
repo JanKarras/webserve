@@ -11,3 +11,10 @@ std::string toString(long long number) {
     ss << number;
     return ss.str();
 }
+
+int toIntString(const std::string &str) {
+    std::stringstream ss(str);
+    int number;
+    ss >> number;
+    return number;
+}

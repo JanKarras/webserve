@@ -68,12 +68,14 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 		return;
 	}
 
+	int maxId = 0;
+
 	std::string line;
 	while (getline(file, line)) {
 		std::stringstream ss(line);
-		std::string emailDb, passwordDb;
+		std::string emailDb, passwordDb, idStr;
 
-		if (getline(ss, emailDb, '|') && getline(ss, passwordDb, '|')) {
+		if (getline(ss, emailDb, '|') && getline(ss, passwordDb, '|') && getline(ss, idStr, '|')) {
 			if (emailDb == email) {
 				res.statusCode = 409;
 				res.statusMessage = "Conflict";
@@ -82,6 +84,9 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 				file.close();
 				return;
 			}
+
+			maxId = toIntString(idStr);
+
 		} else {
 			std::cerr << "Error parsing line: " << line << "\n";
 			handle500(req, res);
@@ -98,8 +103,19 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 		return;
 	}
 
-	outFile << email << "|" << password << "\n";
+	maxId++;
+	std::string dirPath = "./server/files/" + toStringInt(maxId);
+
+	if (mkdir(dirPath.c_str(), 0777) != 0) {
+		std::cerr << "Error creating directory: " << dirPath << "\n";
+		handle500(req, res);
+		return;
+	}
+
+	outFile << email << "|" << password << "|" << maxId << "\n";
 	outFile.close();
+
+
 
 	res.statusCode = 201;
 	res.statusMessage = "Created";
@@ -109,30 +125,9 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 
 void uploadFile(HttpRequest &req, HttpResponse &res) {
 	printHttpRequest(req);
-	res.statusCode = req.exitStatus;
-	std::string boundary;
-	std::string contentType;
-	std::string email;
-	std::string file;
-	std::string fileName;
-
-	contentType = req.headers["Content-Type"];
-
-	if (contentType.find("multipart/form-data") == std::string::npos) {
-		handle400(req, res);
-		return;
-	}
-
-	size_t pos = contentType.find("boundary=");
-	if (pos != std::string::npos) {
-		boundary = contentType.substr(pos + 9);
-	} else {
-		std::cerr << "No boundary found in Content-Type!" << std::endl;
-		handle400(req, res);
-		return;
-	}
-
-	
+	std::cout << req.query["email"] << std::endl;
+	std::cout << req.query["fileName"] << std::endl;
 
 
+	// std::string destPath = getDestPath(req.query["fileName"]);
 }

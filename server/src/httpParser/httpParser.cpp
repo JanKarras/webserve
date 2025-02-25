@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   httpParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atoepper <atoepper@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkarras <jkarras@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 12:15:23 by jkarras           #+#    #+#             */
-/*   Updated: 2025/02/21 13:56:49 by atoepper         ###   ########.fr       */
+/*   Updated: 2025/02/25 10:36:28 by jkarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ void printHttpRequest(const HttpRequest& request) {
     std::cout << "===== HTTP REQUEST =====" << std::endl;
     std::cout << "Method: " << request.method << std::endl;
     std::cout << "URI: " << request.uri << std::endl;
+	std::cout << "Path: " << request.path << std::endl;
+	std::cout << "Query string: " << request.queryString << std::endl;
+
     std::cout << "Version: " << request.version << std::endl;
     std::cout << std::endl << "--- HEADERS ---" << std::endl;
 

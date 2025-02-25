@@ -64,14 +64,11 @@ async function loginRoute(email, password) {
 }
 
 async function uploadFile(file, email) {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('email', email);
-
+	console.log(file);
     try {
-        const response = await fetch('/uploadFile', {
+        const response = await fetch(`/uploadFile?email=${email}&fileName=${file.name}`, {
             method: 'POST',
-            body: formData
+            body: file
         });
 
         if (response.ok) {

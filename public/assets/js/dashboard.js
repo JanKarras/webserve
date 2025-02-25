@@ -1,6 +1,6 @@
 function getEmailFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-	//return "jkarras@42wolfsburg.com";
+	return "jkarras@42wolfsburg.com";
     return urlParams.get('email');
 }
 
