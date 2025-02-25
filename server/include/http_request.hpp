@@ -44,16 +44,20 @@ struct HttpRequest {
 	HttpMethod method;
 	std::string uri;
 	std::string version;
+	std::string path;
+	std::string queryString;
 	std::map<std::string, std::string> headers;
+	std::map<std::string, std::string> query;
 	std::string body;
 	std::string buffer; // Stores the accumulated raw request data
 	size_t content_length;
+	bool cgi;
     size_t pos;
 	unsigned int parseState;
 	RequestState state;
 	int exitStatus;
 	long long startTime;
-	HttpRequest() : pos (0), parseState(0), state(REQUEST_LINE) {}
+	HttpRequest() : cgi(false), pos (0), parseState(0), state(REQUEST_LINE) {}
 };
 
 std::ostream& operator<<(std::ostream& os, const HttpMethod& method);
