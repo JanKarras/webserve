@@ -22,6 +22,7 @@
 #include "http_request.hpp"
 #include <pthread.h>
 #include <sys/stat.h>
+#include <dirent.h>
 
 #define CR (u_char) 'r'
 #define LF (u_char) 'n'
@@ -73,6 +74,7 @@ struct ServerContext {
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> get;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> post;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> del;
+	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> cgi;
 };
 
 struct ConficServer {
@@ -110,6 +112,8 @@ void handleErrorRequest(int clientFd, ServerContext &ServerContext);
 std::string toStringInt(int number);
 int toIntString(const std::string &str);
 std::string toString(long long number);
+std::string getDestPath(std::string email);
+std::map<std::string, std::string> initMimeTypes( void );
 long long getCurrentTime();
 std::string getFileContent(std::string filePath);
 void closeAll(ServerContext ServerContext);
@@ -144,6 +148,10 @@ void handleRemoteStorageJs(HttpRequest &req, HttpResponse &res);
 void handleDashboard(HttpRequest &req, HttpResponse &res);
 void handleDashboardStyle(HttpRequest &req, HttpResponse &res);
 void handleDashboardJs(HttpRequest &req, HttpResponse &res);
+void handleGetFile(HttpRequest &req, HttpResponse &res);
+void getFileNames(HttpRequest &req, HttpResponse &res);
 //DELETE CONTROLLER
-
+void delteFile(HttpRequest &req, HttpResponse &res);
+//CGI CONTROLLER
+void handleLs(HttpRequest &req, HttpResponse &res);
 #endif

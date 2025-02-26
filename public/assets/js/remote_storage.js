@@ -64,7 +64,6 @@ async function loginRoute(email, password) {
 }
 
 async function uploadFile(file, email) {
-	console.log(file);
     try {
         const response = await fetch(`/uploadFile?email=${email}&fileName=${file.name}`, {
             method: 'POST',
@@ -81,4 +80,76 @@ async function uploadFile(file, email) {
 	} catch (error) {
 		return false;
 	}
+}
+
+async function getFile(fileName, email) {
+    try {
+        const response = await fetch(`/getFile?email=${email}&fileName=${fileName}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const contentType = response.headers.get('Content-Type');
+
+            if (contentType && contentType.startsWith('image')) {
+                const imageBlob = await response.blob();
+                return imageBlob;
+            }
+            else if (contentType && contentType.startsWith('application')) {
+                const textContent = await response.text();
+                return textContent;
+            }
+            else {
+                console.log('Unsupported file type:', contentType);
+                return false;
+            }
+        } else {
+            console.log(`Error fetching file: ${response.status}`);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return false;
+    }
+}
+
+
+
+async function getFileNames(email) {
+    try {
+        const response = await fetch(`/getFileNames?email=${email}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const fileList = await response.text();
+
+			const filesArray = fileList ? fileList.split(";") : [];
+
+            return filesArray;
+        } else {
+			console.log(response);
+            return [];
+        }
+	} catch (error) {
+		return [];
+	}
+}
+
+async function deleteFileRoute(fileName, email) {
+    try {
+        const response = await fetch(`/deleteFile?email=${email}&fileName=${fileName}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+			return true;
+        } else {
+            console.log(`Error fetching file: ${response.status}`);
+
+        }
+    } catch (error) {
+        console.error('Error:', error);
+
+    }
 }

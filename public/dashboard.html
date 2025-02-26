@@ -7,6 +7,10 @@
 	<script src="./assets/js/dashboard.js"></script>
 	<script src="./assets/js/remote_storage.js"></script>
 	<link rel="stylesheet" href="./assets/css/dashboard_style.css">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body onload="initDashboard()">
 	<header>
@@ -17,14 +21,36 @@
 		<section id="welcome-section" style="padding: 20px;">
 			<h1>Welcome <span id="username"></span> to your Dashboard!</h1>
 			<p>Here you can view, upload, and delete your files.</p>
-			<p>Allowed file types: <strong>JPG, PNG, SH</strong></p> <!-- Anzeige der erlaubten Dateiformate -->
-			<button class="btn" onclick="openUploadDialog()">Upload</button>
-			<input type="file" id="file-input" style="display: none;" accept=".jpg, .png, .sh" onchange="handleFileUpload(event)"> <!-- Upload-Input -->
+			<p>Allowed file types: <strong>JPG, PNG, SH</strong></p>
+			<button class="mYbtn" onclick="openUploadDialog()">Upload</button>
+			<input type="file" id="file-input" style="display: none;" accept=".jpg, .png, .sh" onchange="handleFileUpload(event)">
 		</section>
 
-		<section id="file-container" style="padding: 20px; overflow-y: auto; max-height: 400px;">
-			<!-- This will be dynamically populated with user files -->
+		<section id="file-container" class="card-wrapper">
+			<!-- Dynamic cards will be appended here -->
 		</section>
+
+		<div class="modal" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="fileModalLabel">File Preview</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="fileContent" style="max-height: 400px; overflow-y: auto;">
+							<!-- File content will go here -->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button id="executeBtn" type="button" class="btn btn-primary" onclick="executeFile()">Execute</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</main>
 
 	<footer>

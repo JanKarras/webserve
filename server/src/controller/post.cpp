@@ -124,10 +124,34 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 }
 
 void uploadFile(HttpRequest &req, HttpResponse &res) {
-	printHttpRequest(req);
-	std::cout << req.query["email"] << std::endl;
-	std::cout << req.query["fileName"] << std::endl;
+	std::string email = req.query["email"];
+	std::string fileName = req.query["fileName"];
 
+	if (email.empty() || fileName.empty()) {
+		handle400(req, res);
+		return ;
+	}
 
-	// std::string destPath = getDestPath(req.query["fileName"]);
+	std::string destPath = getDestPath(email);
+
+	if (destPath.length() == 0) {
+		handle500(req, res);
+		return;
+	}
+
+	destPath.append("/" + fileName);
+
+	std::ofstream outfile(destPath.c_str(), std::ios::binary);
+	if (!outfile) {
+		handle500(req, res);
+		return;
+	}
+
+	outfile.write(req.body.c_str(), req.body.size());
+	outfile.close();
+
+	res.statusCode = 201;
+	res.statusMessage = "Created";
+	res.body = "File uploaded successfully";
+	res.headers["Content-Type"] = "application/json";
 }
