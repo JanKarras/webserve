@@ -1,7 +1,7 @@
 #include "../../include/webserv.hpp"
 
 static const std::string validPathChars = "-_.~!$&'()*+,;=";
-static const std::string validQueryChars = "-_.~!$'()*+,;:@/?";
+static const std::string validQueryChars = "-_.~!$'()*+,;:@/";
 
 static void setRequestError(HttpRequest &req, int errType)
 {
@@ -10,9 +10,51 @@ static void setRequestError(HttpRequest &req, int errType)
 	req.exitStatus = errType;
 }
 
-static void expandPath(HttpRequest &req)
+static int resolvePath(HttpRequest &req, bool resolvePath)
 {
-	
+	if (!resolvePath)
+		return SUCCESS;
+	std::stack<std::string> dirs;  // Stack to hold directory components
+	std::stringstream stream(req.path);
+	std::string token;
+
+	while (std::getline(stream, token, '/'))
+	{
+		if (token == "." || token.empty())
+			continue;
+		else if (token == "..")
+		{
+			if (dirs.empty())
+			{
+				setRequestError(req, HTTP_FORBIDDEN);
+				return FAILURE;
+			}
+			else
+				dirs.pop();
+		}
+		else
+			dirs.push(token);
+	}
+
+    // Reconstruct the resolved path
+    std::string resolvedPath = "/";
+    std::stack<std::string> tempStack;
+    while (!dirs.empty())
+    {
+        tempStack.push(dirs.top());
+        dirs.pop();
+    }
+    // Concatenate each directory to form the final resolved path
+    while (!tempStack.empty())
+    {
+        resolvedPath += tempStack.top() + "/";
+        tempStack.pop();
+	}
+    // If the path isn't just the root, remove the last trailing slash
+    if (resolvedPath.length() > 1)
+        resolvedPath.pop_back();
+	req.path = resolvedPath;
+	return SUCCESS;
 }
 
 static int extractQuery(HttpRequest &req)
@@ -71,7 +113,7 @@ static int parseUri(HttpRequest &req)
 {
 	size_t uriLen = req.uri.length();
 	size_t queryPos;
-	bool expandPath = false;
+	bool resolve = false;
 	UriParseState state = URI_START;
 
 	for (size_t pos = 0; pos < uriLen; pos++)
@@ -81,15 +123,21 @@ static int parseUri(HttpRequest &req)
 		{
 		case URI_START:
 			if (c == '/')
-				state = URI_AFTER_BACKSLASH;
+				state = URI_AFTER_SLASH;
 			else
 				state = URI_ERROR;
 			break;
-		case URI_AFTER_BACKSLASH:
+		case URI_AFTER_SLASH:
 			if (c == '%')
 				state = URI_PERCENTAGE;
 			else if (c == '.')
 				state = URI_PATH_EXPANDER;
+			else if (c == '?')
+				{
+					req.path = req.uri.substr(0, pos);
+					queryPos = pos;
+					state = URI_QUERY;
+				}
 			else if (isValidPathIdentifier(c))
 				state = URI_PATH_SEGMENT;
 			else
@@ -99,7 +147,7 @@ static int parseUri(HttpRequest &req)
 			if (c == '%')
 				state = URI_PERCENTAGE;
 			else if (c == '/')
-				state = URI_AFTER_BACKSLASH;
+				state = URI_AFTER_SLASH;
 			else if (c == '?')
 			{
 				req.path = req.uri.substr(0, pos);
@@ -124,14 +172,14 @@ static int parseUri(HttpRequest &req)
 		case URI_PATH_EXPANDER:
 			if (c == '/')
 			{
-				expandPath = true;
-				state = URI_AFTER_BACKSLASH;
+				resolve = true;
+				state = URI_AFTER_SLASH;
 			}
 			else if (pos + 1 < uriLen && c == '.' && req.uri[pos + 1] == '/')
 			{
-				expandPath = true;
+				resolve = true;
 				pos++;
-				state = URI_AFTER_BACKSLASH;
+				state = URI_AFTER_SLASH;
 			}
 			else
 			{
@@ -202,13 +250,12 @@ static int parseUri(HttpRequest &req)
 		}
 	}
 
-	/* expand Path if neccessary */
-	if (state == URI_PATH_SEGMENT)
+	if ((state == URI_PATH_SEGMENT || state == URI_AFTER_SLASH) && resolvePath(req, resolve) == SUCCESS)
 		return SUCCESS;
-	if (state == URI_EQUAL || state == URI_VALUE)
+	if (state == URI_EQUAL || state == URI_VALUE  && resolvePath(req, resolve) == SUCCESS)
 	{
 		req.queryString = req.uri.substr(queryPos + 1);
-		/* extract queries */
+		extractQuery(req);
 		return SUCCESS;
 	}
 
