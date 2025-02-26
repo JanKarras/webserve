@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <stack>
 
 enum HttpMethod 
 { 
@@ -11,7 +12,7 @@ enum HttpMethod
 
 enum UriParseState{
 	URI_START = 0,
-	URI_AFTER_BACKSLASH,
+	URI_AFTER_SLASH,
 	URI_PATH_SEGMENT,
 	URI_PERCENTAGE,
 	URI_PATH_EXPANDER,
