@@ -157,4 +157,6 @@ void handleRemoteStorageJs(HttpResponse &res);
 void handleDashboard(HttpResponse &res);
 void handleDashboardStyle(HttpResponse &res);
 void handleDashboardJs(HttpResponse &res);
+//LOGGER
+void logger(std::string message, int code);
 #endif
