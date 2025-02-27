@@ -5,14 +5,14 @@ void delteFile(HttpRequest &req, HttpResponse &res) {
 	std::string fileName = req.query["fileName"];
 
 	if (email.empty() || fileName.empty()) {
-		handle400(req, res);
+		handle400(res);
 		return;
 	}
 
 	std::string path = getDestPath(email);
 
 	if (email.empty()) {
-		handle404(req, res);
+		handle404(res);
 		return;
 	}
 
@@ -20,10 +20,10 @@ void delteFile(HttpRequest &req, HttpResponse &res) {
 
 	if (remove(path.c_str()) != 0) {
 		std::cerr << "Fehler beim Löschen der Datei: " << std::endl;
-		handle500(req, res);
+		handle500(res);
 		return;
 	}
-	
+
 	res.statusCode = 200;
 	res.statusMessage = "OK";
 	res.body = "File deleted successfully";

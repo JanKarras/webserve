@@ -2,14 +2,14 @@
 
 void handleLogin(HttpRequest &req, HttpResponse &res) {
 	if (req.headers["Content-Type"] != "application/json") {
-		handle400(req, res);
+		handle400(res);
 		return;
 	}
 	std::ifstream file("server/src/db/loginData.csv");
 	std::map<std::string, std::string> data = parseSimpleJSON(req.body);
 
 	if(data.find("email") == data.end() || data.find("password") == data.end()) {
-		handle400(req, res);
+		handle400(res);
 		return;
 	}
 
@@ -32,29 +32,29 @@ void handleLogin(HttpRequest &req, HttpResponse &res) {
 				}
 			} else {
 				std::cerr << "Error parsing line: " << line << "\n";
-				handle500(req, res);
+				handle500(res);
 				file.close();
 				return;
 			}
 		}
-		handle401(req, res);
+		handle401(res);
 		file.close();
 	} else {
 		std::cerr << "File not found\n";
-		handle404(req, res);
+		handle404(res);
 	}
 }
 
 void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 	if (req.headers["Content-Type"] != "application/json") {
-		handle400(req, res);
+		handle400(res);
 		return;
 	}
 
 	std::map<std::string, std::string> data = parseSimpleJSON(req.body);
 
 	if (data.find("email") == data.end() || data.find("password") == data.end()) {
-		handle400(req, res);
+		handle400(res);
 		return;
 	}
 
@@ -64,7 +64,7 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 	std::ifstream file("server/src/db/loginData.csv");
 	if (!file) {
 		std::cerr << "File not found\n";
-		handle404(req, res);
+		handle404(res);
 		return;
 	}
 
@@ -89,7 +89,7 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 
 		} else {
 			std::cerr << "Error parsing line: " << line << "\n";
-			handle500(req, res);
+			handle500(res);
 			file.close();
 			return;
 		}
@@ -99,7 +99,7 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 	std::ofstream outFile("server/src/db/loginData.csv", std::ios::app);
 	if (!outFile) {
 		std::cerr << "Error opening file for writing\n";
-		handle500(req, res);
+		handle500(res);
 		return;
 	}
 
@@ -108,7 +108,7 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 
 	if (mkdir(dirPath.c_str(), 0777) != 0) {
 		std::cerr << "Error creating directory: " << dirPath << "\n";
-		handle500(req, res);
+		handle500(res);
 		return;
 	}
 
@@ -128,14 +128,14 @@ void uploadFile(HttpRequest &req, HttpResponse &res) {
 	std::string fileName = req.query["fileName"];
 
 	if (email.empty() || fileName.empty()) {
-		handle400(req, res);
+		handle400(res);
 		return ;
 	}
 
 	std::string destPath = getDestPath(email);
 
 	if (destPath.length() == 0) {
-		handle500(req, res);
+		handle500(res);
 		return;
 	}
 
@@ -143,7 +143,7 @@ void uploadFile(HttpRequest &req, HttpResponse &res) {
 
 	std::ofstream outfile(destPath.c_str(), std::ios::binary);
 	if (!outfile) {
-		handle500(req, res);
+		handle500(res);
 		return;
 	}
 

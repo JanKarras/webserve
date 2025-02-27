@@ -14,7 +14,7 @@ void handleRequest(int clientFd, ServerContext &ServerContext) {
 	} else if (req.method == DELETE) {
 		routeRequestDELETE(req, res, ServerContext);
 	} else {
-		handle405(req, res);
+		handle405(res);
 	}
 
 	res.version = req.version;

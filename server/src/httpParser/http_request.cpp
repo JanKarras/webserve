@@ -10,77 +10,261 @@ static void setRequestError(HttpRequest &req, int errType)
 	req.exitStatus = errType;
 }
 
-static bool isValidPathIdentifier(char c)
-{
-	if (validPathChars.find(c) != std::string::npos || isalnum(c))
-		return true;
-	return false;
-}
+// static bool isValidPathIdentifier(char c)
+// {
+// 	if (validPathChars.find(c) != std::string::npos || isalnum(c))
+// 		return true;
+// 	return false;
+// }
 
-static bool isValidQueryIdentifier(char c)
-{
-	if (validQueryChars.find(c) != std::string::npos || isalnum(c))
-		return true;
-	return false;
-}
+// static bool isValidQueryIdentifier(char c)
+// {
+// 	if (validQueryChars.find(c) != std::string::npos || isalnum(c))
+// 		return true;
+// 	return false;
+// }
 
-static char hexToAscii(const std::string& hex)
-{
-	int value;
-	std::stringstream ss;
-	ss << std::hex << hex;
-	ss >> value;
-	return static_cast<char>(value);
-}
+// static char hexToAscii(const std::string& hex)
+// {
+// 	int value;
+// 	std::stringstream ss;
+// 	ss << std::hex << hex;
+// 	ss >> value;
+// 	return static_cast<char>(value);
+// }
 
-static int resolvePath(HttpRequest &req, bool resolvePath)
-{
-	if (!resolvePath)
-		return SUCCESS;
-	std::stack<std::string> dirs;  // Stack to hold directory components
-	std::stringstream stream(req.path);
-	std::string token;
+// static int resolvePath(HttpRequest &req, bool resolvePath)
+// {
+// 	if (!resolvePath)
+// 		return SUCCESS;
+// 	std::stack<std::string> dirs;  // Stack to hold directory components
+// 	std::stringstream stream(req.path);
+// 	std::string token;
 
-	while (std::getline(stream, token, '/'))
-	{
-		if (token == "." || token.empty())
-			continue;
-		else if (token == "..")
-		{
-			if (dirs.empty())
-			{
-				setRequestError(req, HTTP_FORBIDDEN);
-				return FAILURE;
-			}
-			else
-				dirs.pop();
-		}
-		else
-			dirs.push(token);
-	}
+// 	while (std::getline(stream, token, '/'))
+// 	{
+// 		if (token == "." || token.empty())
+// 			continue;
+// 		else if (token == "..")
+// 		{
+// 			if (dirs.empty())
+// 			{
+// 				setRequestError(req, HTTP_FORBIDDEN);
+// 				return FAILURE;
+// 			}
+// 			else
+// 				dirs.pop();
+// 		}
+// 		else
+// 			dirs.push(token);
+// 	}
 
-    // Reconstruct the resolved path
-    std::string resolvedPath = "/";
-    std::stack<std::string> tempStack;
-    while (!dirs.empty())
-    {
-        tempStack.push(dirs.top());
-        dirs.pop();
-    }
-    // Concatenate each directory to form the final resolved path
-    while (!tempStack.empty())
-    {
-        resolvedPath += tempStack.top() + "/";
-        tempStack.pop();
-	}
-    // If the path isn't just the root, remove the last trailing slash
-    if (resolvedPath.length() > 1)
-        resolvedPath.pop_back();
-	req.path = resolvedPath;
-	return SUCCESS;
-}
+// 	// Reconstruct the resolved path
+// 	std::string resolvedPath = "/";
+// 	std::stack<std::string> tempStack;
+// 	while (!dirs.empty())
+// 	{
+// 		tempStack.push(dirs.top());
+// 		dirs.pop();
+// 	}
+// 	// Concatenate each directory to form the final resolved path
+// 	while (!tempStack.empty())
+// 	{
+// 		resolvedPath += tempStack.top() + "/";
+// 		tempStack.pop();
+// 	}
+// 	// If the path isn't just the root, remove the last trailing slash
+// 	if (resolvedPath.length() > 1)
+// 		resolvedPath.pop_back();
+// 	req.path = resolvedPath;
+// 	return SUCCESS;
+// }
 
-static int extractQuery(HttpRequest &req)
+// static int extractQuery(HttpRequest &req)
+// {
+// 	size_t startPos = 0;
+// 	size_t endPos;
+// 	size_t queryLen = req.queryString.length();
+// 	std::string key, value;
+
+// 	while (startPos < queryLen)
+// 	{
+// 		endPos = req.queryString.find('=', startPos);
+// 		if (endPos == std::string::npos)
+// 			break;
+// 		key = req.queryString.substr(startPos, endPos - startPos);
+// 		startPos = endPos + 1;
+// 		endPos = req.queryString.find('&', startPos);
+
+// 		if (endPos == std::string::npos)
+// 			value = req.queryString.substr(startPos); // Last key=value pair
+// 		else
+// 			value = req.queryString.substr(startPos, endPos - startPos);
+
+// 		req.query[key] = value;
+
+// 		startPos = (endPos == std::string::npos) ? req.queryString.length() : endPos + 1;
+// 	}
+// 	return SUCCESS;
+// }
+
+
+/* final URI parser */
+// static int parseUri(HttpRequest &req)
+// {
+// 	size_t uriLen = req.uri.length();
+// 	size_t queryPos;
+// 	bool resolve = false;
+// 	UriParseState state = URI_START;
+
+// 	for (size_t pos = 0; pos < uriLen; pos++)
+// 	{
+// 		char c = req.uri[pos];
+// 		switch (state)
+// 		{
+// 		case URI_START:
+// 			if (c == '/')
+// 				state = URI_AFTER_SLASH;
+// 			else
+// 				state = URI_ERROR;
+// 			break;
+// 		case URI_AFTER_SLASH:
+// 			if (c == '%')
+// 				state = URI_PERCENTAGE;
+// 			else if (c == '.')
+// 				state = URI_PATH_EXPANDER;
+// 			else if (c == '?')
+// 				{
+// 					req.path = req.uri.substr(0, pos);
+// 					queryPos = pos;
+// 					state = URI_QUERY;
+// 				}
+// 			else if (isValidPathIdentifier(c))
+// 				state = URI_PATH_SEGMENT;
+// 			else
+// 				state = URI_ERROR;
+// 			break;
+// 		case URI_PATH_SEGMENT:
+// 			if (c == '%')
+// 				state = URI_PERCENTAGE;
+// 			else if (c == '/')
+// 				state = URI_AFTER_SLASH;
+// 			else if (c == '?')
+// 			{
+// 				req.path = req.uri.substr(0, pos);
+// 				queryPos = pos;
+// 				state = URI_QUERY;
+// 			}
+// 			else if (isValidPathIdentifier(c))
+// 				state = URI_PATH_SEGMENT;
+// 			else
+// 				state = URI_ERROR;
+// 			break;
+// 		case URI_PERCENTAGE:
+// 			if (pos + 1 < uriLen && isxdigit(c) && isxdigit(req.uri[pos + 1]))
+// 			{
+// 				char ascii = hexToAscii(req.uri.substr(pos, 2));
+// 				req.uri.replace(pos - 1, 3, 1, ascii);
+// 				state =  URI_PATH_SEGMENT;
+// 			}
+// 			else
+// 				state = URI_ERROR;
+// 			break;
+// 		case URI_PATH_EXPANDER:
+// 			if (c == '/')
+// 			{
+// 				resolve = true;
+// 				state = URI_AFTER_SLASH;
+// 			}
+// 			else if (pos + 1 < uriLen && c == '.' && req.uri[pos + 1] == '/')
+// 			{
+// 				resolve = true;
+// 				pos++;
+// 				state = URI_AFTER_SLASH;
+// 			}
+// 			else
+// 			{
+// 				pos--;
+// 				state = URI_PATH_SEGMENT;
+// 			}
+// 			break;
+// 		case URI_QUERY:
+// 			if (isValidQueryIdentifier(c))
+// 				state = URI_KEY;
+// 			else
+// 				state = URI_ERROR;
+// 			break;
+// 		case URI_KEY:
+// 			if (c == '=')
+// 				state = URI_EQUAL;
+// 			else if (c == '%')
+// 				state = URI_PERCENTAGE_KEY;
+// 			else if (isValidQueryIdentifier(c))
+// 				state = URI_KEY;
+// 			else
+// 				state = URI_ERROR;
+// 			break;
+// 		case URI_EQUAL:
+// 			if (c == '&')
+// 				state = URI_QUERY;
+// 			else if (isValidQueryIdentifier(c))
+// 				state = URI_VALUE;
+// 			else
+// 				state = URI_ERROR;
+// 			break;
+// 		case URI_VALUE:
+// 			if (c == '&')
+// 				state = URI_QUERY;
+// 			else if (c == '%')
+// 					state = URI_PERCENTAGE_VALUE;
+// 			else if (isValidQueryIdentifier(c))
+// 				state = URI_VALUE;
+// 			else
+// 				state = URI_ERROR;
+// 			break;
+// 		case URI_PERCENTAGE_KEY:
+// 			if (pos + 1 < uriLen && isxdigit(c) && isxdigit(req.uri[pos + 1]))
+// 			{
+// 				char ascii = hexToAscii(req.uri.substr(pos, 2));
+// 				req.uri.replace(pos - 1, 3, 1, ascii);
+// 				state =  URI_PATH_SEGMENT;
+// 			}
+// 			else
+// 				state = URI_KEY;
+// 			break;
+// 		case URI_PERCENTAGE_VALUE:
+// 			if (pos + 1 < uriLen && isxdigit(c) && isxdigit(req.uri[pos + 1]))
+// 			{
+// 				char ascii = hexToAscii(req.uri.substr(pos, 2));
+// 				req.uri.replace(pos - 1, 3, 1, ascii);
+// 				state =  URI_VALUE;
+// 			}
+// 			else
+// 				state = URI_ERROR;
+// 			break;
+// 		case URI_ERROR:
+// 			setRequestError(req, HTTP_BAD_REQUEST);
+// 			return FAILURE;
+// 			break;
+// 		default:
+// 			break;
+// 		}
+// 	}
+
+// 	if ((state == URI_PATH_SEGMENT || state == URI_AFTER_SLASH) && resolvePath(req, resolve) == SUCCESS)
+// 		return SUCCESS;
+// 	if (state == URI_EQUAL || state == URI_VALUE  && resolvePath(req, resolve) == SUCCESS)
+// 	{
+// 		req.queryString = req.uri.substr(queryPos + 1);
+// 		extractQuery(req);
+// 		return SUCCESS;
+// 	}
+
+// 	setRequestError(req, HTTP_BAD_REQUEST);
+// 	return FAILURE;
+// }
+
+static int parseQueryString(HttpRequest &req)
 {
 	size_t startPos = 0;
 	size_t endPos;
@@ -108,160 +292,24 @@ static int extractQuery(HttpRequest &req)
 	return SUCCESS;
 }
 
-
-/* final URI parser */
+/*  provisionally uri parser */
 static int parseUri(HttpRequest &req)
 {
-	size_t uriLen = req.uri.length();
-	size_t queryPos;
-	bool resolve = false;
-	UriParseState state = URI_START;
-
-	for (size_t pos = 0; pos < uriLen; pos++)
+	size_t pos = req.uri.find('?');
+	if (pos != std::string::npos)
 	{
-		char c = req.uri[pos];
-		switch (state)
-		{
-		case URI_START:
-			if (c == '/')
-				state = URI_AFTER_SLASH;
-			else
-				state = URI_ERROR;
-			break;
-		case URI_AFTER_SLASH:
-			if (c == '%')
-				state = URI_PERCENTAGE;
-			else if (c == '.')
-				state = URI_PATH_EXPANDER;
-			else if (c == '?')
-				{
-					req.path = req.uri.substr(0, pos);
-					queryPos = pos;
-					state = URI_QUERY;
-				}
-			else if (isValidPathIdentifier(c))
-				state = URI_PATH_SEGMENT;
-			else
-				state = URI_ERROR;
-			break;
-		case URI_PATH_SEGMENT:
-			if (c == '%')
-				state = URI_PERCENTAGE;
-			else if (c == '/')
-				state = URI_AFTER_SLASH;
-			else if (c == '?')
-			{
-				req.path = req.uri.substr(0, pos);
-				queryPos = pos;
-				state = URI_QUERY;
-			}
-			else if (isValidPathIdentifier(c))
-				state = URI_PATH_SEGMENT;
-			else
-				state = URI_ERROR;
-			break;
-		case URI_PERCENTAGE:
-			if (pos + 1 < uriLen && isxdigit(c) && isxdigit(req.uri[pos + 1]))
-			{
-				char ascii = hexToAscii(req.uri.substr(pos, 2));
-				req.uri.replace(pos - 1, 3, 1, ascii);
-				state =  URI_PATH_SEGMENT;
-			}
-			else
-				state = URI_ERROR;
-			break;
-		case URI_PATH_EXPANDER:
-			if (c == '/')
-			{
-				resolve = true;
-				state = URI_AFTER_SLASH;
-			}
-			else if (pos + 1 < uriLen && c == '.' && req.uri[pos + 1] == '/')
-			{
-				resolve = true;
-				pos++;
-				state = URI_AFTER_SLASH;
-			}
-			else
-			{
-				pos--;
-				state = URI_PATH_SEGMENT;
-			}
-			break;
-		case URI_QUERY:
-			if (isValidQueryIdentifier(c))
-				state = URI_KEY;
-			else 
-				state = URI_ERROR;
-			break;
-		case URI_KEY:
-			if (c == '=')
-				state = URI_EQUAL;
-			else if (c == '%')
-				state = URI_PERCENTAGE_KEY;
-			else if (isValidQueryIdentifier(c))
-				state = URI_KEY;
-			else
-				state = URI_ERROR;
-			break;
-		case URI_EQUAL:
-			if (c == '&')
-				state = URI_QUERY;
-			else if (isValidQueryIdentifier(c))
-				state = URI_VALUE;
-			else
-				state = URI_ERROR;
-			break;
-		case URI_VALUE:
-			if (c == '&')
-				state = URI_QUERY;
-			else if (c == '%')
-					state = URI_PERCENTAGE_VALUE;
-			else if (isValidQueryIdentifier(c))
-				state = URI_VALUE;
-			else
-				state = URI_ERROR; 
-			break;
-		case URI_PERCENTAGE_KEY:
-			if (pos + 1 < uriLen && isxdigit(c) && isxdigit(req.uri[pos + 1]))
-			{
-				char ascii = hexToAscii(req.uri.substr(pos, 2));
-				req.uri.replace(pos - 1, 3, 1, ascii);
-				state =  URI_PATH_SEGMENT;
-			}
-			else
-				state = URI_KEY;
-			break;
-		case URI_PERCENTAGE_VALUE:
-			if (pos + 1 < uriLen && isxdigit(c) && isxdigit(req.uri[pos + 1]))
-			{
-				char ascii = hexToAscii(req.uri.substr(pos, 2));
-				req.uri.replace(pos - 1, 3, 1, ascii);
-				state =  URI_VALUE;
-			}
-			else
-				state = URI_ERROR;
-			break;
-		case URI_ERROR:
-			setRequestError(req, HTTP_BAD_REQUEST);
-			return FAILURE;
-			break;
-		default:
-			break;
-		}
+		req.path = req.uri.substr(0, pos);
+		req.queryString = req.uri.substr(pos + 1);
+		parseQueryString (req);
 	}
-
-	if ((state == URI_PATH_SEGMENT || state == URI_AFTER_SLASH) && resolvePath(req, resolve) == SUCCESS)
-		return SUCCESS;
-	if (state == URI_EQUAL || state == URI_VALUE  && resolvePath(req, resolve) == SUCCESS)
+	else
 	{
-		req.queryString = req.uri.substr(queryPos + 1);
-		extractQuery(req);
-		return SUCCESS;
+		req.path = req.uri;
+		req.queryString = "";
 	}
-
-	setRequestError(req, HTTP_BAD_REQUEST);
-	return FAILURE;
+	if (req.path.rfind(".py") != std::string::npos || req.path.rfind(".sh") != std::string::npos)
+		req.cgi = true;
+	return SUCCESS;
 }
 
 static int parseHttpRequestLine(HttpRequest &req)
@@ -424,50 +472,4 @@ void parseHttpRequest(HttpRequest &req, std::string &data)
 
 
 
-/* static int parseQueryString(HttpRequest &req)
-{
-	size_t startPos = 0;
-	size_t endPos;
-	size_t queryLen = req.queryString.length();
-	std::string key, value;
 
-	while (startPos < queryLen)
-	{
-		endPos = req.queryString.find('=', startPos);
-		if (endPos == std::string::npos)
-			break;
-		key = req.queryString.substr(startPos, endPos - startPos);
-		startPos = endPos + 1;
-		endPos = req.queryString.find('&', startPos);
-
-		if (endPos == std::string::npos)
-			value = req.queryString.substr(startPos); // Last key=value pair
-		else
-			value = req.queryString.substr(startPos, endPos - startPos);
-
-		req.query[key] = value;
-
-		startPos = (endPos == std::string::npos) ? req.queryString.length() : endPos + 1;
-	}
-	return SUCCESS;
-} */
-
-/*  provisionally uri parser */
-/* static int parseUri(HttpRequest &req)
-{
-	size_t pos = req.uri.find('?');
-	if (pos != std::string::npos)
-	{
-		req.path = req.uri.substr(0, pos);
-		req.queryString = req.uri.substr(pos + 1);
-		parseQueryString (req);
-	}
-	else
-	{
-		req.path = req.uri;
-		req.queryString = "";
-	}
-	if (req.path.rfind(".py") != std::string::npos || req.path.rfind(".sh") != std::string::npos)
-		req.cgi = true;
-	return SUCCESS;
-} */

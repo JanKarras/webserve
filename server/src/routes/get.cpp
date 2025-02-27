@@ -2,11 +2,12 @@
 
 void routeRequestGET(HttpRequest &req, HttpResponse &res, ServerContext serverContext) {
 	if (req.cgi) {
-		
+
 	} else if (serverContext.get.find(req.path) != serverContext.get.end()) {
 		serverContext.get[req.path](req, res);
+	} else if (serverContext.pages.find(req.path) != serverContext.pages.end()) {
+		serverContext.pages[req.path](res);
 	} else {
-		std::cout << "asdasdasdas\n";
-		handle404(req, res);
+		handle404(res);
 	}
 }

@@ -75,6 +75,7 @@ struct ServerContext {
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> post;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> del;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> cgi;
+	std::map<std::string, void (*)(HttpResponse &)> pages;
 };
 
 struct ConficServer {
@@ -131,27 +132,29 @@ void handleLogin(HttpRequest &req, HttpResponse &res);
 void handleCreateAccount(HttpRequest &req, HttpResponse &res);
 void uploadFile(HttpRequest &req, HttpResponse &res);
 //GET CONTROLLER
-void handle400(HttpRequest &req, HttpResponse &res);
-void handle401(HttpRequest &req, HttpResponse &res);
-void handle403(HttpRequest &req, HttpResponse &res);
-void handle404(HttpRequest &req, HttpResponse &res);
-void handle405(HttpRequest &req, HttpResponse &res);
-void handle500(HttpRequest &req, HttpResponse &res);
-void handleHome(HttpRequest &req, HttpResponse &res);
-void handleIndexSstyle(HttpRequest &req, HttpResponse &res);
-void handleIndexJs(HttpRequest &req, HttpResponse &res);
-void handleIndexImgJkarras(HttpRequest &req, HttpResponse &res);
-void handleIndexImgAtoepper(HttpRequest &req, HttpResponse &res);
-void handleIndexImgRmathes(HttpRequest &req, HttpResponse &res);
-void handleIndexImgLogo(HttpRequest &req, HttpResponse &res);
-void handleRemoteStorageJs(HttpRequest &req, HttpResponse &res);
-void handleDashboard(HttpRequest &req, HttpResponse &res);
-void handleDashboardStyle(HttpRequest &req, HttpResponse &res);
-void handleDashboardJs(HttpRequest &req, HttpResponse &res);
 void handleGetFile(HttpRequest &req, HttpResponse &res);
 void getFileNames(HttpRequest &req, HttpResponse &res);
 //DELETE CONTROLLER
 void delteFile(HttpRequest &req, HttpResponse &res);
 //CGI CONTROLLER
 void handleLs(HttpRequest &req, HttpResponse &res);
+//PAGES
+void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage);
+void handle400(HttpResponse &res);
+void handle401(HttpResponse &res);
+void handle403(HttpResponse &res);
+void handle404(HttpResponse &res);
+void handle405(HttpResponse &res);
+void handle500(HttpResponse &res);
+void handleHome(HttpResponse &res);
+void handleIndexSstyle(HttpResponse &res);
+void handleIndexJs(HttpResponse &res);
+void handleIndexImgJkarras(HttpResponse &res);
+void handleIndexImgAtoepper(HttpResponse &res);
+void handleIndexImgRmathes(HttpResponse &res);
+void handleIndexImgLogo(HttpResponse &res);
+void handleRemoteStorageJs(HttpResponse &res);
+void handleDashboard(HttpResponse &res);
+void handleDashboardStyle(HttpResponse &res);
+void handleDashboardJs(HttpResponse &res);
 #endif
