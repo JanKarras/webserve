@@ -44,7 +44,8 @@ enum RequestLineState{
 
 enum HeaderLineState{
 	HL_START = 0,
-	HL_NAME,
+	HL_KEY,
+	HL_COLON,
 	HL_VALUE,
 	HL_DONE,
 	HL_ERROR

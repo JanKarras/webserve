@@ -10,6 +10,29 @@ static void setRequestError(HttpRequest &req, int errType)
 	req.exitStatus = errType;
 }
 
+static bool isValidPathIdentifier(char c)
+{
+	if (validPathChars.find(c) != std::string::npos || isalnum(c))
+		return true;
+	return false;
+}
+
+static bool isValidQueryIdentifier(char c)
+{
+	if (validQueryChars.find(c) != std::string::npos || isalnum(c))
+		return true;
+	return false;
+}
+
+static char hexToAscii(const std::string& hex)
+{
+	int value;
+	std::stringstream ss;
+	ss << std::hex << hex;
+	ss >> value;
+	return static_cast<char>(value);
+}
+
 static int resolvePath(HttpRequest &req, bool resolvePath)
 {
 	if (!resolvePath)
@@ -85,28 +108,6 @@ static int extractQuery(HttpRequest &req)
 	return SUCCESS;
 }
 
-static bool isValidPathIdentifier(char c)
-{
-	if (validPathChars.find(c) != std::string::npos || isalnum(c))
-		return true;
-	return false;
-}
-
-static bool isValidQueryIdentifier(char c)
-{
-	if (validQueryChars.find(c) != std::string::npos || isalnum(c))
-		return true;
-	return false;
-}
-
-static char hexToAscii(const std::string& hex)
-{
-	int value;
-	std::stringstream ss;
-	ss << std::hex << hex;
-	ss >> value;
-	return static_cast<char>(value);
-}
 
 /* final URI parser */
 static int parseUri(HttpRequest &req)
@@ -314,6 +315,7 @@ static int parseHttpRequestLine(HttpRequest &req)
 				{
 					req.uri = req.buffer.substr(p, uriLength);
 					parseUri(req);
+					/* check for cgi */
 					p += uriLength;
 					state = RL_VERSION;
 				}
