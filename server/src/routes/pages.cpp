@@ -2,7 +2,6 @@
 
 void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage) {
 	res.body = getFileContent(filePath);
-	std::cout << statusCode << std::endl;
 	if (res.body.empty()) {
 		res.body = "<html><body><h1>" + defaultMessage + "</h1></body></html>";
 	}
@@ -10,7 +9,6 @@ void handleFileResponse(HttpResponse &res, const std::string &filePath, const st
 	res.headers["Content-Type"] = contentType;
 	res.headers["Content-Length"] = toStringInt(res.body.size());
 	res.statusCode = statusCode;
-	std::cout << res.statusCode << std::endl;
 }
 
 void handle400(HttpResponse &res) {
