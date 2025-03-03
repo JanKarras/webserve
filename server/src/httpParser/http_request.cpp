@@ -59,23 +59,23 @@ static int resolvePath(HttpRequest &req, bool resolvePath)
 			dirs.push(token);
 	}
 
-    // Reconstruct the resolved path
-    std::string resolvedPath = "/";
-    std::stack<std::string> tempStack;
-    while (!dirs.empty())
-    {
-        tempStack.push(dirs.top());
-        dirs.pop();
-    }
-    // Concatenate each directory to form the final resolved path
-    while (!tempStack.empty())
-    {
-        resolvedPath += tempStack.top() + "/";
-        tempStack.pop();
+	// Reconstruct the resolved path
+	std::string resolvedPath = "/";
+	std::stack<std::string> tempStack;
+	while (!dirs.empty())
+	{
+		tempStack.push(dirs.top());
+		dirs.pop();
 	}
-    // If the path isn't just the root, remove the last trailing slash
-    if (resolvedPath.length() > 1)
-        resolvedPath.pop_back();
+	// Concatenate each directory to form the final resolved path
+	while (!tempStack.empty())
+	{
+		resolvedPath += tempStack.top() + "/";
+		tempStack.pop();
+	}
+	// If the path isn't just the root, remove the last trailing slash
+	if (resolvedPath.length() > 1)
+		resolvedPath.erase(resolvedPath.length() - 1);
 	req.path = resolvedPath;
 	return SUCCESS;
 }
@@ -252,8 +252,11 @@ static int parseUri(HttpRequest &req)
 	}
 
 	if ((state == URI_PATH_SEGMENT || state == URI_AFTER_SLASH) && resolvePath(req, resolve) == SUCCESS)
+	{
+		req.path = req.uri;
 		return SUCCESS;
-	if (state == URI_EQUAL || state == URI_VALUE  && resolvePath(req, resolve) == SUCCESS)
+	}
+	if ((state == URI_EQUAL || state == URI_VALUE) && resolvePath(req, resolve) == SUCCESS)
 	{
 		req.queryString = req.uri.substr(queryPos + 1);
 		extractQuery(req);
@@ -356,6 +359,32 @@ static int parseHttpRequestLine(HttpRequest &req)
 	return SUCCESS;
 }
 
+static int parseHttpHeaderLineCorr(HttpRequest &req)
+{
+	size_t p;
+	while (!req.buffer.empty() && req.state != COMPLETE) {
+		p = req.buffer.find("\r\n");
+		if (p == std::string::npos)
+			break;
+
+		std::string line = req.buffer.substr(0, p);
+		req.buffer.erase(0, p + 2);  // Remove line + CRLF
+
+		if (line.empty()) {
+			req.state = req.headers.count("Content-Length") ? BODY : COMPLETE;
+			break;
+		}
+
+		size_t splitPos = line.find(":");
+		if (splitPos != std::string::npos) {
+			std::string key = line.substr(0, splitPos);
+			std::string value = line.substr(splitPos + 2);
+			req.headers[key] = value;
+		}
+	}
+	return 0;
+}
+
 /* to be corrected */
 static int parseHttpHeaderLine(HttpRequest &req)
 {
@@ -382,6 +411,8 @@ static int parseHttpHeaderLine(HttpRequest &req)
 	}
 	return 0;
 }
+
+
 
 /* to be corrected */
 static int parseHttpBody(HttpRequest &req)
