@@ -17,6 +17,7 @@ void initPAGES(std::map<std::string, void (*)(HttpResponse &)> &pages) {
 void initGET(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &get) {
 	get["/getFile"] = handleGetFile;
 	get["/getFileNames"] = getFileNames;
+	get["/checkRootPassword"] = checkRootPassword;
 }
 
 void initPOST(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &post) {
@@ -29,9 +30,10 @@ void initDEL(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &del
 	del["/deleteFile"] = delteFile;
 }
 
-void initCGI(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &cgi) {
+void initCGI(std::map<std::string, void (*)(HttpRequest &, HttpResponse &, ServerContext &, int)> &cgi) {
 	cgi["/cgi/ls.sh"] = handleLs;
-	cgi["/cgi/ls.php"] = handleLs;
+	cgi["/cgi/loop.sh"] = handleLoop;
+	cgi["/executeSkript/test.sh"] = executeSkript;
 	cgi["/cgi/ls.py"] = handleLs;
 }
 

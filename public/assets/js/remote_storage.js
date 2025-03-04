@@ -155,3 +155,39 @@ async function deleteFileRoute(fileName, email) {
 }
 
 
+async function checkRootPassword(password) {
+    try {
+        const response = await fetch(`/checkRootPassword?password=${password}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+			return true;
+        } else {
+            console.log(`Error fetching file: ${response.status}`);
+			return false;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+
+    }
+}
+
+async function executeSkript(fileName, email) {
+    try {
+        const response = await fetch(`/executeSkript/test.sh?fileName=${fileName}&email=${email}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+			console.log(await response.text());
+			return true;
+        } else {
+            console.log(`Error fetching file: ${response.status}`);
+			return false;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+
+    }
+}

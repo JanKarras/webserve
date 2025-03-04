@@ -35,6 +35,7 @@
 #define PORT 8080
 #define CHUNK_SIZE 1024
 #define BUFFER_SIZE 1024
+#define TIME_TO_KILL_CHILD 10
 
 #define HTTP_BAD_REQUEST 400
 #define HTTP_FORBIDDEN 403
@@ -71,10 +72,12 @@ struct ServerContext {
 	int epollFd;
 	std::map<int, HttpRequest> requests;
 	std::map<int, HttpResponse> responses;
+	std::map<int, int> fds;
+	std::map<int, pid_t> pids;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> get;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> post;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> del;
-	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> cgi;
+	std::map<std::string, void (*)(HttpRequest &, HttpResponse &, ServerContext &, int)> cgi;
 	std::map<std::string, void (*)(HttpResponse &)> pages;
 };
 
@@ -127,6 +130,8 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, ServerContext serverC
 void routeRequestGET(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //DELETE ROUTES
 void routeRequestDELETE(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
+//CGI ROUTES
+void routeRequestCGI(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
 //POST CONTROLLER
 void handleLogin(HttpRequest &req, HttpResponse &res);
 void handleCreateAccount(HttpRequest &req, HttpResponse &res);
@@ -134,10 +139,13 @@ void uploadFile(HttpRequest &req, HttpResponse &res);
 //GET CONTROLLER
 void handleGetFile(HttpRequest &req, HttpResponse &res);
 void getFileNames(HttpRequest &req, HttpResponse &res);
+void checkRootPassword(HttpRequest &req, HttpResponse &res);
 //DELETE CONTROLLER
 void delteFile(HttpRequest &req, HttpResponse &res);
 //CGI CONTROLLER
-void handleLs(HttpRequest &req, HttpResponse &res);
+void handleLs(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
+void handleLoop(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
+void executeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
 //PAGES
 void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage);
 void handle400(HttpResponse &res);

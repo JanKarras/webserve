@@ -79,3 +79,21 @@ void getFileNames(HttpRequest &req, HttpResponse &res) {
 	res.body = fileList;
 	res.headers["Content-Type"] = "text/plain";
 }
+
+void checkRootPassword(HttpRequest &req, HttpResponse &res) {
+	std::string password = req.query["password"];
+
+	if (password.empty()) {
+		handle400(res);
+		return;
+	}
+
+	if (password == "cvwKg3bqRootPassword") {
+		res.statusCode = 200;
+		res.statusMessage = "OK";
+		res.headers["Content-Type"] = "text/plain";
+	} else {
+		handle403(res);
+	}
+
+}

@@ -18,3 +18,4 @@ std::string getFileContent(std::string filePath) {
 	}
 	return body;
 }
+
