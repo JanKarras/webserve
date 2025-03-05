@@ -18,6 +18,7 @@ void initGET(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &get
 	get["/getFile"] = handleGetFile;
 	get["/getFileNames"] = getFileNames;
 	get["/checkRootPassword"] = checkRootPassword;
+	get["/getBigBody"] = getBigMessage;
 }
 
 void initPOST(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &post) {

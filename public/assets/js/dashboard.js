@@ -113,6 +113,16 @@ function openFileModal(fileName, file, email) {
     modal.modal('show');
 }
 
+function closeModal() {
+    const modal = $('#fileModal');
+    modal.modal('hide');
+
+    $('.modal-backdrop').remove();
+
+    $('body').removeClass('modal-open');
+}
+
+
 async function deleteFile(fileName, email) {
 	await deleteFileRoute(fileName, email);
 	await renderFiles(email);
@@ -120,17 +130,21 @@ async function deleteFile(fileName, email) {
 
 async function executeFile(fileName, email) {
 	document.getElementById("fileContent").innerHTML += `
+	<div id="rootpasswordContainer">
 		<label for="rootPassword">Please enter root password:</label>
         <input type="password" id="rootPassword" placeholder="Root Password" required>
         <button type="button" id="submitPasswordBtn">Submit</button>
         <p id="errorMessage" style="color: red; display: none;">Incorrect password. Please try again.</p>
+	</div>
 	`
-
+	document.getElementById("executeBtn").style.display = "none";
 	document.getElementById("submitPasswordBtn").onclick = async function() {
         const password = document.getElementById("rootPassword").value;
 
-        if (await checkRootPassword(password)) {
-			executeSkript(fileName, email);
+		if (await checkRootPassword(password)) {
+			executeSkript(fileName, email, password);
+			document.getElementById("rootpasswordContainer").style.display = "none";
+			
 		} else {
 			document.getElementById("errorMessage").style.display = 'block';
 		}

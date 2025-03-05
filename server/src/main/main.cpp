@@ -4,8 +4,9 @@ int main(int argc, char **argv) {
 
 	ConficData data;
 
+
 	if (argc > 2) {
-		logger("Bad arg number", 3);
+		Logger::log(ERROR_LOG, "Bad number of arguments. Provided: %i Allowed: 0 || 1", argc - 1);
 		return (1);
 	} else if (argc == 2) {
 		if (parseConfic(std::string(argv[1]), &data)) {

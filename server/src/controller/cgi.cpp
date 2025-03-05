@@ -3,7 +3,18 @@
 void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd, std::string path) {
 	int pipeFd[2];
 
-	std::cout << path << std::endl;
+
+	if (access(path.c_str(), F_OK) == -1) {
+		std::cerr << "Error: Script does not exist: " << path << "\n";
+		handle500(res);
+		return;
+	}
+
+	if (access(path.c_str(), X_OK) == -1) {
+		std::cerr << "Error: Script is not executable: " << path << ")\n";
+		handle500(res);
+		return;
+	}
 
 	if(pipe(pipeFd) == -1) {
 		std::cout << "pipeError\n";
@@ -21,6 +32,7 @@ void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext
 	if (pid == 0) {
 		close(pipeFd[0]);
 		dup2(pipeFd[1], STDOUT_FILENO);
+		dup2(pipeFd[1], STDERR_FILENO);
 		close(pipeFd[1]);
 
 		char *argv[] = { const_cast<char*>(path.c_str()), NULL };
@@ -54,15 +66,19 @@ void handleLoop(HttpRequest &req, HttpResponse &res, ServerContext &serverContex
 void executeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd) {
 	std::string email = req.query["email"];
 	std::string fileName = req.query["fileName"];
+	std::string password = req.query["password"];
 
-	if (email.empty() || fileName.empty()) {
+	if (email.empty() || fileName.empty() || password.empty()) {
 		handle404(res);
 		return;
 	}
 
-	std::string path = getDestPath(email);
+	if (password != "cvwKg3bqRootPassword") {
+		handle403(res);
+		return;
+	}
 
-	std::cout << path << std::endl;
+	std::string path = getDestPath(email);
 
 	if (path.length() == 0) {
 		handle500(res);

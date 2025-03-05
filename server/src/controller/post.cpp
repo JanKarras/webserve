@@ -126,8 +126,24 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 void uploadFile(HttpRequest &req, HttpResponse &res) {
 	std::string email = req.query["email"];
 	std::string fileName = req.query["fileName"];
+	std::string contentType = req.headers["Content-Type"];
 
-	if (email.empty() || fileName.empty()) {
+	if (email.empty() || fileName.empty() || contentType.empty()) {
+		handle400(res);
+		return ;
+	}
+
+	bool isExecutable = false;
+
+	if (contentType == "image/jpeg") {
+		;
+	} else if (contentType == "image/png") {
+		;
+	} else if (contentType == "application/x-sh") {
+		isExecutable = true;
+	} else if (contentType == "application/x-shellscript") {
+		isExecutable = true;
+	} else {
 		handle400(res);
 		return ;
 	}
@@ -149,6 +165,13 @@ void uploadFile(HttpRequest &req, HttpResponse &res) {
 
 	outfile.write(req.body.c_str(), req.body.size());
 	outfile.close();
+
+	if (isExecutable) {
+		if (!setsetExecutable(destPath)) {
+			handle500(res);
+			return;
+		}
+	}
 
 	res.statusCode = 201;
 	res.statusMessage = "Created";

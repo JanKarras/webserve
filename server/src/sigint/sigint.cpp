@@ -9,14 +9,18 @@ void handle_sigint(int sig, siginfo_t *siginfo, void *context) {
 	running = false;
 }
 
+void handleSigPipe(int signal) {
+	std::cout << signal << std::endl;
+}
+
 bool initSignal(void) {
 	struct sigaction sa;
 	sa.sa_sigaction = handle_sigint;
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
-
+	signal(SIGPIPE, handleSigPipe);
 	if (sigaction(SIGINT, &sa, NULL) == -1) {
-		std::cerr << "SigInt error!" << std::endl;
+		Logger::log(ERROR_LOG, "Failed to initalize ctrl + c signal");
 		return (false);
 	}
 	return (true);

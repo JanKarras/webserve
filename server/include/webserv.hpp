@@ -20,9 +20,12 @@
 #include <ctime>
 #include <cstdlib>
 #include "http_request.hpp"
+#include "../classes/header/Logger.hpp"
 #include <pthread.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #define CR (u_char) 'r'
 #define LF (u_char) 'n'
@@ -35,7 +38,8 @@
 #define PORT 8080
 #define CHUNK_SIZE 1024
 #define BUFFER_SIZE 1024
-#define TIME_TO_KILL_CHILD 10
+#define TIME_TO_KILL_CHILD 50
+#define BIG_BODY_SIZE 10485760
 
 #define HTTP_BAD_REQUEST 400
 #define HTTP_FORBIDDEN 403
@@ -113,6 +117,7 @@ bool initSignal(void);
 void handleRequest(int clientFd, ServerContext &ServerContext);
 void handleErrorRequest(int clientFd, ServerContext &ServerContext);
 //helper
+bool setsetExecutable(std::string &filePath);
 std::string toStringInt(int number);
 int toIntString(const std::string &str);
 std::string toString(long long number);
@@ -140,6 +145,7 @@ void uploadFile(HttpRequest &req, HttpResponse &res);
 void handleGetFile(HttpRequest &req, HttpResponse &res);
 void getFileNames(HttpRequest &req, HttpResponse &res);
 void checkRootPassword(HttpRequest &req, HttpResponse &res);
+void getBigMessage(HttpRequest &req, HttpResponse &res);
 //DELETE CONTROLLER
 void delteFile(HttpRequest &req, HttpResponse &res);
 //CGI CONTROLLER
@@ -165,6 +171,4 @@ void handleRemoteStorageJs(HttpResponse &res);
 void handleDashboard(HttpResponse &res);
 void handleDashboardStyle(HttpResponse &res);
 void handleDashboardJs(HttpResponse &res);
-//LOGGER
-void logger(std::string message, int code);
 #endif

@@ -97,3 +97,12 @@ void checkRootPassword(HttpRequest &req, HttpResponse &res) {
 	}
 
 }
+
+void getBigMessage(HttpRequest &req, HttpResponse &res) {
+	for (size_t i = 0; i < 10485760; i++) {
+		res.body.append("a");
+	}
+	res.version = req.version;
+	res.statusCode = 200;
+	res.statusMessage = "Send big Body succsessfully\n";
+}

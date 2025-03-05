@@ -31,7 +31,7 @@ bool handleEventRes(ServerContext &ServerContext, struct epoll_event *events, in
 			char buffer[CHUNK_SIZE];
 			int readPipeFd = ServerContext.fds[events[i].data.fd];
 			long long time = getCurrentTime();
-			if (time - response.startTime > 10000000) {
+			if (time - response.startTime > TIME_TO_KILL_CHILD * 1000000) {
 				kill(ServerContext.pids[events[i].data.fd], SIGTERM);
 				close(readPipeFd);
 				close(events[i].data.fd);
