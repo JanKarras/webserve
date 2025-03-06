@@ -108,8 +108,6 @@ static int extractQuery(HttpRequest &req)
 	return SUCCESS;
 }
 
-
-/* final URI parser */
 static int parseUri(HttpRequest &req)
 {
 	size_t uriLen = req.uri.length();
@@ -273,6 +271,7 @@ static int parseHttpRequestLine(HttpRequest &req)
 	size_t uriLength;
 	RequestLineState state = static_cast<RequestLineState>(req.parseState);
 	size_t buffer_length = req.buffer.length();
+
 	for (; p < buffer_length; p++)
 	{
 		u_char c = req.buffer[p];
@@ -359,101 +358,303 @@ static int parseHttpRequestLine(HttpRequest &req)
 	return SUCCESS;
 }
 
-static int parseHttpHeaderLineCorr(HttpRequest &req)
-{
-	size_t p;
-	while (!req.buffer.empty() && req.state != COMPLETE) {
-		p = req.buffer.find("\r\n");
-		if (p == std::string::npos)
-			break;
-
-		std::string line = req.buffer.substr(0, p);
-		req.buffer.erase(0, p + 2);  // Remove line + CRLF
-
-		if (line.empty()) {
-			req.state = req.headers.count("Content-Length") ? BODY : COMPLETE;
-			break;
-		}
-
-		size_t splitPos = line.find(":");
-		if (splitPos != std::string::npos) {
-			std::string key = line.substr(0, splitPos);
-			std::string value = line.substr(splitPos + 2);
-			req.headers[key] = value;
-		}
-	}
-	return 0;
-}
-
-/* to be corrected */
 static int parseHttpHeaderLine(HttpRequest &req)
 {
-	size_t p;
-	while (!req.buffer.empty() && req.state != COMPLETE) {
-		p = req.buffer.find("\r\n");
-		if (p == std::string::npos)
-			break;
+	size_t pos = req.pos;
+	size_t keyPos, valPos;
+	HeaderLineState state = static_cast<HeaderLineState>(req.parseState);
+	size_t buffer_length = req.buffer.length();
 
-		std::string line = req.buffer.substr(0, p);
-		req.buffer.erase(0, p + 2);  // Remove line + CRLF
-
-		if (line.empty()) {
-			req.state = req.headers.count("Content-Length") ? BODY : COMPLETE;
-			break;
-		}
-
-		size_t splitPos = line.find(":");
-		if (splitPos != std::string::npos) {
-			std::string key = line.substr(0, splitPos);
-			std::string value = line.substr(splitPos + 2);
-			req.headers[key] = value;
-		}
-	}
-	return 0;
-}
-
-
-
-/* to be corrected */
-static int parseHttpBody(HttpRequest &req)
-{
-	req.body.append(req.buffer);
-	req.buffer.clear();
-
-	if (req.headers.count("Content-Length"))
+	for (; pos < buffer_length; pos++)
 	{
-		char *endptr = NULL;
-		unsigned long contentLength = strtoul(req.headers["Content-Length"].c_str(), &endptr, 10);
+		u_char c = req.buffer[pos];
 
-		// Check if conversion was successful
-		if (*endptr != '\0') {
-			setRequestError(req, HTTP_BAD_REQUEST);
-			return FAILURE;
-		}
-
-		if (req.body.size() >= contentLength)
+		switch (state)
 		{
-			req.state = COMPLETE;
+			case (HL_START):
+				if (isalnum(c))
+					state = HL_KEY;
+				else if (c == '\r')
+					state = HL_DONE;
+				else
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;
+				break;
+			case (HL_KEY):
+				if (c == ':')
+				{
+					req.currentKey = req.buffer.substr(0, pos);
+					req.buffer.erase(0, pos);
+					pos = 0;
+					req.headers[req.currentKey];
+					state = HL_COLON;
+				}
+				else if (c != '-' && !isalnum(c))
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;
+				}	
+				break;
+			case (HL_COLON):
+				if (c == ' ' || c == '\t')
+				{
+					state = HL_VALUE;
+				}
+				else if (c == 'r')
+					state = HL_END_OF_FIELD;
+				else
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;					
+				}
+				break;
+			case (HL_VALUE):
+				if (c == ',' || c == ';')
+				{
+					req.headers[req.currentKey].push_back(req.buffer.substr(2, pos - 2));
+					req.buffer.erase (0, pos);
+					state = HL_COLON;
+				}
+				else if (c == '\r')
+				{
+					req.headers[req.currentKey].push_back(req.buffer.substr(2, pos - 2));
+					req.buffer.erase (0, pos);
+					state = HL_END_OF_FIELD;
+				}
+				else if (c == '\"')
+					state = HL_DOUBLE_QUOTES;
+				else if (c < 33 || c > 126)
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;					
+				}
+					break;
+				break;
+			case (HL_DOUBLE_QUOTES):
+				if (c == '\"')
+					state = HL_VALUE;
+				if (c == '\\')
+					state = HL_ESCAPE_CHAR;
+				else if (c == '\r' || c == '\n')
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;						
+				}
+				break;
+			case (HL_ESCAPE_CHAR):
+				if (c == '\"' || c == '\\') 
+				{
+					// req.buffer.replace(pos - 1, 2, "\"");
+					// pos--;
+					state = HL_DOUBLE_QUOTES;
+				}
+				else
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;
+				}
+				break;
+			case (HL_END_OF_FIELD):
+				if (c != '\n')
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;
+				}
+				state = HL_FOLDING;
+				break;
+			case (HL_FOLDING):
+				if (isalnum(c) && !req.folding)
+					state = HL_KEY;
+				else if (c == '\r')
+					state = HL_DONE;
+				else if (c > 33 && c < 126 && req.folding)
+				{
+					req.buffer.erase(0, pos - 2);
+					pos = 2;
+					req.folding = false;
+					state = HL_VALUE;
+				}
+				else if (c == ' ' || c == '\t')
+					req.folding = true;
+				else 
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;					
+				}
+				break;
+			case (HL_DONE):
+				if (c != '\n')
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;
+				}
+				req.buffer.erase(0, pos + 1);
+				req.pos = 0;
+				std::map<std::string, std::vector<std::string>>::iterator it = req.headers.find("Transfer-Encoding");
+				if (it != req.headers.end() && it->second[0] == "chunked")
+					req.state = BODY_CHUNKED;
+				else if (req.headers.find("Content-Length") != req.headers.end())
+				{
+					req.content_length = atol(req.headers["Content-Length"][0].c_str());
+					if (req.content_length < 0)
+					{
+						setRequestError(req, HTTP_BAD_REQUEST);
+						return FAILURE;
+					}
+					req.state = BODY;
+				}
+				else
+					req.state = NO_BODY;
+				req.parseState = 0;
+				return SUCCESS;
+			default:
+				setRequestError(req, HTTP_BAD_REQUEST);
+				return FAILURE;
 		}
+		buffer_length = req.buffer.length();
 	}
+	req.pos = pos;
+	req.parseState = static_cast<int>(state);
 	return SUCCESS;
 }
 
-void parseHttpRequest(HttpRequest &req, std::string &data)
+static int parseHttpNoBody(HttpRequest &req)
 {
-    req.buffer.append(data);
+	if (!req.buffer.empty())
+	{
+		setRequestError(req, HTTP_BAD_REQUEST);
+		return FAILURE;
+	}
+	req.state = COMPLETE;
+	return SUCCESS;
+}
 
-    if (req.state == REQUEST_LINE)
-        if (parseHttpRequestLine(req) == FAILURE) return;
+static int parseHttpBody(HttpRequest &req)
+{
+	size_t pos = req.pos;
+	size_t bufferLen = req.buffer.length();
 
-    if (req.state == HEADERS)
-        if (parseHttpHeaderLine(req) == FAILURE) return;
+	size_t remainingBytes = req.content_length - req.body.size();
+	if (bufferLen > remainingBytes)
+	{
+		setRequestError(req, HTTP_BAD_REQUEST);
+		return FAILURE;
+	}
 
-    if (req.state == BODY)
-        parseHttpBody(req);
+	req.body.append(req.buffer, 0, bufferLen);
+	req.buffer.erase(0, bufferLen);
+	req.pos = 0;
+
+	if (req.body.size() == req.content_length)
+		req.state = COMPLETE;
+		return SUCCESS;
+}
+
+static int parseHttpBodyChunked(HttpRequest &req)
+{
+	BodyState state = static_cast<BodyState>(req.parseState);
+	while (!req.buffer.empty())
+	{
+		switch (state)
+		{
+			case B_CHUNK_SIZE:
+			{
+				size_t pos = req.buffer.find("\r\n");
+				if (pos == std::string::npos) // Incomplete chunk size
+					return SUCCESS;
+
+				// Convert hex size to integer
+				std::string hexSize = req.buffer.substr(0, pos);
+				char *endptr;
+				long chunkSize = strtol(hexSize.c_str(), &endptr, 16);
+				if (*endptr != '\0' || chunkSize < 0) // Invalid size
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;
+				}
+
+				req.chunkSize = chunkSize;
+				req.buffer.erase(0, pos + 2); // Remove size line
+				state = (chunkSize == 0) ? B_CHUNK_TRAILER : B_CHUNK_DATA;
+				break;
+			}
+
+			case B_CHUNK_DATA:
+			{
+				if (req.buffer.length() < req.chunkSize + 2) // Wait for full chunk
+					return SUCCESS;
+
+				req.body.append(req.buffer, 0, req.chunkSize);
+				req.buffer.erase(0, req.chunkSize + 2); // Remove chunk + \r\n
+				state = B_CHUNK_SIZE;
+				break;
+			}
+
+			case B_CHUNK_TRAILER:
+			{
+				if (req.buffer.length() < 2) // Trailer must be \r\n
+					return SUCCESS;
+
+				if (req.buffer.substr(0, 2) != "\r\n") // Invalid trailer
+				{
+					setRequestError(req, HTTP_BAD_REQUEST);
+					return FAILURE;
+				}
+
+				req.buffer.erase(0, 2); // Remove final \r\n
+				req.state = COMPLETE;
+				return SUCCESS;
+			}
+		}
+	}
 }
 
 
+
+void parseHttpRequest(HttpRequest &req, std::string &data)
+{
+	req.buffer.append(data);
+	
+    if (req.state == REQUEST_LINE)
+		if (parseHttpRequestLine(req) == FAILURE) return;
+	
+    if (req.state == HEADERS)
+		if (parseHttpHeaderLine(req) == FAILURE) return;
+	
+	if (req.state == NO_BODY)
+		if (parseHttpNoBody(req) == FAILURE) return;
+	
+	if (req.state == BODY_CHUNKED)
+		if (parseHttpBodyChunked(req) == FAILURE) return;
+	
+    if (req.state == BODY)
+		if (parseHttpBody(req) == FAILURE) return;
+}
+
+/* to be corrected */
+// static int parseHttpBody(HttpRequest &req)
+// {
+// 	req.body.append(req.buffer);
+// 	req.buffer.clear();
+	
+// 	if (req.headers.count("Content-Length"))
+// 	{
+// 		char *endptr = NULL;
+// 		unsigned long contentLength = strtoul(req.headers["Content-Length"].c_str(), &endptr, 10);
+		
+// 		// Check if conversion was successful
+// 		if (*endptr != '\0') {
+// 			setRequestError(req, HTTP_BAD_REQUEST);
+// 			return FAILURE;
+// 		}
+		
+// 		if (req.body.size() >= contentLength)
+// 		{
+// 			req.state = COMPLETE;
+// 		}
+// 	}
+// 	return SUCCESS;
+// }
 
 /* static int parseQueryString(HttpRequest &req)
 {
@@ -461,23 +662,23 @@ void parseHttpRequest(HttpRequest &req, std::string &data)
 	size_t endPos;
 	size_t queryLen = req.queryString.length();
 	std::string key, value;
-
+	
 	while (startPos < queryLen)
 	{
 		endPos = req.queryString.find('=', startPos);
 		if (endPos == std::string::npos)
-			break;
+		break;
 		key = req.queryString.substr(startPos, endPos - startPos);
 		startPos = endPos + 1;
 		endPos = req.queryString.find('&', startPos);
-
+		
 		if (endPos == std::string::npos)
-			value = req.queryString.substr(startPos); // Last key=value pair
+		value = req.queryString.substr(startPos); // Last key=value pair
 		else
-			value = req.queryString.substr(startPos, endPos - startPos);
-
+		value = req.queryString.substr(startPos, endPos - startPos);
+		
 		req.query[key] = value;
-
+		
 		startPos = (endPos == std::string::npos) ? req.queryString.length() : endPos + 1;
 	}
 	return SUCCESS;
@@ -499,6 +700,33 @@ void parseHttpRequest(HttpRequest &req, std::string &data)
 		req.queryString = "";
 	}
 	if (req.path.rfind(".py") != std::string::npos || req.path.rfind(".sh") != std::string::npos)
-		req.cgi = true;
+	req.cgi = true;
 	return SUCCESS;
 } */
+
+/* to be corrected */
+// static int parseHttpHeaderLine(HttpRequest &req)
+// {
+// 	size_t p;
+// 	while (!req.buffer.empty() && req.state != COMPLETE) {
+// 		p = req.buffer.find("\r\n");
+// 		if (p == std::string::npos)
+// 			break;
+
+// 		std::string line = req.buffer.substr(0, p);
+// 		req.buffer.erase(0, p + 2);  // Remove line + CRLF
+
+// 		if (line.empty()) {
+// 			req.state = req.headers.count("Content-Length") ? BODY : COMPLETE;
+// 			break;
+// 		}
+
+// 		size_t splitPos = line.find(":");
+// 		if (splitPos != std::string::npos) {
+// 			std::string key = line.substr(0, splitPos);
+// 			std::string value = line.substr(splitPos + 2);
+// 			req.headers[key].push_back(value);
+// 		}
+// 	}
+// 	return 0;
+// }

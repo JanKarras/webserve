@@ -28,7 +28,9 @@ enum UriParseState{
 enum RequestState {
 	REQUEST_LINE = 0,
 	HEADERS,
+	NO_BODY,
 	BODY,
+	BODY_CHUNKED,
 	COMPLETE,
 	ERROR
 };
@@ -47,15 +49,24 @@ enum HeaderLineState{
 	HL_KEY,
 	HL_COLON,
 	HL_VALUE,
+	HL_END_OF_FIELD,
+	HL_FOLDING,
+	HL_DOUBLE_QUOTES,
+	HL_ESCAPE_CHAR,
 	HL_DONE,
 	HL_ERROR
 };
 
 enum BodyState{
 	B_START = 0,
+	B_CHUNK_SIZE,
+	B_CHUNK_DATA,
+	B_CHUNK_TRAILER,
 	B_DONE,
 	B_ERROR,
 };
+
+
 
 struct HttpRequest {
 	HttpMethod method;
@@ -63,18 +74,22 @@ struct HttpRequest {
 	std::string version;
 	std::string path;
 	std::string queryString;
-	std::map<std::string, std::string> headers;
+	std::map<std::string, std::vector<std::string>> headers;
 	std::map<std::string, std::string> query;
 	std::string body;
 	std::string buffer; // Stores the accumulated raw request data
 	size_t content_length;
 	bool cgi;
     size_t pos;
+	bool folding;
+	std::string currentKey;
+	size_t chunkSize;
+	
 	unsigned int parseState;
 	RequestState state;
 	int exitStatus;
 	long long startTime;
-	HttpRequest() : cgi(false), pos (0), parseState(0), state(REQUEST_LINE) {}
+	HttpRequest() : cgi(false), pos (0), folding (false), currentKey(""), parseState(0), state(REQUEST_LINE) {}
 };
 
 std::ostream& operator<<(std::ostream& os, const HttpMethod& method);
