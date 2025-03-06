@@ -3,7 +3,7 @@
 bool initServer(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event) {
 	ServerContext.serverFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (ServerContext.serverFd == -1) {
-		Logger::log(ERROR_LOG, "Failed to create socket.");
+		Logger::error("Failed to create socket.");
 		return false;
 	}
 
