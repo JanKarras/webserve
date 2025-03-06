@@ -20,9 +20,12 @@
 #include <ctime>
 #include <cstdlib>
 #include "http_request.hpp"
+#include "../classes/header/Logger.hpp"
 #include <pthread.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #define CR (u_char) 'r'
 #define LF (u_char) 'n'
@@ -35,6 +38,8 @@
 #define PORT 8080
 #define CHUNK_SIZE 1024
 #define BUFFER_SIZE 1024
+#define TIME_TO_KILL_CHILD 50
+#define BIG_BODY_SIZE 10485760
 
 #define HTTP_BAD_REQUEST 400
 #define HTTP_FORBIDDEN 403
@@ -71,10 +76,13 @@ struct ServerContext {
 	int epollFd;
 	std::map<int, HttpRequest> requests;
 	std::map<int, HttpResponse> responses;
+	std::map<int, int> fds;
+	std::map<int, pid_t> pids;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> get;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> post;
 	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> del;
-	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> cgi;
+	std::map<std::string, void (*)(HttpRequest &, HttpResponse &, ServerContext &, int)> cgi;
+	std::map<std::string, void (*)(HttpResponse &)> pages;
 };
 
 struct ConficServer {
@@ -109,6 +117,7 @@ bool initSignal(void);
 void handleRequest(int clientFd, ServerContext &ServerContext);
 void handleErrorRequest(int clientFd, ServerContext &ServerContext);
 //helper
+bool setsetExecutable(std::string &filePath);
 std::string toStringInt(int number);
 int toIntString(const std::string &str);
 std::string toString(long long number);
@@ -126,32 +135,40 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, ServerContext serverC
 void routeRequestGET(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //DELETE ROUTES
 void routeRequestDELETE(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
+//CGI ROUTES
+void routeRequestCGI(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
 //POST CONTROLLER
 void handleLogin(HttpRequest &req, HttpResponse &res);
 void handleCreateAccount(HttpRequest &req, HttpResponse &res);
 void uploadFile(HttpRequest &req, HttpResponse &res);
 //GET CONTROLLER
-void handle400(HttpRequest &req, HttpResponse &res);
-void handle401(HttpRequest &req, HttpResponse &res);
-void handle403(HttpRequest &req, HttpResponse &res);
-void handle404(HttpRequest &req, HttpResponse &res);
-void handle405(HttpRequest &req, HttpResponse &res);
-void handle500(HttpRequest &req, HttpResponse &res);
-void handleHome(HttpRequest &req, HttpResponse &res);
-void handleIndexSstyle(HttpRequest &req, HttpResponse &res);
-void handleIndexJs(HttpRequest &req, HttpResponse &res);
-void handleIndexImgJkarras(HttpRequest &req, HttpResponse &res);
-void handleIndexImgAtoepper(HttpRequest &req, HttpResponse &res);
-void handleIndexImgRmathes(HttpRequest &req, HttpResponse &res);
-void handleIndexImgLogo(HttpRequest &req, HttpResponse &res);
-void handleRemoteStorageJs(HttpRequest &req, HttpResponse &res);
-void handleDashboard(HttpRequest &req, HttpResponse &res);
-void handleDashboardStyle(HttpRequest &req, HttpResponse &res);
-void handleDashboardJs(HttpRequest &req, HttpResponse &res);
 void handleGetFile(HttpRequest &req, HttpResponse &res);
 void getFileNames(HttpRequest &req, HttpResponse &res);
+void checkRootPassword(HttpRequest &req, HttpResponse &res);
+void getBigMessage(HttpRequest &req, HttpResponse &res);
 //DELETE CONTROLLER
 void delteFile(HttpRequest &req, HttpResponse &res);
 //CGI CONTROLLER
-void handleLs(HttpRequest &req, HttpResponse &res);
+void handleLs(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
+void handleLoop(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
+void executeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
+//PAGES
+void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage);
+void handle400(HttpResponse &res);
+void handle401(HttpResponse &res);
+void handle403(HttpResponse &res);
+void handle404(HttpResponse &res);
+void handle405(HttpResponse &res);
+void handle500(HttpResponse &res);
+void handleHome(HttpResponse &res);
+void handleIndexSstyle(HttpResponse &res);
+void handleIndexJs(HttpResponse &res);
+void handleIndexImgJkarras(HttpResponse &res);
+void handleIndexImgAtoepper(HttpResponse &res);
+void handleIndexImgRmathes(HttpResponse &res);
+void handleIndexImgLogo(HttpResponse &res);
+void handleRemoteStorageJs(HttpResponse &res);
+void handleDashboard(HttpResponse &res);
+void handleDashboardStyle(HttpResponse &res);
+void handleDashboardJs(HttpResponse &res);
 #endif

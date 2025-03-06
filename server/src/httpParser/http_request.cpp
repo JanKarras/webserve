@@ -10,54 +10,54 @@ static void setRequestError(HttpRequest &req, int errType)
 	req.exitStatus = errType;
 }
 
-static bool isValidPathIdentifier(char c)
-{
-	if (validPathChars.find(c) != std::string::npos || isalnum(c))
-		return true;
-	return false;
-}
+// static bool isValidPathIdentifier(char c)
+// {
+// 	if (validPathChars.find(c) != std::string::npos || isalnum(c))
+// 		return true;
+// 	return false;
+// }
 
-static bool isValidQueryIdentifier(char c)
-{
-	if (validQueryChars.find(c) != std::string::npos || isalnum(c))
-		return true;
-	return false;
-}
+// static bool isValidQueryIdentifier(char c)
+// {
+// 	if (validQueryChars.find(c) != std::string::npos || isalnum(c))
+// 		return true;
+// 	return false;
+// }
 
-static char hexToAscii(const std::string& hex)
-{
-	int value;
-	std::stringstream ss;
-	ss << std::hex << hex;
-	ss >> value;
-	return static_cast<char>(value);
-}
+// static char hexToAscii(const std::string& hex)
+// {
+// 	int value;
+// 	std::stringstream ss;
+// 	ss << std::hex << hex;
+// 	ss >> value;
+// 	return static_cast<char>(value);
+// }
 
-static int resolvePath(HttpRequest &req, bool resolvePath)
-{
-	if (!resolvePath)
-		return SUCCESS;
-	std::stack<std::string> dirs;  // Stack to hold directory components
-	std::stringstream stream(req.path);
-	std::string token;
+// static int resolvePath(HttpRequest &req, bool resolvePath)
+// {
+// 	if (!resolvePath)
+// 		return SUCCESS;
+// 	std::stack<std::string> dirs;  // Stack to hold directory components
+// 	std::stringstream stream(req.path);
+// 	std::string token;
 
-	while (std::getline(stream, token, '/'))
-	{
-		if (token == "." || token.empty())
-			continue;
-		else if (token == "..")
-		{
-			if (dirs.empty())
-			{
-				setRequestError(req, HTTP_FORBIDDEN);
-				return FAILURE;
-			}
-			else
-				dirs.pop();
-		}
-		else
-			dirs.push(token);
-	}
+// 	while (std::getline(stream, token, '/'))
+// 	{
+// 		if (token == "." || token.empty())
+// 			continue;
+// 		else if (token == "..")
+// 		{
+// 			if (dirs.empty())
+// 			{
+// 				setRequestError(req, HTTP_FORBIDDEN);
+// 				return FAILURE;
+// 			}
+// 			else
+// 				dirs.pop();
+// 		}
+// 		else
+// 			dirs.push(token);
+// 	}
 
 	// Reconstruct the resolved path
 	std::string resolvedPath = "/";

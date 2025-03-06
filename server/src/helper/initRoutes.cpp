@@ -1,19 +1,24 @@
 #include "../../include/webserv.hpp"
 
+void initPAGES(std::map<std::string, void (*)(HttpResponse &)> &pages) {
+	pages["/"] = handleHome;
+	pages["/assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg"] = handleIndexImgLogo;
+	pages["/assets/img/atoepper.png"] = handleIndexImgAtoepper;
+	pages["/assets/img/jkarras.png"] = handleIndexImgJkarras;
+	pages["/assets/img/rmatthes.png"] = handleIndexImgRmathes;
+	pages["/assets/css/index_style.css"] = handleIndexSstyle;
+	pages["/assets/js/dashboard.js"] = handleDashboardJs;
+	pages["/assets/css/dashboard_style.css"] = handleDashboardStyle;
+	pages["/assets/js/index.js"] = handleIndexJs;
+	pages["/assets/js/remote_storage.js"] = handleRemoteStorageJs;
+	pages["/dashboard"] = handleDashboard;
+}
+
 void initGET(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &get) {
-	get["/"] = handleHome;
-	get["/assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg"] = handleIndexImgLogo;
-	get["/assets/img/atoepper.png"] = handleIndexImgAtoepper;
-	get["/assets/img/jkarras.png"] = handleIndexImgJkarras;
-	get["/assets/img/rmatthes.png"] = handleIndexImgRmathes;
-	get["/assets/css/index_style.css"] = handleIndexSstyle;
-	get["/assets/js/dashboard.js"] = handleDashboardJs;
-	get["/assets/css/dashboard_style.css"] = handleDashboardStyle;
-	get["/assets/js/index.js"] = handleIndexJs;
-	get["/assets/js/remote_storage.js"] = handleRemoteStorageJs;
-	get["/dashboard"] = handleDashboard;
 	get["/getFile"] = handleGetFile;
 	get["/getFileNames"] = getFileNames;
+	get["/checkRootPassword"] = checkRootPassword;
+	get["/getBigBody"] = getBigMessage;
 }
 
 void initPOST(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &post) {
@@ -26,8 +31,11 @@ void initDEL(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &del
 	del["/deleteFile"] = delteFile;
 }
 
-void initCGI(std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> &cgi) {
-	cgi["/ls"] = handleLs;
+void initCGI(std::map<std::string, void (*)(HttpRequest &, HttpResponse &, ServerContext &, int)> &cgi) {
+	cgi["/cgi/ls.sh"] = handleLs;
+	cgi["/cgi/loop.sh"] = handleLoop;
+	cgi["/executeSkript/test.sh"] = executeSkript;
+	cgi["/cgi/ls.py"] = handleLs;
 }
 
 void initRoutes(ServerContext &serverContext) {
@@ -35,4 +43,7 @@ void initRoutes(ServerContext &serverContext) {
 	initPOST(serverContext.post);
 	initDEL(serverContext.del);
 	initCGI(serverContext.cgi);
+	initPAGES(serverContext.pages);
 }
+
+

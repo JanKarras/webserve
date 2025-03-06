@@ -14,7 +14,6 @@ bool handleEventReq(ServerContext &ServerContext, struct epoll_event *events, in
 	} else {
 		data.append(buffer, bytesRead);
 		parseHttpRequest(ServerContext.requests[events[i].data.fd], data);
-		//printHttpRequest(ServerContext.requests[events[i].data.fd]);
 		if (ServerContext.requests[events[i].data.fd].state == COMPLETE) {
 			handleRequest(events[i].data.fd, ServerContext);
 		} else if (ServerContext.requests[events[i].data.fd].state == ERROR) {

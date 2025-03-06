@@ -153,3 +153,69 @@ async function deleteFileRoute(fileName, email) {
 
     }
 }
+
+
+async function checkRootPassword(password) {
+    try {
+        const response = await fetch(`/checkRootPassword?password=${password}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+			return true;
+        } else {
+            console.log(`Error fetching file: ${response.status}`);
+			return false;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+
+    }
+}
+
+async function executeSkript(fileName, email, password) {
+    try {
+        const response = await fetch(`/executeSkript/test.sh?fileName=${fileName}&email=${email}&password=${password}`, {
+            method: 'GET'
+        });
+
+        if (!response.body) {
+            console.error("No response body received.");
+            return false;
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        const terminalContainer = document.getElementById("fileContent");
+        terminalContainer.innerHTML += "<div id='terminal' class='terminal'></div>";
+        const terminal = document.getElementById("terminal");
+
+        // Scrollen zum neuesten Inhalt
+        terminal.scrollTop = terminal.scrollHeight;
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+
+            // Konvertiere Zeilenumbrüche zu <br> oder einer neuen <div>
+            const formattedChunk = chunk.replace(/\n/g, '<br>'); // Zeilenumbrüche zu <br> machen
+
+            // Füge den formatierten Text dem Terminal hinzu
+            terminal.innerHTML += formattedChunk;
+
+            // Sicherstellen, dass das Terminal immer nach unten scrollt
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+		terminal.innerHTML += "Execution finished."
+        return true;
+
+    } catch (error) {
+        console.error('Error:', error);
+        return false;
+    }
+}
+
+

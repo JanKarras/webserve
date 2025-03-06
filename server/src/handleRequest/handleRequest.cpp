@@ -8,13 +8,17 @@ void handleRequest(int clientFd, ServerContext &ServerContext) {
 	HttpResponse &res = ServerContext.responses[clientFd];
 
 	if (req.method == GET) {
-		routeRequestGET(req, res, ServerContext);
+		if(req.cgi && ServerContext.cgi.find(req.path) != ServerContext.cgi.end()) {
+			routeRequestCGI(req, res, ServerContext, clientFd);
+		} else {
+			routeRequestGET(req, res, ServerContext);
+		}
 	} else if (req.method == POST) {
 		routeRequestPOST(req, res, ServerContext);
 	} else if (req.method == DELETE) {
 		routeRequestDELETE(req, res, ServerContext);
 	} else {
-		handle405(req, res);
+		handle405(res);
 	}
 
 	res.version = req.version;

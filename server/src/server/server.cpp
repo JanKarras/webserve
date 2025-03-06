@@ -42,6 +42,8 @@ void startServer(ConficData &conficData, bool conficFlag) {
 		}
 	}
 
+	std::cout << "test\n";
+
 	closeAll(ServerContext);
 }
 

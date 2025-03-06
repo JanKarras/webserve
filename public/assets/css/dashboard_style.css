@@ -51,7 +51,7 @@ footer a{
 	display: flex;
 	flex-wrap: wrap;
 	gap: 2px;
-	justify-content: space-between;
+	justify-content: start;
 	padding-left: 20px;
 	padding-right: 20px;
 	overflow-y: auto;
@@ -63,7 +63,7 @@ footer a{
 }
 
 .card {
-	width: 32%;
+	width: 33%;
 	max-height: 400px;
 	box-sizing: border-box;
 	border: 1px solid #ddd;
@@ -109,4 +109,35 @@ footer a{
 
 .trash-icon:hover {
 	color: red;
+}
+
+/* Terminal Container */
+.terminal {
+    width: 100%;               /* Breite des Containers */
+    height: 400px;             /* Feste Höhe für das Terminal */
+    overflow-y: auto;          /* Scrollen in vertikaler Richtung */
+    background-color: black;  /* Hintergrundfarbe */
+    color: white;              /* Textfarbe */
+    font-family: 'Courier New', Courier, monospace; /* Monospace Schriftart */
+    padding: 10px;             /* Innenabstand */
+    box-sizing: border-box;    /* Sicherstellen, dass Padding in der Größe berücksichtigt wird */
+    white-space: pre-wrap;     /* Erlaubt Zeilenumbrüche und langen Text ohne Abschneiden */
+    font-size: 14px;           /* Schriftgröße */
+    border: 2px solid #333;    /* Border, um es wie ein Terminal aussehen zu lassen */
+    border-radius: 5px;        /* Abgerundete Ecken */
+    margin-top: 10px;          /* Abstand nach oben */
+}
+
+/* Styling für das Scrolling */
+.terminal::-webkit-scrollbar {
+    width: 8px; /* Breite des Scrollbalkens */
+}
+
+.terminal::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbalken-Farbe */
+    border-radius: 4px;
+}
+
+.terminal::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Hover-Farbe des Scrollbalkens */
 }
