@@ -20,7 +20,7 @@ bool initSignal(void) {
 	sigemptyset(&sa.sa_mask);
 	signal(SIGPIPE, handleSigPipe);
 	if (sigaction(SIGINT, &sa, NULL) == -1) {
-		Logger::log(ERROR_LOG, "Failed to initalize ctrl + c signal");
+		Logger::error("Failed to initalize ctrl + c signal");
 		return (false);
 	}
 	return (true);
