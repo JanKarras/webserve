@@ -7,7 +7,8 @@ enum HttpMethod
 { 
 	GET,
 	POST,
-    DELETE
+    DELETE,
+	INVALID
 };
 
 enum UriParseState{
@@ -48,22 +49,24 @@ enum HeaderLineState{
 	HL_START = 0,
 	HL_KEY,
 	HL_COLON,
+	HL_SPACE_AFTER_COLON,
 	HL_VALUE,
+	HL_COMMA,
 	HL_END_OF_FIELD,
 	HL_FOLDING,
 	HL_DOUBLE_QUOTES,
 	HL_ESCAPE_CHAR,
-	HL_DONE,
-	HL_ERROR
+	HL_DONE
+	// HL_ERROR
 };
 
 enum BodyState{
-	B_START = 0,
-	B_CHUNK_SIZE,
+	// B_START = 0,
+	B_CHUNK_SIZE = 0,
 	B_CHUNK_DATA,
-	B_CHUNK_TRAILER,
-	B_DONE,
-	B_ERROR,
+	B_CHUNK_TRAILER
+	// B_DONE,
+	// B_ERROR,
 };
 
 
@@ -83,6 +86,7 @@ struct HttpRequest {
     size_t pos;
 	bool folding;
 	std::string currentKey;
+	size_t valuePos;
 	size_t chunkSize;
 	
 	unsigned int parseState;
