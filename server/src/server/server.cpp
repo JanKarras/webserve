@@ -1,6 +1,6 @@
 #include "../../include/webserv.hpp"
 
-void startServer(ConficData &conficData, bool conficFlag) {
+void startServer(ConfigData &conficData, bool conficFlag) {
 	ServerContext ServerContext;
 	ServerContext.serverFd = -1;
 	ServerContext.epollFd = -1;

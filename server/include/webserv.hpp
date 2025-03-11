@@ -26,6 +26,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <stdarg.h>
 
 #define CR (u_char) 'r'
 #define LF (u_char) 'n'
@@ -85,28 +86,51 @@ struct ServerContext {
 	std::map<std::string, void (*)(HttpResponse &)> pages;
 };
 
-struct ConficServer {
-
+struct errorPage {
+	size_t errorCode;
+	std::string path;
 };
 
+struct location {
+	bool post;
+	bool get;
+	bool del;
+	std::string name;
+	std::string root;
+	std::string index;
+	std::vector<std::string> cgi_paths;
+	std::vector<std::string> cgi_ext;
+	std::string redirect;
+};
 
-struct ConficData {
-	ConficServer *server;
-	int nb;
+struct server{
+	int port;
+	size_t client_max_body_size;
+	std::string server_name;
+	std::string host;
+	std::string root;
+	std::string index;
+	std::vector<errorPage> errorpages;
+	std::vector<location> locations;
+};
+
+struct ConfigData {
+	std::vector<server> servers;
+	std::vector<int> ports;
 };
 
 
 //CONFIC
-bool parseConfic(std::string path, ConficData *data);
+bool parseConfic(std::string path, ConfigData &data);
 
 //HTTPPARSER
 void printHttpRequest(const HttpRequest& request);
 void parseHttpRequest(HttpRequest &req, std::string &data);
 
 //SERVER
-void startServer(ConficData &conficData, bool conficFlag);
+void startServer(ConfigData &conficData, bool conficFlag);
 bool initServer(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event);
-bool initServerConfic(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event, ConficData &conficData);
+bool initServerConfic(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event, ConfigData &conficData);
 bool addEvent(ServerContext &ServerContext, struct epoll_event &event);
 bool handleEventReq(ServerContext &ServerContext, struct epoll_event *events, int i);
 bool handleEventRes(ServerContext &ServerContext, struct epoll_event *events, int i);

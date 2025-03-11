@@ -1,7 +1,7 @@
 #include "../../include/webserv.hpp"
 
-bool initServerConfic(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event, ConficData &conficData) {
-	conficData.nb = 1;
+bool initServerConfic(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event, ConfigData &conficData) {
+	conficData.servers.clear();
 	std::cout << "confic\n";
 	return (false);
 	ServerContext.serverFd = socket(AF_INET, SOCK_STREAM, 0);
