@@ -5,6 +5,14 @@ static const std::string validQueryChars = "-_.~!$'()*+,;:@/";
 static const std::string validQuoteChars = "\t !#$%&'()*+,-./:;<=>?@[]_{}~";
 static const std::string validValueChars = "\"!#$%&'*+-.^_`|~";
 
+static std::string toLowerCase(const std::string& str)
+{
+	std::string lower = "";
+	for (size_t i = 0; i < str.length(); i++)
+		lower.append(1, tolower(str[i]));
+	return lower;
+}
+
 static void setRequestError(HttpRequest &req, int errType)
 {
 	req.buffer.clear();
@@ -110,22 +118,42 @@ static int extractQuery(HttpRequest &req)
 	return SUCCESS;
 }
 
-/*
-static bool	isCgi(std::string &path, std::vector<std::string>cgiExtension)
+static bool	isCgi(const std::string &path, const server &s)
 {
 	size_t pathLen = path.length();
-	size_t extensionLen;
-	std::vector<std::string>::iterator it = cgiExtension.begin();
 
-	while (it != cgiExtension.end())
+	for (size_t i = 0; i < s.locations.size(); i++)
 	{
-		extensionLen =
-		if ( extension in string )
-		return true;
+		const std::vector<std::string> &cgiExtension = s.locations[i].cgi_ext;
+		for (size_t j = 0; j < cgiExtension.size(); j++)
+		{
+			size_t extensionLen = cgiExtension[j].length();
+			if (pathLen >= extensionLen && !path.compare(pathLen -  extensionLen, extensionLen, cgiExtension[j]))
+				return (true);
+		}
 	}
 	return false;
 }
-*/
+
+static int distributeRequest(ConfigData &config, HttpRequest &req)
+{
+	if (req.headers.find("server-name") != req.headers.end())
+	{
+		std::string serverName = req.headers["server-name"][0];
+		for (int i = 0; i < config.servers.size(); i++)
+		{
+			if (config.servers[i].server_name == serverName)
+			{
+				req.server = &config.servers[i];
+				config.servers[i].serverContex.requests.insert(std::pair<int, HttpRequest>(req.clientFd, req));
+				return SUCCESS;
+			}
+		}
+	}
+	req.server = &config.servers[0];
+	config.servers[0].serverContex.requests.insert(std::pair<int, HttpRequest>(req.clientFd, req));
+	return SUCCESS;
+}
 
 static int parseUri(HttpRequest &req)
 {
@@ -339,8 +367,6 @@ static int parseHttpRequestLine(HttpRequest &req)
 
 					if (parseUri(req) == FAILURE)
 						return FAILURE;
-					/* if (isCgi(req.path, server.cgi))
-						req.cgi = true; */
 					p += uriLength;
 					state = RL_VERSION;
 				}
@@ -394,7 +420,7 @@ static int parseHttpRequestLine(HttpRequest &req)
 	return SUCCESS;
 }
 
-static int parseHttpHeaderLine(HttpRequest &req)
+static int parseHttpHeaderLine(ConfigData &config, HttpRequest &req)
 {
 	size_t pos = req.pos;
 	HeaderLineState state = static_cast<HeaderLineState>(req.parseState);
@@ -420,7 +446,7 @@ static int parseHttpHeaderLine(HttpRequest &req)
 			case (HL_KEY):
 				if (c == ':')
 				{
-					req.currentKey = req.buffer.substr(0, pos);
+					req.currentKey = toLowerCase(req.buffer.substr(0, pos));
 					req.headers[req.currentKey];
 					state = HL_COLON;
 				}
@@ -572,13 +598,15 @@ static int parseHttpHeaderLine(HttpRequest &req)
 				}
 				break;
 			case (HL_DONE):
-				if (c != '\n' || req.headers.empty())
+				if (c != '\n' || req.headers.empty() || req.headers.find("host") == req.headers.end())
 				{
 					setRequestError(req, HTTP_BAD_REQUEST);
 					return FAILURE;
 				}
 				req.buffer.erase(0, pos + 1);
 				req.pos = 0;
+				distributeRequest(config, req);
+				req.cgi = isCgi(req.path, *req.server); // check for NULLPTR?
 				std::map<std::string, std::vector<std::string> >::iterator it = req.headers.find("Transfer-Encoding");
 				if (it != req.headers.end() && it->second[0] == "chunked")
 					req.state = BODY_CHUNKED;
@@ -590,11 +618,11 @@ static int parseHttpHeaderLine(HttpRequest &req)
 						setRequestError(req, HTTP_BAD_REQUEST);
 						return FAILURE;
 					}
-					// else if (req.content_length < CONTENT_MAX)
-					// {
-					// 	setRequestError(req, HTTP_ENTITY_TOO_LARGE);
-					// 	return FAILURE;
-					// }
+					else if (req.content_length > req.server->client_max_body_size)
+					{
+						setRequestError(req, HTTP_ENTITY_TOO_LARGE);
+						return FAILURE;
+					}
 					req.state = BODY;
 				}
 				else
@@ -710,14 +738,35 @@ static int parseHttpBodyChunked(HttpRequest &req)
 	return SUCCESS;
 }
 
-void parseHttpRequest(HttpRequest &req, std::string &data)
+void parseHttpRequest(ConfigData &config, int client_fd, std::string &data)
+{
+	HttpRequest &req = config.requests[client_fd];
+	
+	req.buffer.append(data);
+	if (req.state == REQUEST_LINE)
+		if (parseHttpRequestLine(req) == FAILURE) return;
+
+	if (req.state == HEADERS)
+		if (parseHttpHeaderLine(config, req) == FAILURE) return;
+
+	if (req.state == NO_BODY)
+		if (parseHttpNoBody(req) == FAILURE) return;
+
+	if (req.state == BODY_CHUNKED)
+		if (parseHttpBodyChunked(req) == FAILURE) return;
+
+	if (req.state == BODY)
+		if (parseHttpBody(req) == FAILURE) return;
+}
+
+/* void parseHttpRequestOld(HttpRequest &req, std::string &data)
 {
 	req.buffer.append(data);
 
-    if (req.state == REQUEST_LINE)
+	if (req.state == REQUEST_LINE)
 		if (parseHttpRequestLine(req) == FAILURE) return;
 
-    if (req.state == HEADERS)
+	if (req.state == HEADERS)
 		if (parseHttpHeaderLine(req) == FAILURE) return;
 
 	if (req.state == NO_BODY)
@@ -726,9 +775,9 @@ void parseHttpRequest(HttpRequest &req, std::string &data)
 	if (req.state == BODY_CHUNKED)
 		if (parseHttpBodyChunked(req) == FAILURE) return;
 
-    if (req.state == BODY)
+	if (req.state == BODY)
 		if (parseHttpBody(req) == FAILURE) return;
-}
+} */
 
 // void printRequest(const HttpRequest &req)
 // {
