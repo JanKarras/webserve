@@ -110,6 +110,23 @@ static int extractQuery(HttpRequest &req)
 	return SUCCESS;
 }
 
+/* 
+static bool	isCgi(std::string &path, std::vector<std::string>cgiExtension)
+{
+	size_t pathLen = path.length();
+	size_t extensionLen;
+	std::vector<std::string>::iterator it = cgiExtension.begin();
+	
+	while (it != cgiExtension.end())
+	{
+		extensionLen = 
+		if ( extension in string )
+		return true;
+	}
+	return false;
+}
+*/
+
 static int parseUri(HttpRequest &req)
 {
 	size_t uriLen = req.uri.length();
@@ -293,7 +310,6 @@ static int parseHttpRequestLine(HttpRequest &req)
 			case RL_METHOD:
 				if (c == ' ')
 				{
-					/* check method with strcmp */
 					if (!req.buffer.compare(0, p, "GET"))
 						req.method = GET;
 					else if (!req.buffer.compare(0, p, "POST"))
@@ -323,7 +339,8 @@ static int parseHttpRequestLine(HttpRequest &req)
 
 					if (parseUri(req) == FAILURE)
 						return FAILURE;
-					/* check for cgi */
+					/* if (isCgi(req.path, server.cgi))
+						req.cgi = true; */
 					p += uriLength;
 					state = RL_VERSION;
 				}
@@ -573,6 +590,11 @@ static int parseHttpHeaderLine(HttpRequest &req)
 						setRequestError(req, HTTP_BAD_REQUEST);
 						return FAILURE;
 					}
+					// else if (req.content_length < CONTENT_MAX)
+					// {
+					// 	setRequestError(req, HTTP_ENTITY_TOO_LARGE);
+					// 	return FAILURE;
+					// }
 					req.state = BODY;
 				}
 				else
@@ -644,7 +666,13 @@ static int parseHttpBodyChunked(HttpRequest &req)
 					setRequestError(req, HTTP_BAD_REQUEST);
 					return FAILURE;
 				}
-
+				/*
+				if (req.body.size() + chunkSize > req.content_length)
+				{
+					setRequestError(req, HTTP_TOO_LARGE);
+					return FAILURE;
+				}
+				*/
 				req.chunkSize = chunkSize;
 				req.buffer.erase(0, pos + 2); // Remove size line
 				state = (chunkSize == 0) ? B_CHUNK_TRAILER : B_CHUNK_DATA;
