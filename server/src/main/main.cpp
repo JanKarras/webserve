@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv) {
 
-	ConfigData data;
+	std::map<int, ConfigData> data;
 
 
 	if (argc > 2) {
@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 			if(!initSignal()) {
 				return (1);
 			}
-			startServer(data, true);
+			startServer(data);
 		}
 	} else {
 		if (parseConfic("std_confic", data)) {
@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 			if(!initSignal()) {
 				return (1);
 			}
-			startServer(data, false);
+			startServer(data);
 		}
 	}
 	return (0);

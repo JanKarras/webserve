@@ -3,8 +3,8 @@
 #include <map>
 #include <stack>
 
-enum HttpMethod 
-{ 
+enum HttpMethod
+{
 	GET,
 	POST,
     DELETE,
@@ -77,7 +77,7 @@ struct HttpRequest {
 	std::string version;
 	std::string path;
 	std::string queryString;
-	std::map<std::string, std::vector<std::string>> headers;
+	std::map<std::string, std::vector<std::string> > headers;
 	std::map<std::string, std::string> query;
 	std::string body;
 	std::string buffer; // Stores the accumulated raw request data
@@ -88,7 +88,7 @@ struct HttpRequest {
 	std::string currentKey;
 	size_t valuePos;
 	size_t chunkSize;
-	
+
 	unsigned int parseState;
 	RequestState state;
 	int exitStatus;

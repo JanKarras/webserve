@@ -6,7 +6,7 @@
 /*   By: jkarras <jkarras@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 12:15:23 by jkarras           #+#    #+#             */
-/*   Updated: 2025/02/25 10:36:28 by jkarras          ###   ########.fr       */
+/*   Updated: 2025/03/11 13:06:03 by jkarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ void printHttpRequest(const HttpRequest& request) {
     std::cout << std::endl << "--- HEADERS ---" << std::endl;
 
     // Map durchlaufen mit einem klassischen Iterator
-    std::map<std::string, std::string>::const_iterator it;
+    /*std::map<std::string, std::string>::const_iterator it;
     for (it = request.headers.begin(); it != request.headers.end(); ++it) {
         std::cout << it->first << ": " << it->second << std::endl;
-    }
+    }*/
 
     std::cout << std::endl << "--- BODY ---" << std::endl;
     if (!request.body.empty()) {

@@ -1,7 +1,6 @@
 #include "../../include/webserv.hpp"
 
 void printServer(server &Server) {
-	Logger::debug("--------------------------------------------------------");
 	Logger::debug("Port: %i", Server.port);
 	Logger::debug("client_max_body_size: %i", Server.client_max_body_size);
 	Logger::debug("server_name: %s", Server.server_name.c_str());
@@ -53,9 +52,6 @@ void printServer(server &Server) {
 			Logger::debug("  Redirect: None");
 		}
 	}
-
-
-	Logger::debug("--------------------------------------------------------");
 }
 
 bool checkPath(std::string path) {
@@ -90,58 +86,58 @@ std::string readFile(std::string path) {
 }
 
 std::vector<std::string> extractLocationBlocks(std::string &serverBlock) {
-    std::vector<std::string> locationBlocks;
-    std::string currentBlock;
-    int braceCount = 0;
-    bool insideLocation = false;
+	std::vector<std::string> locationBlocks;
+	std::string currentBlock;
+	int braceCount = 0;
+	bool insideLocation = false;
 
-    std::istringstream fs(serverBlock);
-    std::string line;
+	std::istringstream fs(serverBlock);
+	std::string line;
 
-    while (std::getline(fs, line)) {
-        // Überprüfen, ob wir mit einem Location-Block beginnen
-        if (line.find("location") != std::string::npos && braceCount == 0) {
-            if (insideLocation) {
-                // Falls wir bereits in einem Location-Block sind, müssen wir sicherstellen, dass wir den vorherigen Block beenden.
-                locationBlocks.push_back(currentBlock);
-                currentBlock.clear();
-            }
-            insideLocation = true;
-            currentBlock = line;  // Start des Location-Blocks
-            braceCount = 1;  // Ersten offenen Brace zählen
-        } else if (insideLocation) {
-            currentBlock += '\n' + line;  // Zeile zum aktuellen Location-Block hinzufügen
+	while (std::getline(fs, line)) {
+		// Überprüfen, ob wir mit einem Location-Block beginnen
+		if (line.find("location") != std::string::npos && braceCount == 0) {
+			if (insideLocation) {
+				// Falls wir bereits in einem Location-Block sind, müssen wir sicherstellen, dass wir den vorherigen Block beenden.
+				locationBlocks.push_back(currentBlock);
+				currentBlock.clear();
+			}
+			insideLocation = true;
+			currentBlock = line;  // Start des Location-Blocks
+			braceCount = 1;  // Ersten offenen Brace zählen
+		} else if (insideLocation) {
+			currentBlock += '\n' + line;  // Zeile zum aktuellen Location-Block hinzufügen
 
-            // Zählen der öffnenden und schließenden Klammern
-            size_t openingBraces = 0;
-            size_t closingBraces = 0;
+			// Zählen der öffnenden und schließenden Klammern
+			size_t openingBraces = 0;
+			size_t closingBraces = 0;
 
-            for (size_t i = 0; i < line.length(); ++i) {
-                if (line[i] == '{') {
-                    openingBraces++;
-                } else if (line[i] == '}') {
-                    closingBraces++;
-                }
-            }
+			for (size_t i = 0; i < line.length(); ++i) {
+				if (line[i] == '{') {
+					openingBraces++;
+				} else if (line[i] == '}') {
+					closingBraces++;
+				}
+			}
 
-            braceCount += openingBraces;
-            braceCount -= closingBraces;
+			braceCount += openingBraces;
+			braceCount -= closingBraces;
 
-            // Wenn alle Klammern geschlossen sind, Location-Block abschließen
-            if (braceCount == 0) {
-                locationBlocks.push_back(currentBlock);
-                currentBlock.clear();
-                insideLocation = false;
-            }
-        }
-    }
+			// Wenn alle Klammern geschlossen sind, Location-Block abschließen
+			if (braceCount == 0) {
+				locationBlocks.push_back(currentBlock);
+				currentBlock.clear();
+				insideLocation = false;
+			}
+		}
+	}
 
-    // Falls der letzte Location-Block nicht hinzugefügt wurde (bei mehreren Locations im Block)
-    if (insideLocation && !currentBlock.empty()) {
-        locationBlocks.push_back(currentBlock);
-    }
+	// Falls der letzte Location-Block nicht hinzugefügt wurde (bei mehreren Locations im Block)
+	if (insideLocation && !currentBlock.empty()) {
+		locationBlocks.push_back(currentBlock);
+	}
 
-    return locationBlocks;
+	return locationBlocks;
 }
 
 
@@ -308,9 +304,9 @@ bool isValidLocation(const std::string &line, location &Location) {
 	Location.get = false;
 	Location.post = false;
 	Location.del = false;
-    std::istringstream ss(line);
-    std::string keyword;
-    std::string value;
+	std::istringstream ss(line);
+	std::string keyword;
+	std::string value;
 	std::string subline;
 
 	while (getline(ss, subline)) {
@@ -323,7 +319,6 @@ bool isValidLocation(const std::string &line, location &Location) {
 
 		if (keyword == "allow_methods") {
 			while (iss >> value) {
-				std::cout << value << std::endl;
 				if (value == "GET") {
 					Location.get = true;
 				} else if (value == "POST"){
@@ -338,7 +333,6 @@ bool isValidLocation(const std::string &line, location &Location) {
 			Location.index = value;
 		} else if (keyword == "root") {
 			iss >> value;
-			std::cout << value << std::endl;
 			Location.root = value;
 		} else if (keyword == "cgi_path") {
 			while (iss >> value) {
@@ -367,12 +361,12 @@ bool isValidLocation(const std::string &line, location &Location) {
 		// }
 	}
 
-    return false;
+	return false;
 }
 
 
 
-bool parseServer(ConfigData &data, std::string serverBlock) {
+bool parseServer(std::map<int, ConfigData> &data, std::string serverBlock) {
 	std::string line;
 	std::istringstream fs(serverBlock);
 	std::vector<std::string> lines;
@@ -432,12 +426,14 @@ bool parseServer(ConfigData &data, std::string serverBlock) {
 		Server.locations.push_back(Location);
 	}
 
+	if (data.find(Server.port) != data.end()) {
+		data[Server.port].servers.push_back(Server);
+	} else {
+		data[Server.port] = ConfigData();
+		data[Server.port].servers.push_back(Server);
+		data[Server.port].port = Server.port;
+	}
 
-
-	data.servers.push_back(Server);
-	data.ports.push_back(Server.port);
-
-	printServer(Server);
 	return true;
 }
 
@@ -459,7 +455,25 @@ bool validateLines(const std::string &filetxt) {
 }
 
 
-bool parseConfic(std::string path, ConfigData &data) {
+void printAll(std::map<int, ConfigData> &data) {
+	for (std::map<int, ConfigData>::iterator it = data.begin(); it != data.end(); ++it) {
+		std::cout << "-------------------------------------------------------------\n";
+		std::cout << "Port:             " << it->second.port << std::endl;
+		std::cout << "Keyvalue:         " << it->first << std::endl;
+		std::cout << "Server number:    " << it->second.servers.size() << std::endl;
+		int i = 0;
+		for (std::vector<server>::iterator itt = it->second.servers.begin(); itt != it->second.servers.end(); ++itt) {
+			std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~" << "Server: " << i << "~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+			printServer(*itt);
+			std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+			i++;
+		}
+		std::cout << "-------------------------------------------------------------\n";
+	}
+}
+
+
+bool parseConfic(std::string path, std::map<int, ConfigData> &data) {
 	if (!checkPath(path)) {
 		return (true);
 	}
@@ -488,7 +502,7 @@ bool parseConfic(std::string path, ConfigData &data) {
 		}
 	}
 
-
+	printAll(data);
 
 	return (true);
 }

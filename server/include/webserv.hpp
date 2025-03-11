@@ -75,6 +75,8 @@ struct HttpResponse {
 struct ServerContext {
 	int serverFd;
 	int epollFd;
+	struct sockaddr_in serverAddress;
+	struct epoll_event event, events[MAX_EVENTS];
 	std::map<int, HttpRequest> requests;
 	std::map<int, HttpResponse> responses;
 	std::map<int, int> fds;
@@ -112,23 +114,25 @@ struct server{
 	std::string index;
 	std::vector<errorPage> errorpages;
 	std::vector<location> locations;
+	ServerContext serverContex;
 };
 
 struct ConfigData {
+	std::map<int, HttpRequest> requests;
 	std::vector<server> servers;
-	std::vector<int> ports;
+	int port;
 };
 
 
 //CONFIC
-bool parseConfic(std::string path, ConfigData &data);
+bool parseConfic(std::string path, std::map<int, ConfigData> &data);
 
 //HTTPPARSER
 void printHttpRequest(const HttpRequest& request);
 void parseHttpRequest(HttpRequest &req, std::string &data);
 
 //SERVER
-void startServer(ConfigData &conficData, bool conficFlag);
+void startServer(std::map<int, ConfigData> &data);
 bool initServer(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event);
 bool initServerConfic(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event, ConfigData &conficData);
 bool addEvent(ServerContext &ServerContext, struct epoll_event &event);

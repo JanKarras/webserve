@@ -1,10 +1,10 @@
 #include "../../include/webserv.hpp"
 
 void handleLogin(HttpRequest &req, HttpResponse &res) {
-	if (req.headers["Content-Type"] != "application/json") {
-		handle400(res);
-		return;
-	}
+	// if (req.headers["Content-Type"] != "application/json") {
+	// 	handle400(res);
+	// 	return;
+	// }
 	std::ifstream file("server/src/db/loginData.csv");
 	std::map<std::string, std::string> data = parseSimpleJSON(req.body);
 
@@ -46,10 +46,10 @@ void handleLogin(HttpRequest &req, HttpResponse &res) {
 }
 
 void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
-	if (req.headers["Content-Type"] != "application/json") {
-		handle400(res);
-		return;
-	}
+	// if (req.headers["Content-Type"] != "application/json") {
+	// 	handle400(res);
+	// 	return;
+	// }
 
 	std::map<std::string, std::string> data = parseSimpleJSON(req.body);
 
@@ -126,27 +126,27 @@ void handleCreateAccount(HttpRequest &req, HttpResponse &res) {
 void uploadFile(HttpRequest &req, HttpResponse &res) {
 	std::string email = req.query["email"];
 	std::string fileName = req.query["fileName"];
-	std::string contentType = req.headers["Content-Type"];
+	//std::string contentType = req.headers["Content-Type"];
 
-	if (email.empty() || fileName.empty() || contentType.empty()) {
+	if (email.empty() || fileName.empty() /*|| contentType.empty()*/) {
 		handle400(res);
 		return ;
 	}
 
 	bool isExecutable = false;
 
-	if (contentType == "image/jpeg") {
-		;
-	} else if (contentType == "image/png") {
-		;
-	} else if (contentType == "application/x-sh") {
-		isExecutable = true;
-	} else if (contentType == "application/x-shellscript") {
-		isExecutable = true;
-	} else {
-		handle400(res);
-		return ;
-	}
+	// if (contentType == "image/jpeg") {
+	// 	;
+	// } else if (contentType == "image/png") {
+	// 	;
+	// } else if (contentType == "application/x-sh") {
+	// 	isExecutable = true;
+	// } else if (contentType == "application/x-shellscript") {
+	// 	isExecutable = true;
+	// } else {
+	// 	handle400(res);
+	// 	return ;
+	// }
 
 	std::string destPath = getDestPath(email);
 
