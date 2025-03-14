@@ -128,7 +128,7 @@ server {
 }
 server {
 	listen 80;
-	server_name localhost;
+	server_name example.com;
 	host 127.0.0.1;
 	root public/;
 	client_max_body_size 2000000;

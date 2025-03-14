@@ -73,10 +73,6 @@ struct HttpResponse {
 };
 
 struct ServerContext {
-	int serverFd;
-	int epollFd;
-	struct sockaddr_in serverAddress;
-	struct epoll_event event, events[MAX_EVENTS];
 	std::map<int, HttpRequest> requests;
 	std::map<int, HttpResponse> responses;
 	std::map<int, int> fds;
@@ -118,9 +114,14 @@ struct server{
 };
 
 struct ConfigData {
+	int epollFd;
+	int serverFd;
 	std::map<int, HttpRequest> requests;
 	std::vector<server> servers;
 	int port;
+	struct sockaddr_in serverAddress;
+	struct epoll_event event;
+	struct epoll_event events[MAX_EVENTS];
 };
 
 
@@ -135,14 +136,14 @@ void parseHttpRequest(HttpRequest &req, std::string &data);
 void startServer(std::map<int, ConfigData> &data);
 bool initServer(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event);
 bool initServerConfic(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event, ConfigData &conficData);
-bool addEvent(ServerContext &ServerContext, struct epoll_event &event);
-bool handleEventReq(ServerContext &ServerContext, struct epoll_event *events, int i);
+bool addEvent(ConfigData &configData);
+bool handleEventReq(ConfigData &configData, int i);
 bool handleEventRes(ServerContext &ServerContext, struct epoll_event *events, int i);
 //SIG
 void handle_sigint(int sig, siginfo_t *siginfo, void *context);
 bool initSignal(void);
 //HANDLE REQ
-void handleRequest(int clientFd, ServerContext &ServerContext);
+void handleRequest(int clientFd, ConfigData &configData);
 void handleErrorRequest(int clientFd, ServerContext &ServerContext);
 //helper
 bool setsetExecutable(std::string &filePath);

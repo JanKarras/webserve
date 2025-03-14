@@ -502,7 +502,7 @@ bool parseConfic(std::string path, std::map<int, ConfigData> &data) {
 		}
 	}
 
-	printAll(data);
+	//printAll(data);
 
-	return (true);
+	return (false);
 }

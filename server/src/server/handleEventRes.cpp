@@ -57,7 +57,7 @@ bool handleEventRes(ServerContext &ServerContext, struct epoll_event *events, in
 				close(readPipeFd);
 				ServerContext.fds.erase(events[i].data.fd);
 				response.state = RESP_COMPLETE;
-				epoll_ctl(ServerContext.epollFd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
+				//epoll_ctl(ServerContext.epollFd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 				close(events[i].data.fd);
 				ServerContext.requests.erase(events[i].data.fd);
 				ServerContext.responses.erase(events[i].data.fd);
@@ -95,7 +95,7 @@ bool handleEventRes(ServerContext &ServerContext, struct epoll_event *events, in
 				}
 			}
 			response.state = RESP_COMPLETE;
-			epoll_ctl(ServerContext.epollFd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
+			//epoll_ctl(ServerContext.epollFd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 			close(events[i].data.fd);
 			ServerContext.requests.erase(events[i].data.fd);
 			ServerContext.responses.erase(events[i].data.fd);

@@ -59,12 +59,12 @@ void handleErrorRequest(int clientFd, ServerContext &ServerContext) {
 	event.events = EPOLLOUT;
 	event.data.fd = clientFd;
 
-	if (epoll_ctl(ServerContext.epollFd, EPOLL_CTL_MOD, clientFd, &event) == -1) {
-		std::cerr << "Failed to modify epoll event for EPOLLOUT." << std::endl;
-		close(clientFd);
-		ServerContext.requests.erase(clientFd);
-		ServerContext.responses.erase(clientFd);
-		return;
-	}
+	// if (epoll_ctl(ServerContext.epollFd, EPOLL_CTL_MOD, clientFd, &event) == -1) {
+	// 	std::cerr << "Failed to modify epoll event for EPOLLOUT." << std::endl;
+	// 	close(clientFd);
+	// 	ServerContext.requests.erase(clientFd);
+	// 	ServerContext.responses.erase(clientFd);
+	// 	return;
+	// }
 	res.startTime = getCurrentTime();
 }

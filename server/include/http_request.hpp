@@ -72,6 +72,7 @@ enum BodyState{
 
 
 struct HttpRequest {
+	int	clientFd;
 	HttpMethod method;
 	std::string uri;
 	std::string version;
