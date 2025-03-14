@@ -72,7 +72,6 @@ enum BodyState{
 
 
 struct HttpRequest {
-	int	clientFd;
 	HttpMethod method;
 	std::string uri;
 	std::string version;
@@ -80,15 +79,16 @@ struct HttpRequest {
 	std::string queryString;
 	std::map<std::string, std::vector<std::string> > headers;
 	std::map<std::string, std::string> query;
-	std::string body;
-	std::string buffer; // Stores the accumulated raw request data
-	size_t content_length;
-	bool cgi;
-    size_t pos;
-	bool folding;
-	std::string currentKey;
-	size_t valuePos;
-	size_t chunkSize;
+	std::string		body;
+	std::string		buffer; // Stores the accumulated raw request data
+	size_t			content_length;
+	bool			cgi;
+    size_t			pos;
+	bool			folding;
+	std::string		currentKey;
+	size_t			valuePos;
+	size_t			chunkSize;
+	server			*server;
 
 	unsigned int parseState;
 	RequestState state;
