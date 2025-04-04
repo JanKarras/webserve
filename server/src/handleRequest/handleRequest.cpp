@@ -1,73 +1,91 @@
 #include "../../include/webserv.hpp"
 
 void handleRequest(int clientFd, ConfigData &configData) {
-
 	size_t index = 0;
-
 	std::map<int, ConfigData> data;
-
 	data[configData.port] = configData;
 
+	// Server anhand der Client-Anfrage identifizieren
 	for (size_t i = 0; i < configData.servers.size(); i++) {
 		server &server = configData.servers[i];
 		ServerContext &serverContext = server.serverContex;
 		if (serverContext.requests.find(clientFd) != serverContext.requests.end()) {
 			index = i;
-			Logger::info("Request was found for server: %s index = %i", server.server_name.c_str(), index);
+			Logger::info("Request was found for server: %s index = %zu", server.server_name.c_str(), index);
+			break;
 		}
 	}
 	server &Server = configData.servers[index];
 
+	// Request und Response abrufen
 	HttpRequest req = Server.serverContex.requests[clientFd];
 	HttpResponse &res = Server.serverContex.responses[clientFd];
 
-	location *foundLocation = NULL;
+	// Beste passende Location finden (Längste-Prefix-Matching)
+	location *bestMatch = NULL;
+	size_t longestMatch = 0;
 	std::string &path = req.path;
 
 	for (size_t i = 0; i < Server.locations.size(); i++) {
 		location &loc = Server.locations[i];
 
+		// Prüfen, ob der Pfad mit der Location beginnt
 		if (path.find(loc.name) == 0) {
-			foundLocation = &loc;
-			break;
-		}
-
-		for (size_t j = 0; j < loc.files.size(); j++) {
-			std::string filePath = loc.files[j].path;
-
-			if (filePath.find(Server.root) == 0) {
-				filePath = filePath.substr(Server.root.size());
+			// Längere Matches haben Priorität
+			if (loc.name.length() > longestMatch) {
+				bestMatch = &loc;
+				longestMatch = loc.name.length();
 			}
-
-			if (path == filePath) {
-				foundLocation = &loc;
-				break;
-			}
-		}
-
-		if (foundLocation) {
-			break;
 		}
 	}
 
+	// Falls keine passende Location gefunden wurde, prüfen wir die Files in allen Locations
+	if (!bestMatch) {
+		for (size_t i = 0; i < Server.locations.size(); i++) {
+			location &loc = Server.locations[i];
+
+			for (size_t j = 0; j < loc.files.size(); j++) {
+				std::string filePath = loc.files[j].path;
+
+				// Falls das File unter dem `root`-Pfad gespeichert ist, korrigieren wir den relativen Pfad
+				if (filePath.find(Server.root) == 0) {
+					filePath = filePath.substr(Server.root.size());
+				}
+
+				// Wenn der Pfad genau mit einer Datei übereinstimmt, wählen wir diese Location
+				if (path == filePath) {
+					bestMatch = &loc;
+					break;
+				}
+			}
+
+			if (bestMatch) break;
+		}
+	}
+
+	location *foundLocation = bestMatch;
+
+	// Request basierend auf der gefundenen Location oder Datei verarbeiten
 	if (foundLocation) {
+		Logger::debug("Matched location: %s", foundLocation->name.c_str());
+
 		if (req.method == GET) {
-			if (foundLocation->get == false) {
+			if (!foundLocation->get) {
 				Logger::error("Method GET not allowed for location %s", foundLocation->name.c_str());
 				handle405(res);
 			} else {
 				Logger::debug("GET in location %s called", foundLocation->name.c_str());
-				routeRequestGET(req, res, Server);
+				routeRequestGET(req, res, Server, *foundLocation);
 			}
 		} else if (req.method == POST) {
-			if (foundLocation->post == false) {
+			if (!foundLocation->post) {
 				Logger::error("Method POST not allowed for location %s", foundLocation->name.c_str());
 				handle405(res);
 			} else {
 				Logger::debug("POST in location %s called", foundLocation->name.c_str());
 			}
 		} else if (req.method == DELETE) {
-			if (foundLocation->del == false) {
+			if (!foundLocation->del) {
 				Logger::error("Method DELETE not allowed for location %s", foundLocation->name.c_str());
 				handle405(res);
 			} else {
@@ -78,16 +96,15 @@ void handleRequest(int clientFd, ConfigData &configData) {
 			handle501(res);
 		}
 	} else {
-		Logger::error("Unknown location for path", req.path.c_str());
+		Logger::error("Unknown location or file for path: %s", req.path.c_str());
 		handle404(res);
 	}
 
-	handleHome(res);
-
+	// Antwort vorbereiten
 	res.version = req.version;
 	res.state = SENDING_HEADERS;
 
-
+	// Epoll für das Schreiben vorbereiten
 	struct epoll_event event;
 	event.events = EPOLLOUT;
 	event.data.fd = clientFd;
@@ -99,5 +116,7 @@ void handleRequest(int clientFd, ConfigData &configData) {
 		Server.serverContex.responses.erase(clientFd);
 		return;
 	}
+
 	res.startTime = getCurrentTime();
 }
+

@@ -61,10 +61,17 @@ bool initServerConfigTmp(std::map<int, ConfigData> &data) {
 		configData.serverAddress.sin_addr.s_addr = INADDR_ANY;
 		configData.serverAddress.sin_port = htons(configData.port);
 
-		if (bind(configData.serverFd, (struct sockaddr*)&configData.serverAddress, sizeof(configData.serverAddress)) == -1) {
-			Logger::error("Failed to bind socket.");
-			close(configData.serverFd);
-			return (false);
+		if (LOOP != 1) {
+			if (bind(configData.serverFd, (struct sockaddr*)&configData.serverAddress, sizeof(configData.serverAddress)) == -1) {
+				Logger::error("Failed to bind socket.");
+				close(configData.serverFd);
+				return (false);
+			}
+		} else {
+			while (bind(configData.serverFd, (struct sockaddr*)&configData.serverAddress, sizeof(configData.serverAddress)) == -1) {
+				Logger::error ("bind faild, Retry in 2 secs");
+				sleep(2);
+			}
 		}
 
 		if (listen(configData.serverFd, MAX_CLIENTS) == -1){
@@ -201,7 +208,7 @@ void startServer(std::map<int, ConfigData> &data) {
 		return ;
 	}
 	Logger::info("Server init finished successfully");
-	printAll(data);
+
 	if(!initLocations(data)) {
 		Logger::error("Locations init doesn't finished successfully");
 		return ;

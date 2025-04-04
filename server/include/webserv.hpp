@@ -34,6 +34,8 @@
 #define SUCCESS 0
 #define FAILURE 1
 
+#define LOOP 1
+
 #define MAX_EVENTS 1024
 #define MAX_CLIENTS 1024
 #define PORT 8080
@@ -126,6 +128,7 @@ struct ConfigData {
 	struct epoll_event events[MAX_EVENTS];
 };
 
+void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage);
 
 //CONFIC
 bool parseConfic(std::string path, std::map<int, ConfigData> &data);
@@ -164,7 +167,7 @@ std::map<std::string, std::string> parseSimpleJSON(const std::string& body);
 //POST ROUTES
 void routeRequestPOST(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //GET ROUTES
-void routeRequestGET(HttpRequest &req, HttpResponse &res, server &server);
+void routeRequestGET(HttpRequest &req, HttpResponse &res, server &server, location &loc);
 //DELETE ROUTES
 void routeRequestDELETE(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //CGI ROUTES
