@@ -35,6 +35,10 @@ void handle500(HttpResponse &res) {
 	handleFileResponse(res, "public/error/500.html", "text/html", 500, "Http internal server error");
 }
 
+void handle501(HttpResponse &res) {
+	handleFileResponse(res, "public/error/501.html", "text/html", 501, "501 Not Implemented");
+}
+
 void handleHome(HttpResponse &res) {
 	handleFileResponse(res, "public/index.html", "text/html", 200, "OK");
 }

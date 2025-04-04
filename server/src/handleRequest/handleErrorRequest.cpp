@@ -1,9 +1,12 @@
 #include "../../include/webserv.hpp"
 
-void handleErrorRequest(int clientFd, ServerContext &ServerContext) {
+void handleErrorRequest(int clientFd, ConfigData &data, HttpRequest &req) {
 
-	HttpRequest req = ServerContext.requests[clientFd];
-	HttpResponse &res = ServerContext.responses[clientFd];
+	ServerContext *serverContext = &data.servers[0].serverContex;
+
+	Logger::info("Error request detected for clientFd %i, error code %i", clientFd, req.exitStatus);
+
+	HttpResponse &res = serverContext->responses[clientFd];
 
 
 	res.statusCode = req.exitStatus;
@@ -59,12 +62,12 @@ void handleErrorRequest(int clientFd, ServerContext &ServerContext) {
 	event.events = EPOLLOUT;
 	event.data.fd = clientFd;
 
-	// if (epoll_ctl(ServerContext.epollFd, EPOLL_CTL_MOD, clientFd, &event) == -1) {
-	// 	std::cerr << "Failed to modify epoll event for EPOLLOUT." << std::endl;
-	// 	close(clientFd);
-	// 	ServerContext.requests.erase(clientFd);
-	// 	ServerContext.responses.erase(clientFd);
-	// 	return;
-	// }
+	if (epoll_ctl(data.epollFd, EPOLL_CTL_MOD, clientFd, &event) == -1) {
+		std::cerr << "Failed to modify epoll event for EPOLLOUT." << std::endl;
+		close(clientFd);
+		serverContext->requests.erase(clientFd);
+		serverContext->responses.erase(clientFd);
+		return;
+	}
 	res.startTime = getCurrentTime();
 }

@@ -3,6 +3,9 @@
 #include <map>
 #include <stack>
 
+struct server;
+
+
 enum HttpMethod
 {
 	GET,
@@ -80,15 +83,17 @@ struct HttpRequest {
 	std::map<std::string, std::vector<std::string> > headers;
 	std::map<std::string, std::string> query;
 	std::string		body;
-	std::string		buffer; // Stores the accumulated raw request data
+	std::string		buffer;
 	size_t			content_length;
 	bool			cgi;
-    size_t			pos;
+	size_t			pos;
 	bool			folding;
 	std::string		currentKey;
 	size_t			valuePos;
 	size_t			chunkSize;
-	server			*server;
+	server			*srv;
+
+	int clientFd;
 
 	unsigned int parseState;
 	RequestState state;

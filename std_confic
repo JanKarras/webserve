@@ -31,40 +31,8 @@ server {
 	}
 }
 server {
-	listen 80;
-	server_name localhost;
-	host 127.0.0.1;
-	root public/;
-	client_max_body_size 2000000;
-	index index.html;
-	error_page 400 error/400.html;
-	error_page 401 error/401.html;
-	error_page 403 error/403.html;
-	error_page 404 error/404.html;
-	error_page 405 error/405.html;
-	error_page 413 error/413.html;
-	error_page 500 error/500.html;
-	location / {
-		allow_methods GET POST;
-	}
-	location /dashboard {
-		index dashboard.html;
-		allow_methods GET POST DELETE;
-	}
-	location /red {
-		return /;
-	}
-	location /scripts {
-		root server/scripts;
-		allow_methods GET POST DELETE;
-		index time.sh;
-		cgi_path /usr/bin/python3 /bin/bash;
-		cgi_ext .py .sh;
-	}
-}
-server {
 	listen 8080;
-	server_name localhost;
+	server_name example.com;
 	host 127.0.0.1;
 	root public/;
 	client_max_body_size 3000000;
@@ -90,70 +58,6 @@ server {
 		index time.sh;
 		allow_methods GET POST DELETE;
 		root server/scripts;
-		cgi_path /usr/bin/python3 /bin/bash;
-		cgi_ext .py .sh;
-	}
-}
-server {
-	listen 80;
-	server_name localhost;
-	host 127.0.0.1;
-	root public/;
-	client_max_body_size 2000000;
-	index index.html;
-	error_page 400 error/400.html;
-	error_page 401 error/401.html;
-	error_page 403 error/403.html;
-	error_page 404 error/404.html;
-	error_page 405 error/405.html;
-	error_page 413 error/413.html;
-	error_page 500 error/500.html;
-	location / {
-		allow_methods GET POST;
-	}
-	location /dashboard {
-		index dashboard.html;
-		allow_methods GET POST DELETE;
-	}
-	location /red {
-		return /;
-	}
-	location /scripts {
-		root server/scripts;
-		allow_methods GET POST DELETE;
-		index time.sh;
-		cgi_path /usr/bin/python3 /bin/bash;
-		cgi_ext .py .sh;
-	}
-}
-server {
-	listen 80;
-	server_name example.com;
-	host 127.0.0.1;
-	root public/;
-	client_max_body_size 2000000;
-	index index.html;
-	error_page 400 error/400.html;
-	error_page 401 error/401.html;
-	error_page 403 error/403.html;
-	error_page 404 error/404.html;
-	error_page 405 error/405.html;
-	error_page 413 error/413.html;
-	error_page 500 error/500.html;
-	location / {
-		allow_methods GET POST;
-	}
-	location /dashboard {
-		index dashboard.html;
-		allow_methods GET POST DELETE;
-	}
-	location /red {
-		return /;
-	}
-	location /scripts {
-		root server/scripts;
-		allow_methods GET POST DELETE;
-		index time.sh;
 		cgi_path /usr/bin/python3 /bin/bash;
 		cgi_ext .py .sh;
 	}

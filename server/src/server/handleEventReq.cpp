@@ -13,13 +13,14 @@ bool handleEventReq(ConfigData &configData, int i) {
 		epoll_ctl(configData.epollFd, EPOLL_CTL_DEL, configData.events[i].data.fd, NULL);
 	} else {
 		data.append(buffer, bytesRead);
-		parseHttpRequest(configData.requests[configData.events[i].data.fd], data);
+		Logger::debug("Data bei dem aufruf %s", data.c_str());
+		parseHttpRequest(configData, configData.requests[configData.events[i].data.fd].clientFd, data);
 		printHttpRequest(configData.requests[configData.events[i].data.fd]);
 		if (configData.requests[configData.events[i].data.fd].state == COMPLETE) {
 			handleRequest(configData.events[i].data.fd, configData);
-		} // else if (ServerContext.requests[events[i].data.fd].state == ERROR) {
-		// 	handleErrorRequest(events[i].data.fd, ServerContext);
-		// }
+		} else if (configData.requests[configData.events[i].data.fd].state == ERROR) {
+			handleErrorRequest(configData.events[i].data.fd, configData, configData.requests[configData.events[i].data.fd]);
+		}
 	}
 	return (true);
 }

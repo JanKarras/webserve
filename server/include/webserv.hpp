@@ -72,16 +72,17 @@ struct HttpResponse {
 	HttpResponse() : version("HTTP/1.1"), statusCode(200), statusMessage("OK"), state(NOT_STARTED), bodySent(0), startTime(0) {}
 };
 
+struct file {
+	std::string contentType;
+	std::string path;
+};
+
 struct ServerContext {
 	std::map<int, HttpRequest> requests;
 	std::map<int, HttpResponse> responses;
 	std::map<int, int> fds;
 	std::map<int, pid_t> pids;
-	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> get;
-	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> post;
-	std::map<std::string, void (*)(HttpRequest &, HttpResponse &)> del;
-	std::map<std::string, void (*)(HttpRequest &, HttpResponse &, ServerContext &, int)> cgi;
-	std::map<std::string, void (*)(HttpResponse &)> pages;
+	std::vector<file> files;
 };
 
 struct errorPage {
@@ -99,6 +100,7 @@ struct location {
 	std::vector<std::string> cgi_paths;
 	std::vector<std::string> cgi_ext;
 	std::string redirect;
+	std::vector<file> files;
 };
 
 struct server{
@@ -127,10 +129,11 @@ struct ConfigData {
 
 //CONFIC
 bool parseConfic(std::string path, std::map<int, ConfigData> &data);
+void printAll(std::map<int, ConfigData> &data);
 
 //HTTPPARSER
 void printHttpRequest(const HttpRequest& request);
-void parseHttpRequest(HttpRequest &req, std::string &data);
+void parseHttpRequest(ConfigData &config, int client_fd, std::string &data);
 
 //SERVER
 void startServer(std::map<int, ConfigData> &data);
@@ -138,13 +141,13 @@ bool initServer(ServerContext &ServerContext, struct sockaddr_in &serverAddress,
 bool initServerConfic(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event, ConfigData &conficData);
 bool addEvent(ConfigData &configData);
 bool handleEventReq(ConfigData &configData, int i);
-bool handleEventRes(ServerContext &ServerContext, struct epoll_event *events, int i);
+bool handleEventRes(ConfigData &data, int i);
 //SIG
 void handle_sigint(int sig, siginfo_t *siginfo, void *context);
 bool initSignal(void);
 //HANDLE REQ
 void handleRequest(int clientFd, ConfigData &configData);
-void handleErrorRequest(int clientFd, ServerContext &ServerContext);
+void handleErrorRequest(int clientFd, ConfigData &configData, HttpRequest &req);
 //helper
 bool setsetExecutable(std::string &filePath);
 std::string toStringInt(int number);
@@ -161,7 +164,7 @@ std::map<std::string, std::string> parseSimpleJSON(const std::string& body);
 //POST ROUTES
 void routeRequestPOST(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //GET ROUTES
-void routeRequestGET(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
+void routeRequestGET(HttpRequest &req, HttpResponse &res, server &server);
 //DELETE ROUTES
 void routeRequestDELETE(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
 //CGI ROUTES
@@ -189,6 +192,7 @@ void handle403(HttpResponse &res);
 void handle404(HttpResponse &res);
 void handle405(HttpResponse &res);
 void handle500(HttpResponse &res);
+void handle501(HttpResponse &res);
 void handleHome(HttpResponse &res);
 void handleIndexSstyle(HttpResponse &res);
 void handleIndexJs(HttpResponse &res);

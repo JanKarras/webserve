@@ -137,20 +137,20 @@ static bool	isCgi(const std::string &path, const server &s)
 
 static int distributeRequest(ConfigData &config, HttpRequest &req)
 {
-	if (req.headers.find("server-name") != req.headers.end())
+	if (req.headers.find("server-name") != req.headers.end()) //statt server-name host? Der browser sendet kein server-name header sondern host.
 	{
 		std::string serverName = req.headers["server-name"][0];
 		for (int i = 0; i < config.servers.size(); i++)
 		{
 			if (config.servers[i].server_name == serverName)
 			{
-				req.server = &config.servers[i];
+				req.srv = &config.servers[i];
 				config.servers[i].serverContex.requests.insert(std::pair<int, HttpRequest>(req.clientFd, req));
 				return SUCCESS;
 			}
 		}
 	}
-	req.server = &config.servers[0];
+	req.srv = &config.servers[0];
 	config.servers[0].serverContex.requests.insert(std::pair<int, HttpRequest>(req.clientFd, req));
 	return SUCCESS;
 }
@@ -598,15 +598,16 @@ static int parseHttpHeaderLine(ConfigData &config, HttpRequest &req)
 				}
 				break;
 			case (HL_DONE):
-				if (c != '\n' || req.headers.empty() || req.headers.find("host") == req.headers.end())
+				if (c != '\n' || req.headers.empty() || req.headers.find("host") == req.headers.end()) //host oder Host???
 				{
+
 					setRequestError(req, HTTP_BAD_REQUEST);
 					return FAILURE;
 				}
 				req.buffer.erase(0, pos + 1);
 				req.pos = 0;
 				distributeRequest(config, req);
-				req.cgi = isCgi(req.path, *req.server); // check for NULLPTR?
+				req.cgi = isCgi(req.path, *req.srv); // check for NULLPTR?
 				std::map<std::string, std::vector<std::string> >::iterator it = req.headers.find("Transfer-Encoding");
 				if (it != req.headers.end() && it->second[0] == "chunked")
 					req.state = BODY_CHUNKED;
@@ -618,7 +619,7 @@ static int parseHttpHeaderLine(ConfigData &config, HttpRequest &req)
 						setRequestError(req, HTTP_BAD_REQUEST);
 						return FAILURE;
 					}
-					else if (req.content_length > req.server->client_max_body_size)
+					else if (req.content_length > req.srv->client_max_body_size)
 					{
 						setRequestError(req, HTTP_ENTITY_TOO_LARGE);
 						return FAILURE;
@@ -740,23 +741,35 @@ static int parseHttpBodyChunked(HttpRequest &req)
 
 void parseHttpRequest(ConfigData &config, int client_fd, std::string &data)
 {
-	HttpRequest &req = config.requests[client_fd];
-	
-	req.buffer.append(data);
-	if (req.state == REQUEST_LINE)
-		if (parseHttpRequestLine(req) == FAILURE) return;
+    HttpRequest &req = config.requests[client_fd];
 
-	if (req.state == HEADERS)
-		if (parseHttpHeaderLine(config, req) == FAILURE) return;
+    req.buffer.append(data);
+    Logger::debug("Data appended to buffer for client %i", client_fd);
 
-	if (req.state == NO_BODY)
-		if (parseHttpNoBody(req) == FAILURE) return;
+    if (req.state == REQUEST_LINE) {
+        if (parseHttpRequestLine(req) == FAILURE) return;
+        Logger::debug("Request line parsed successfully for client %i", client_fd);
+    }
 
-	if (req.state == BODY_CHUNKED)
-		if (parseHttpBodyChunked(req) == FAILURE) return;
+    if (req.state == HEADERS) {
+        if (parseHttpHeaderLine(config, req) == FAILURE) return;
+        Logger::debug("Headers parsed successfully for client %i", client_fd);
+    }
 
-	if (req.state == BODY)
-		if (parseHttpBody(req) == FAILURE) return;
+    if (req.state == NO_BODY) {
+        if (parseHttpNoBody(req) == FAILURE) return;
+        Logger::debug("No-body request handled successfully for client %i", client_fd);
+    }
+
+    if (req.state == BODY_CHUNKED) {
+        if (parseHttpBodyChunked(req) == FAILURE) return;
+        Logger::debug("Chunked body parsed successfully for client %i", client_fd);
+    }
+
+    if (req.state == BODY) {
+        if (parseHttpBody(req) == FAILURE) return;
+        Logger::debug("Body parsed successfully for client %i", client_fd);
+    }
 }
 
 /* void parseHttpRequestOld(HttpRequest &req, std::string &data)
