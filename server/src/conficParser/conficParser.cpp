@@ -51,6 +51,7 @@ void printServer(server &Server) {
 		} else {
 			Logger::debug("  Redirect: None");
 		}
+
 	}
 }
 
