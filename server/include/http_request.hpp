@@ -54,13 +54,11 @@ enum HeaderLineState{
 	HL_COLON,
 	HL_SPACE_AFTER_COLON,
 	HL_VALUE,
-	HL_COMMA,
-	HL_END_OF_FIELD,
-	HL_FOLDING,
 	HL_DOUBLE_QUOTES,
 	HL_ESCAPE_CHAR,
+	HL_END_OF_FIELD,
+	HL_FOLDING,
 	HL_DONE
-	// HL_ERROR
 };
 
 enum BodyState{
@@ -80,7 +78,7 @@ struct HttpRequest {
 	std::string version;
 	std::string path;
 	std::string queryString;
-	std::map<std::string, std::vector<std::string> > headers;
+	std::map<std::string, std::string> headers;
 	std::map<std::string, std::string> query;
 	std::string		body;
 	std::string		buffer;
@@ -99,7 +97,7 @@ struct HttpRequest {
 	RequestState state;
 	int exitStatus;
 	long long startTime;
-	HttpRequest() : cgi(false), pos (0), folding (false), currentKey(""), parseState(0), state(REQUEST_LINE) {}
+	HttpRequest() : cgi(false), pos (0), folding (false), currentKey(""), srv(NULL), parseState(0), state(REQUEST_LINE) {}
 };
 
 std::ostream& operator<<(std::ostream& os, const HttpMethod& method);
