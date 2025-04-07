@@ -63,6 +63,33 @@ async function loginRoute(email, password) {
 	}
 }
 
+async function uploadFileBackend(file) {
+	try {
+		console.log(file); // Zeigt Metadaten wie Name, Typ, Größe an
+
+		const formData = new FormData();
+		formData.append("file", file); // Datei unter dem Key "file" hinzufügen
+
+		const response = await fetch(`/dashboard`, {
+			method: 'POST',
+			body: formData
+		});
+
+		if (response.ok) {
+			console.log("File upload successful");
+			return response;
+		} else {
+			console.log("File upload failed:", response);
+			return false;
+		}
+	} catch (error) {
+		console.error("Upload failed:", error);
+		return false;
+	}
+}
+
+
+
 async function uploadFile(file, email) {
     try {
         const response = await fetch(`/uploadFile?email=${email}&fileName=${file.name}`, {

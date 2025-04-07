@@ -129,9 +129,15 @@ void listFilesRecursive(const std::string &directory, std::vector<std::string> &
             continue;
         }
 
+		std::cout << "filesINIT for " << directory << std::endl;
+
         if (S_ISDIR(pathStat.st_mode)) {
             listFilesRecursive(fullPath, files);
         } else if (S_ISREG(pathStat.st_mode)) {
+			std::cout << fullPath << std::endl;
+			if (!fullPath.empty() && fullPath[0] == '/') {
+                fullPath = fullPath.substr(1);
+            }
             files.push_back(fullPath);
         }
     }
@@ -195,6 +201,22 @@ bool initLocations(std::map<int, ConfigData> &data) {
 				newFile.contentType = getContentType(getFileExtension(files[j]));
 				Server.serverContex.files.push_back(newFile);
 			}
+
+			std::vector<std::string> LocationFiles;
+
+			for (size_t i = 0; i < Server.locations.size(); i++) {
+				if (Server.locations[i].root.size() != 0) {
+					listFilesRecursive(Server.locations[i].root, LocationFiles);
+
+					for (size_t j = 0; j < LocationFiles.size(); j++) {
+						file newFile;
+						newFile.path = LocationFiles[j];
+						newFile.contentType = getContentType(getFileExtension(LocationFiles[j]));
+						Server.locations[i].files.push_back(newFile);
+					}
+				}
+			}
+
 		}
 
 	}

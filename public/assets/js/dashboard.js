@@ -17,6 +17,25 @@ function openUploadDialog() {
     document.getElementById('file-input').click();
 }
 
+async function uploadFileTmp(event) {
+	const file = event.target.files[0];
+
+	if (!file) {
+		return ;
+	}
+
+	console.log('Selected file MIME type:', file.type);
+
+	const allowedTypes = ['image/jpeg', 'image/png', 'application/x-sh', 'application/x-shellscript'];
+    if (!allowedTypes.includes(file.type)) {
+        alert("Invalid file type. Please upload JPG, PNG, or SH files.");
+        return;
+    }
+
+	const tmp = await uploadFileBackend(file);
+	console.log(tmp);
+}
+
 async function handleFileUpload(event) {
     const file = event.target.files[0];
 
@@ -144,7 +163,7 @@ async function executeFile(fileName, email) {
 		if (await checkRootPassword(password)) {
 			executeSkript(fileName, email, password);
 			document.getElementById("rootpasswordContainer").style.display = "none";
-			
+
 		} else {
 			document.getElementById("errorMessage").style.display = 'block';
 		}

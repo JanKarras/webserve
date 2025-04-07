@@ -129,7 +129,8 @@ struct ConfigData {
 };
 
 void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage);
-
+std::string getFileExtension(const std::string &filename);
+std::string getContentType(const std::string &extension);
 //CONFIC
 bool parseConfic(std::string path, std::map<int, ConfigData> &data);
 void printAll(std::map<int, ConfigData> &data);
@@ -165,7 +166,7 @@ int setNonBlocking(int fd);
 void initRoutes(ServerContext &serverContext);
 std::map<std::string, std::string> parseSimpleJSON(const std::string& body);
 //POST ROUTES
-void routeRequestPOST(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
+void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc);
 //GET ROUTES
 void routeRequestGET(HttpRequest &req, HttpResponse &res, server &server, location &loc);
 //DELETE ROUTES

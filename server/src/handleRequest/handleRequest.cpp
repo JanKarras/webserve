@@ -83,6 +83,7 @@ void handleRequest(int clientFd, ConfigData &configData) {
 				handle405(res);
 			} else {
 				Logger::debug("POST in location %s called", foundLocation->name.c_str());
+				routeRequestPOST(req, res, Server, *foundLocation);
 			}
 		} else if (req.method == DELETE) {
 			if (!foundLocation->del) {
