@@ -1,5 +1,27 @@
 #include "../../include/webserv.hpp"
 
+bool isPathSafe(const std::string &fileName) {
+	if (fileName.find("..") != std::string::npos) {
+		return false;  // Verhindert Pfad-Traversal
+	}
+	return true;
+}
+
+bool isCGIFile(const std::string &fileName, const std::vector<std::string> &cgi_ext) {
+	size_t dotPos = fileName.rfind('.');
+	if (dotPos == std::string::npos) {
+		return false;
+	}
+
+	std::string fileExt = fileName.substr(dotPos);
+	for (size_t i = 0; i < cgi_ext.size(); ++i) {
+		if (fileExt == cgi_ext[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc) {
 	std::string uploadDir;
 
@@ -22,8 +44,8 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 	}
 
 	std::string fileName = req.headers["Filename"];
-	if (fileName.empty()) {
-		Logger::error("Filename not provided.");
+	if (fileName.empty() || !isPathSafe(fileName)) {
+		Logger::error("Invalid or unsafe filename");
 		handle400(res);
 		return;
 	}
@@ -44,6 +66,14 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 
 	newFile.path = filePath;
 	newFile.contentType = getContentType(getFileExtension(filePath));
+
+	if (isCGIFile(fileName, loc.cgi_ext)) {
+		Logger::info("Making CGI script executable: %s", filePath.c_str());
+
+		if (!setsetExecutable(filePath)) {
+			Logger::error("Failed to set file as executable: %s", filePath.c_str());
+		}
+	}
 
 	std::cout << "newFile: " << newFile.path << "--" << newFile.contentType << std::endl;
 
