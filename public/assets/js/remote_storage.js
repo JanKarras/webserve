@@ -30,6 +30,27 @@ async function registerRoute(email, password) {
 	}
 }
 
+tmp()
+
+async function tmp() {
+	try {
+		const response = await fetch("/dashboard", {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: "test"
+		})
+
+		if (response.ok) {
+			console.log("res ok");
+		} else {
+			console.log(response.status);
+		}
+	}
+	catch (error) {
+		console.log(response);
+	}
+}
+
 async function loginRoute(email, password) {
 	try {
 		const response = await fetch('/auth/login', {
@@ -65,10 +86,13 @@ async function loginRoute(email, password) {
 
 async function uploadFileBackend(file) {
 	try {
-		console.log(file); // Zeigt Metadaten wie Name, Typ, Größe an
 
 		const formData = new FormData();
 		formData.append("file", file); // Datei unter dem Key "file" hinzufügen
+		console.log("FormData Inhalt:");
+		for (const pair of formData.entries()) {
+			console.log(pair[0], pair[1]); // Key und Wert ausgeben
+		}
 
 		const response = await fetch(`/dashboard`, {
 			method: 'POST',

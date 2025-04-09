@@ -4,13 +4,13 @@ function getEmailFromURL() {
 }
 
 async function initDashboard() {
-    const email = getEmailFromURL();
-    if (email) {
-        document.getElementById('username').innerText = email;
-        await renderFiles(email);
-    } else {
-        console.error('No email found in the URL.');
-    }
+    //const email = getEmailFromURL();
+    //if (email) {
+    //    document.getElementById('username').innerText = email;
+    //    await renderFiles(email);
+    //} else {
+    //    console.error('No email found in the URL.');
+    //}
 }
 
 function openUploadDialog() {
