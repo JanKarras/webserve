@@ -170,7 +170,7 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 //GET ROUTES
 void routeRequestGET(HttpRequest &req, HttpResponse &res, server &server, location &loc);
 //DELETE ROUTES
-void routeRequestDELETE(HttpRequest &req, HttpResponse &res, ServerContext serverContext);
+void routeRequestDELETE(HttpRequest &req, HttpResponse &res, server &server, location &loc);
 //CGI ROUTES
 void routeRequestCGI(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
 //POST CONTROLLER

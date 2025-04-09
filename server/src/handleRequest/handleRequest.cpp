@@ -65,8 +65,28 @@ void handleRequest(int clientFd, ConfigData &configData) {
 
 	location *foundLocation = bestMatch;
 
+
+
 	// Request basierend auf der gefundenen Location oder Datei verarbeiten
 	if (foundLocation) {
+
+		if (!foundLocation->redirect.empty()) {
+			bool isValidLocationName = false;
+			std::string red = foundLocation->redirect;
+			for (size_t i = 0; i < Server.locations.size(); i++) {
+				if (red == Server.locations[i].name) {
+					req.path = foundLocation->redirect + req.path.substr(foundLocation->name.size());
+					foundLocation = &Server.locations[i];
+					isValidLocationName = true;
+					break;
+				}
+			}
+			if (isValidLocationName == false) {
+				handle404(res);
+				return;
+			}
+		}
+
 		Logger::debug("Matched location: %s", foundLocation->name.c_str());
 
 		if (req.method == GET) {
@@ -91,6 +111,7 @@ void handleRequest(int clientFd, ConfigData &configData) {
 				handle405(res);
 			} else {
 				Logger::debug("DELETE in location %s called", foundLocation->name.c_str());
+				routeRequestDELETE(req, res, Server, *foundLocation);
 			}
 		} else {
 			Logger::error("Unknown method: %i", req.method);
