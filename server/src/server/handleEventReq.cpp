@@ -13,7 +13,6 @@ bool handleEventReq(ConfigData &configData, int i) {
 		epoll_ctl(configData.epollFd, EPOLL_CTL_DEL, configData.events[i].data.fd, NULL);
 	} else {
 		data.append(buffer, bytesRead);
-		Logger::debug("data in handleEvenentReq: %s", data.c_str());
 		parseHttpRequest(configData, configData.requests[configData.events[i].data.fd].clientFd, data);
 		printHttpRequest(configData.requests[configData.events[i].data.fd]);
 		if (configData.requests[configData.events[i].data.fd].state == COMPLETE) {

@@ -22,8 +22,62 @@ bool isCGIFile(const std::string &fileName, const std::vector<std::string> &cgi_
 	return false;
 }
 
+void printFormData(formData &data) {
+    Logger::debug("boundary: %s", data.boundary.c_str());
+    Logger::debug("Content-Disposition: %s", data.dis.c_str());
+    Logger::debug("name: %s", data.name.c_str());
+    Logger::debug("filename: %s", data.filename.c_str());
+    Logger::debug("Content-Type: %s", data.contentType.c_str());
+    Logger::debug("fileContent:\n%s", data.fileContent.c_str());
+}
+
+bool parseFormData(HttpRequest &req, HttpResponse &res, formData &formData) {
+    std::map<std::string, std::string>::iterator it = req.headers.find("content-type");
+    if (it == req.headers.end()) {
+        Logger::error("Fehler: Kein Content-Type-Header vorhanden.");
+        handle500(res);
+        return false;
+    }
+
+    std::string contentType = it->second;
+    std::string boundaryPrefix = "boundary=";
+    size_t pos = contentType.find("multipart/form-data");
+
+    if (pos == std::string::npos) {
+        Logger::error("Fehler: Content-Type ist nicht multipart/form-data.");
+        handle500(res);
+        return false;
+    }
+
+    pos = contentType.find(boundaryPrefix);
+    if (pos == std::string::npos) {
+        Logger::error("Fehler: Keine Boundary im Content-Type gefunden.");
+        handle500(res);
+        return false;
+    }
+
+    formData.boundary = "--" + contentType.substr(pos + boundaryPrefix.length());
+
+	std::cout << req.body << std::endl;
+
+	pos = req.body.find(formData.boundary);
+	if (pos == std::string::npos) {
+		Logger::error("Fehler: Keine Boundary im Body gefunden.");
+        handle500(res);
+        return false;
+	}
+
+
+	printFormData(formData);
+    return true;
+}
+
+
+
 void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc) {
 	std::string uploadDir;
+
+	std::cout << req.body << std::endl;
 
 	if (loc.root.size() != 0) {
 		uploadDir = loc.root;
@@ -31,15 +85,15 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		uploadDir = server.root;
 	}
 
-	if (uploadDir.empty()) {
-		Logger::error("Upload directory is not set.");
-		handle500(res);
+	formData form;
+
+	if (parseFormData(req, res, form) == false) {
 		return;
 	}
 
-	if (req.body.empty()) {
-		Logger::error("No file data received.");
-		handle400(res);
+	if (uploadDir.empty()) {
+		Logger::error("Upload directory is not set.");
+		handle500(res);
 		return;
 	}
 

@@ -21,6 +21,8 @@ void handleRequest(int clientFd, ConfigData &configData) {
 	HttpRequest req = Server.serverContex.requests[clientFd];
 	HttpResponse &res = Server.serverContex.responses[clientFd];
 
+	printHttpRequest(req);
+
 	// Beste passende Location finden (Längste-Prefix-Matching)
 	location *bestMatch = NULL;
 	size_t longestMatch = 0;

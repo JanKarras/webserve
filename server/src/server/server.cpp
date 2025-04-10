@@ -129,12 +129,10 @@ void listFilesRecursive(const std::string &directory, std::vector<std::string> &
             continue;
         }
 
-		std::cout << "filesINIT for " << directory << std::endl;
 
         if (S_ISDIR(pathStat.st_mode)) {
             listFilesRecursive(fullPath, files);
         } else if (S_ISREG(pathStat.st_mode)) {
-			std::cout << fullPath << std::endl;
 			if (!fullPath.empty() && fullPath[0] == '/') {
                 fullPath = fullPath.substr(1);
             }

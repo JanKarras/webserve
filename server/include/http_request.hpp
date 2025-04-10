@@ -70,8 +70,6 @@ enum BodyState{
 	// B_ERROR,
 };
 
-
-
 struct HttpRequest {
 	HttpMethod method;
 	std::string uri;

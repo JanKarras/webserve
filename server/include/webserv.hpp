@@ -128,6 +128,15 @@ struct ConfigData {
 	struct epoll_event events[MAX_EVENTS];
 };
 
+struct formData{
+	std::string boundary;
+	std::string dis;
+	std::string name;
+	std::string filename;
+	std::string contentType;
+	std::string fileContent;
+};
+
 void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage);
 std::string getFileExtension(const std::string &filename);
 std::string getContentType(const std::string &extension);
