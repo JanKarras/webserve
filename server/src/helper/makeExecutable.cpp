@@ -1,6 +1,6 @@
 #include "../../include/webserv.hpp"
 
-bool setExecutable(std::string &filePath) {
+bool setsetExecutable(std::string &filePath) {
     pid_t pid = fork();
 
     if (pid == -1) {
