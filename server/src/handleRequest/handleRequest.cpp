@@ -18,7 +18,14 @@ void handleRequest(int clientFd, ConfigData &configData) {
 	server &Server = configData.servers[index];
 
 	// Request und Response abrufen
-	HttpRequest req = Server.serverContex.requests[clientFd];
+	std::map<int, HttpRequest&>::iterator it = Server.serverContex.requests.find(clientFd);
+	HttpRequest req;
+	if (it != Server.serverContex.requests.end()) {
+		req =  it->second;
+	} else {
+		std::cout << "error" << std::endl;
+		return; 
+	}
 	HttpResponse &res = Server.serverContex.responses[clientFd];
 
 	printHttpRequest(req);

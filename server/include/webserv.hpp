@@ -80,7 +80,7 @@ struct file {
 };
 
 struct ServerContext {
-	std::map<int, HttpRequest> requests;
+	std::map<int, HttpRequest&> requests;
 	std::map<int, HttpResponse> responses;
 	std::map<int, int> fds;
 	std::map<int, pid_t> pids;

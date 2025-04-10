@@ -81,7 +81,6 @@ struct HttpRequest {
 	std::string		body;
 	std::string		buffer;
 	size_t			content_length;
-	bool			cgi;
 	size_t			pos;
 	bool			folding;
 	std::string		currentKey;
@@ -95,7 +94,7 @@ struct HttpRequest {
 	RequestState state;
 	int exitStatus;
 	long long startTime;
-	HttpRequest() : cgi(false), pos (0), folding (false), currentKey(""), srv(NULL), parseState(0), state(REQUEST_LINE) {}
+	HttpRequest() : pos (0), folding (false), currentKey(""), srv(NULL), parseState(0), state(REQUEST_LINE) {}
 };
 
 std::ostream& operator<<(std::ostream& os, const HttpMethod& method);

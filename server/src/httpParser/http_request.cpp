@@ -148,13 +148,13 @@ static int distributeRequest(ConfigData &config, HttpRequest &req)
 			if (config.servers[i].server_name == serverName)
 			{
 				req.srv = &config.servers[i];
-				config.servers[i].serverContex.requests.insert(std::pair<int, HttpRequest>(req.clientFd, req));
+				config.servers[i].serverContex.requests.insert(std::pair<int, HttpRequest&>(req.clientFd, req));
 				return SUCCESS;
 			}
 		}
 	}
 	req.srv = &config.servers[0];
-	config.servers[0].serverContex.requests.insert(std::pair<int, HttpRequest>(req.clientFd, req));
+	config.servers[0].serverContex.requests.insert(std::pair<int, HttpRequest&>(req.clientFd, req));
 	return SUCCESS;
 }
 
@@ -581,7 +581,6 @@ static int parseHttpHeaderLine(ConfigData &configData, HttpRequest &req)
 				req.buffer.erase(0, pos + 1);
 				req.pos = 0;
 				distributeRequest(configData, req);
-				req.cgi = (req.srv != NULL) ? isCgi(req.path, *req.srv) : false;
 				std::map<std::string, std::string>::iterator it = req.headers.find("transfer-encoding");
 				if (it != req.headers.end() && it->second == "chunked")
 					req.state = BODY_CHUNKED;
