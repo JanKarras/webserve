@@ -585,9 +585,9 @@ static int parseHttpHeaderLine(ConfigData &configData, HttpRequest &req)
 				std::map<std::string, std::string>::iterator it = req.headers.find("transfer-encoding");
 				if (it != req.headers.end() && it->second == "chunked")
 					req.state = BODY_CHUNKED;
-				else if (req.headers.find("content-Length") != req.headers.end())
+				else if (req.headers.find("content-length") != req.headers.end())
 				{
-					req.content_length = atol(req.headers["content-Length"].c_str());
+					req.content_length = atol(req.headers["content-length"].c_str());
 					if (req.content_length < 0)
 					{
 						setRequestError(configData, req, HTTP_BAD_REQUEST);
