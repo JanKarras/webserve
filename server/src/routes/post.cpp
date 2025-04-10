@@ -8,6 +8,7 @@ bool isPathSafe(const std::string &fileName) {
 }
 
 bool isCGIFile(const std::string &fileName, const std::vector<std::string> &cgi_ext) {
+	Logger::debug("File: %s is an exectuabale", fileName.c_str());
 	size_t dotPos = fileName.rfind('.');
 	if (dotPos == std::string::npos) {
 		return false;
@@ -152,7 +153,7 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		return;
 	}
 
-	std::string fileName = req.headers["Filename"];
+	std::string fileName = form.filename;
 	if (fileName.empty() || !isPathSafe(fileName)) {
 		Logger::error("Invalid or unsafe filename");
 		handle400(res);
@@ -168,7 +169,7 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		return;
 	}
 
-	outfile.write(req.body.c_str(), req.body.size());
+	outfile.write(form.fileContent.c_str(), form.fileContent.size());
 	outfile.close();
 
 	file newFile;
@@ -184,7 +185,7 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		}
 	}
 
-	std::cout << "newFile: " << newFile.path << "--" << newFile.contentType << std::endl;
+	std::cout << "newFile: " << newFile.path << " -- " << newFile.contentType << std::endl;
 
 	Logger::info("File uploaded successfully: %s", filePath.c_str());
 	res.statusCode = 201;

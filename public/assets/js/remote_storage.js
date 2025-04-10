@@ -30,27 +30,6 @@ async function registerRoute(email, password) {
 	}
 }
 
-tmp()
-
-async function tmp() {
-	try {
-		const response = await fetch("/dashboard", {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: "test"
-		})
-
-		if (response.ok) {
-			console.log("res ok");
-		} else {
-			console.log(response.status);
-		}
-	}
-	catch (error) {
-		console.log(response);
-	}
-}
-
 async function loginRoute(email, password) {
 	try {
 		const response = await fetch('/auth/login', {
