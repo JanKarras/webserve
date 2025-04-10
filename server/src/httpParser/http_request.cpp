@@ -873,14 +873,17 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 		{
 			case B_CHUNK_SIZE:
 			{
+				Logger::debug("CHUNK_SIZE buffer: %s", req.buffer.c_str());
 				size_t pos = req.buffer.find("\r\n");
 				if (pos == std::string::npos) // Incomplete chunk size
 					return SUCCESS;
 
 				// Convert hex size to integer
 				std::string hexSize = req.buffer.substr(0, pos);
+				Logger::debug("CHUNK_SIZE hexSize: %s", hexSize.c_str());
 				char *endptr;
 				long chunkSize = strtol(hexSize.c_str(), &endptr, 16);
+				Logger::debug("CHUNK_SIZE chunkSize: %i", chunkSize);
 				if (*endptr != '\0' || chunkSize < 0) // Invalid size
 				{
 					setRequestError(configData, req, HTTP_BAD_REQUEST);

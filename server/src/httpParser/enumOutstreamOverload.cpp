@@ -29,6 +29,12 @@ std::ostream& operator<<(std::ostream& os, const RequestState& state) {
         case BODY:
             os << "BODY";
             break;
+		case NO_BODY:
+			os << "NO_BODY";
+			break;
+		case BODY_CHUNKED:
+			os << "BODY_CHUNKED";
+			break;
         case COMPLETE:
             os << "COMPLETE";
             break;
