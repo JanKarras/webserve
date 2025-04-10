@@ -32,9 +32,10 @@ void printFormData(formData &data) {
 }
 
 bool parseFormData(HttpRequest &req, HttpResponse &res, formData &formData) {
+    // 1. Extract boundary from the header
     std::map<std::string, std::string>::iterator it = req.headers.find("content-type");
     if (it == req.headers.end()) {
-        Logger::error("Fehler: Kein Content-Type-Header vorhanden.");
+        Logger::error("Error: No Content-Type header found.");
         handle500(res);
         return false;
     }
@@ -44,35 +45,89 @@ bool parseFormData(HttpRequest &req, HttpResponse &res, formData &formData) {
     size_t pos = contentType.find("multipart/form-data");
 
     if (pos == std::string::npos) {
-        Logger::error("Fehler: Content-Type ist nicht multipart/form-data.");
+        Logger::error("Error: Content-Type is not multipart/form-data.");
         handle500(res);
         return false;
     }
 
     pos = contentType.find(boundaryPrefix);
     if (pos == std::string::npos) {
-        Logger::error("Fehler: Keine Boundary im Content-Type gefunden.");
+        Logger::error("Error: No boundary found in Content-Type.");
         handle500(res);
         return false;
     }
 
     formData.boundary = "--" + contentType.substr(pos + boundaryPrefix.length());
 
-	std::cout << req.body << std::endl;
-
-	pos = req.body.find(formData.boundary);
-	if (pos == std::string::npos) {
-		Logger::error("Fehler: Keine Boundary im Body gefunden.");
+    // 2. Split body into sections
+    std::string body = req.body;
+    size_t start = body.find(formData.boundary);
+    if (start == std::string::npos) {
+        Logger::error("Error: Boundary not found in the body.");
         handle500(res);
         return false;
-	}
+    }
+    start += formData.boundary.length(); // Move past the boundary
 
+    // 3. Parse headers
+    size_t end = body.find("\r\n\r\n", start);
+    if (end == std::string::npos) {
+        Logger::error("Error: No double CRLF found (Headers missing or malformed).");
+        handle500(res);
+        return false;
+    }
 
-	printFormData(formData);
+    std::string headers = body.substr(start, end - start);
+    start = end + 4; // Move past CRLF
+
+    // Find Content-Disposition
+    pos = headers.find("Content-Disposition:");
+    if (pos == std::string::npos) {
+        Logger::error("Error: Content-Disposition header missing.");
+        handle500(res);
+        return false;
+    }
+
+    // Extract name
+    pos = headers.find("name=\"", pos);
+    if (pos == std::string::npos) {
+        Logger::error("Error: Name parameter missing in Content-Disposition.");
+        handle500(res);
+        return false;
+    }
+    size_t nameStart = pos + 6;
+    size_t nameEnd = headers.find("\"", nameStart);
+    formData.name = headers.substr(nameStart, nameEnd - nameStart);
+
+    // Extract filename (optional)
+    pos = headers.find("filename=\"", nameEnd);
+    if (pos != std::string::npos) {
+        size_t fileStart = pos + 10;
+        size_t fileEnd = headers.find("\"", fileStart);
+        formData.filename = headers.substr(fileStart, fileEnd - fileStart);
+    }
+
+    // Extract Content-Type (optional)
+    pos = headers.find("Content-Type:");
+    if (pos != std::string::npos) {
+        size_t typeStart = pos + 14;
+        size_t typeEnd = headers.find("\r\n", typeStart);
+        formData.contentType = headers.substr(typeStart, typeEnd - typeStart);
+    }
+
+    // 4. Extract file content
+    end = body.find(formData.boundary, start);
+    if (end == std::string::npos) {
+        Logger::error("Error: No closing boundary found.");
+        handle500(res);
+        return false;
+    }
+
+    formData.fileContent = body.substr(start, end - start - 2); // -2 to remove \r\n before boundary
+
+    printFormData(formData);
     return true;
 }
-
-
 
 void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc) {
 	std::string uploadDir;
