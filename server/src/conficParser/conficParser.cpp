@@ -13,9 +13,11 @@ void printServer(server &Server) {
 	}
 	for (size_t i = 0; i < Server.locations.size(); i++) {
 		const location& loc = Server.locations[i];  // Referenz auf das aktuelle location-Objekt
-
 		// Ausgabe der verschiedenen Eigenschaften der location
 		Logger::debug("Location %d:", i);
+		if (loc.regularLocation) {
+			Logger::debug("  Regular Location with pattern: %s and ext: %s", loc.pattern.c_str(), loc.ext.c_str());
+		}
 
 		if (loc.get) {
 			Logger::debug("  Get is true");
@@ -29,7 +31,9 @@ void printServer(server &Server) {
 			Logger::debug("  del is true");
 		}
 
-		Logger::debug("  Name: %s", loc.name.c_str());
+		if (!loc.regularLocation) {
+			Logger::debug("  Name: %s", loc.name.c_str());
+		}
 		Logger::debug("  Root: %s", loc.root.c_str());
 		Logger::debug("  Index: %s", loc.index.c_str());
 
@@ -51,7 +55,6 @@ void printServer(server &Server) {
 		} else {
 			Logger::debug("  Redirect: None");
 		}
-
 	}
 }
 
@@ -305,6 +308,7 @@ bool isValidLocation(const std::string &line, location &Location) {
 	Location.get = false;
 	Location.post = false;
 	Location.del = false;
+	Location.regularLocation = false;
 	std::istringstream ss(line);
 	std::string keyword;
 	std::string value;
@@ -350,19 +354,29 @@ bool isValidLocation(const std::string &line, location &Location) {
 			iss >> value;
 			Location.redirect = value;
 		} else if (keyword == "location") {
-			iss >> value;
-			Location.name = value;
+			std::string tmp;
+			iss >> tmp;
+			if (tmp == "~") {
+				Location.regularLocation = true;
+				std::string regexPattern;
+				iss >> regexPattern;
+				Location.pattern = regexPattern;
+				if (regexPattern.size() >= 4 && regexPattern.substr(0, 2) == "\\." && regexPattern[regexPattern.size() - 1] == '$') {
+					Location.ext = "." + regexPattern.substr(2, regexPattern.size() - 3);
+				} else {
+					Logger::error("Unsupported regex location pattern: '%s'", regexPattern.c_str());
+					return true;
+				}
+			} else {
+				Location.name = tmp;
+				Location.regularLocation = false;
+			}
 		} else if (keyword == "}") {
 			continue;
 		} else {
 			Logger::error("Unknown keyword '%s' in location block", keyword.c_str());
 			return true;
 		}
-
-		// if (line[line.size() - 1] != ';' && keyword != "location") {
-		// 	Logger::error("Line doesn't end with ';' in location block");
-		// 	return true;
-		// }
 	}
 
 	return false;
@@ -560,9 +574,16 @@ bool checkConfig(std::map<int, ConfigData> &data) {
 
 			for (std::vector<location>::iterator ittt = tmpServer.locations.begin(); ittt != tmpServer.locations.end(); ++ittt) {
 				location &tmpLocation = *ittt;
-				if (tmpLocation.name.empty()) {
-					Logger::error("Location with no name detected");
-					return (false);
+				if (!tmpLocation.regularLocation) {
+					if (tmpLocation.name.empty()) {
+						Logger::error("Location with no name detected");
+						return (false);
+					}
+				} else {
+					if (tmpLocation.root.empty() || tmpLocation.index.empty()) {
+						Logger::error("Regular locatoin with no root or index detected");
+						return (false);
+					}
 				}
 				if (!tmpLocation.root.empty()) {
 					if (!isDirectoryAndReadable(tmpLocation.root.c_str())) {

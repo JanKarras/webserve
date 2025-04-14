@@ -28,22 +28,38 @@ void handleRequest(int clientFd, ConfigData &configData) {
 	}
 	HttpResponse &res = Server.serverContex.responses[clientFd];
 
-	printHttpRequest(req);
-
-	// Beste passende Location finden (Längste-Prefix-Matching)
 	location *bestMatch = NULL;
 	size_t longestMatch = 0;
 	std::string &path = req.path;
 
+	printAll(data);
+
+	// Reguläre Pfadprüfung nach Dateiendung
 	for (size_t i = 0; i < Server.locations.size(); i++) {
 		location &loc = Server.locations[i];
 
-		// Prüfen, ob der Pfad mit der Location beginnt
-		if (path.find(loc.name) == 0) {
-			// Längere Matches haben Priorität
-			if (loc.name.length() > longestMatch) {
+		if (loc.regularLocation) {
+			Logger::debug("path: %s --> loc.ext: %s", req.path.c_str(), loc.ext.c_str());
+			if (path.size() >= loc.ext.size() &&
+				path.compare(path.size() - loc.ext.size(), loc.ext.size(), loc.ext) == 0) {
 				bestMatch = &loc;
-				longestMatch = loc.name.length();
+				break;
+			}
+		}
+	}
+
+
+	if (!bestMatch) {
+		for (size_t i = 0; i < Server.locations.size(); i++) {
+			location &loc = Server.locations[i];
+
+			// Prüfen, ob der Pfad mit der Location beginnt
+			if (path.find(loc.name) == 0) {
+				// Längere Matches haben Priorität
+				if (loc.name.length() > longestMatch) {
+					bestMatch = &loc;
+					longestMatch = loc.name.length();
+				}
 			}
 		}
 	}
@@ -112,7 +128,7 @@ void handleRequest(int clientFd, ConfigData &configData) {
 				handle405(res);
 			} else {
 				Logger::debug("POST in location %s called", foundLocation->name.c_str());
-				routeRequestPOST(req, res, Server, *foundLocation);
+				routeRequestPOST(req, res, Server, *foundLocation, clientFd);
 			}
 		} else if (req.method == DELETE) {
 			if (!foundLocation->del) {
