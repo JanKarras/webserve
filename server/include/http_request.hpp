@@ -104,3 +104,4 @@ struct HttpRequest {
 std::ostream& operator<<(std::ostream& os, const HttpMethod& method);
 std::ostream& operator<<(std::ostream& os, const RequestState& state);
 std::ostream& operator<<(std::ostream& os, const RequestLineState& state);
+std::ostream& operator<<(std::ostream& os, const BodyState& state);

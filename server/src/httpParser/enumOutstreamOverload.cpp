@@ -75,3 +75,43 @@ std::ostream& operator<<(std::ostream& os, const RequestLineState& state) {
     }
     return os;
 }
+
+// Overloading the << operator to print the enum as a string
+std::ostream& operator<<(std::ostream& os, const BodyState& state) {
+    switch (state) {
+        case B_CHUNK_SIZE_START:
+            os << "CHUNK_SIZE_START";
+            break;
+        case B_CHUNK_SIZE:
+            os << "B_CHUNK_SIZE";
+            break;
+        case B_CHUNK_SIZE_CRLF:
+            os << "B_CHUNK_SIZE_CRLF";
+            break;
+        case B_CHUNK_DATA_START:
+            os << "B_CHUNK_DATA_START";
+            break;
+        case B_CHUNK_DATA:
+            os << "B_CHUNK_DATA";
+            break;
+        case B_CHUNK_DATA_CRLF:
+            os << "B_CHUNK_DATA_CRLF";
+            break;
+        case B_CHUNK_TRAILER_START:
+            os << "B_CHUNK_TRAILER_START";
+            break;
+        case B_CHUNK_TRAILER:
+            os << "B_CHUNK_TRAILER";
+            break;
+        case B_CHUNK_TRAILER_CRLF:
+            os << "B_CHUNK_TRAILER_CRLF";
+            break;
+        case B_FINAL_CRLF:
+            os << "B_FINAL_CRLF";
+            break;
+        default:
+            os << "UNKNOWN";
+            break;
+    }
+    return os;
+}

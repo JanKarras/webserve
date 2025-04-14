@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PORT=8080
+PORT=80
 
 # Überprüfe, ob der Port belegt ist
 PID=$(lsof -t -i :$PORT)

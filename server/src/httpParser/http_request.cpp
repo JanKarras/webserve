@@ -641,13 +641,13 @@ static int parseHttpBody(ConfigData &configData, HttpRequest &req)
 		setRequestError(configData, req, HTTP_ENTITY_TOO_LARGE);
 		return FAILURE;
 	}
-
+	
 	req.body.append(req.buffer, 0, bufferLen);
 	req.buffer.erase(0, bufferLen);
 	req.pos = 0;
-
+	
 	if (req.body.size() == req.content_length)
-		req.state = COMPLETE;
+	req.state = COMPLETE;
 	return SUCCESS;
 }
 
@@ -659,7 +659,9 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 	for (; pos < buffer_length; pos++)
 	{
 		u_char c = req.buffer[pos];
-
+		std::cout << "c: " << c << std::endl;
+		std::cout << "Body state: " << state << std::endl;
+		
 		switch (state)
 		{
 			case (B_CHUNK_SIZE_START):
@@ -701,7 +703,7 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 					return FAILURE;
 				}
 				if (req.chunkSize == 0)
-					state = B_CHUNK_TRAILER;
+					state = B_CHUNK_TRAILER_START;
 				else
 					state = B_CHUNK_DATA_START;
 				break;
@@ -754,7 +756,8 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 					setRequestError(configData, req, HTTP_BAD_REQUEST);
 					return FAILURE;
 				}
-				state = B_CHUNK_TRAILER;
+				else
+					state = B_CHUNK_TRAILER;
 				break;
 			case (B_CHUNK_TRAILER):
 				if (c == '\r')
@@ -770,6 +773,7 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 					state = B_CHUNK_TRAILER_START;
 				break;
 			case (B_FINAL_CRLF):
+				Logger::debug("Final CRLF");
 				req.buffer.erase(0, pos);
 				if (c != '\n' && req.buffer.size() != 0)
 				{
