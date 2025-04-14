@@ -11,6 +11,27 @@ std::ostream& operator<<(std::ostream& os, const HttpMethod& method) {
         case DELETE:
             os << "DELETE";
             break;
+        case HEAD:
+            os << "HEAD";
+            break;
+        case PUT:
+            os << "PUT";
+            break;
+        case CONNECT:
+            os << "CONNECT";
+            break;
+        case OPTIONS:
+            os << "OPTIONS";
+            break;
+        case TRACE:
+            os << "TRACE";
+            break;
+        case PATCH:
+            os << "PATCH";
+            break;
+        case INVALID:
+            os << "INVALID";
+            break;
         default:
             os << "UNKNOWN";
             break;

@@ -347,6 +347,18 @@ static int parseHttpRequestLine(ConfigData &configData, HttpRequest &req)
 						req.method = POST;
 					else if (!req.buffer.compare(0, p, "DELETE"))
 						req.method = DELETE;
+					else if (!req.buffer.compare(0, p, "HEAD"))
+						req.method = HEAD;
+					else if (!req.buffer.compare(0, p, "PUT"))
+						req.method = PUT;
+					else if (!req.buffer.compare(0, p, "CONNECT"))
+						req.method = CONNECT;
+					else if (!req.buffer.compare(0, p, "OPTIONS"))
+						req.method = OPTIONS;
+					else if (!req.buffer.compare(0, p, "TRACE"))
+							req.method = TRACE;
+					else if (!req.buffer.compare(0, p, "PATCH"))
+						req.method = PATCH;
 					else
 					{
 						req.method = INVALID;
@@ -355,7 +367,7 @@ static int parseHttpRequestLine(ConfigData &configData, HttpRequest &req)
 					}
 					state = RL_URI;
 				}
-				else if (c < 'A' || c > 'Z' || p > 5)
+				else if (c < 'A' || c > 'Z' || p > 6)
 				{
 					setRequestError(configData, req, HTTP_BAD_REQUEST);
 					return FAILURE;
@@ -659,8 +671,6 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 	for (; pos < buffer_length; pos++)
 	{
 		u_char c = req.buffer[pos];
-		std::cout << "c: " << c << std::endl;
-		std::cout << "Body state: " << state << std::endl;
 		
 		switch (state)
 		{
@@ -773,7 +783,6 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 					state = B_CHUNK_TRAILER_START;
 				break;
 			case (B_FINAL_CRLF):
-				Logger::debug("Final CRLF");
 				req.buffer.erase(0, pos);
 				if (c != '\n' && req.buffer.size() != 0)
 				{
