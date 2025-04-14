@@ -103,6 +103,9 @@ struct location {
 	std::vector<std::string> cgi_ext;
 	std::string redirect;
 	std::vector<file> files;
+	bool regularLocation;
+	std::string ext;
+	std::string pattern;
 };
 
 struct server{
@@ -176,7 +179,7 @@ int setNonBlocking(int fd);
 void initRoutes(ServerContext &serverContext);
 std::map<std::string, std::string> parseSimpleJSON(const std::string& body);
 //POST ROUTES
-void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc);
+void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd);
 //GET ROUTES
 void routeRequestGET(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd);
 //DELETE ROUTES

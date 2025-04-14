@@ -91,7 +91,24 @@ async function uploadFileBackend(file) {
 	}
 }
 
+async function testTmpKek() {
+	try {
+        const response = await fetch(`/test.bla`, {
+            method: 'POST',
+            body: "Ich Poste die test File"
+        });
 
+        if (response.ok) {
+            console.log("Ich Poste die test File successful");
+            return true;
+        } else {
+			console.log(response);
+            return false;
+        }
+	} catch (error) {
+		return false;
+	}
+}
 
 async function uploadFile(file, email) {
     try {

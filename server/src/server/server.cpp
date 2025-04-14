@@ -234,6 +234,8 @@ void startServer(std::map<int, ConfigData> &data) {
 		return ;
 	}
 
+	printAll(data);
+
 	while (running) {
 		for (std::map<int, ConfigData>::iterator it = data.begin(); it != data.end(); ++it) {
 			ConfigData &configData = it->second;

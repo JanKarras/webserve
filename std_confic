@@ -19,12 +19,11 @@ server {
 	location /put_test/ {
 		root tester/put_test;
 		allow_methods POST;
-		cgi_ext .bla;
 	}
-	location ~ \.bla{
-		root tester
-		index ubuntu_cgi_tester
-		allow_methods POST
+	location ~ \.bla$ {
+		root tester;
+		index ubuntu_cgi_tester;
+		allow_methods POST;
 	}
 	location /post_body {
 		allow_methods POST;

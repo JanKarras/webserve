@@ -131,7 +131,22 @@ bool parseFormData(HttpRequest &req, HttpResponse &res, formData &formData) {
     return true;
 }
 
-void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc) {
+void handleRegularLocation(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
+	std::string path = loc.root + "/" + loc.index;
+	for (size_t i = 0; i < loc.files.size(); i++) {
+		if (path == loc.files[i].path) {
+			executeSkript(req, res, server, clientFd, loc.files[i]);
+			return ;
+		}
+	}
+	handle404(res);
+}
+
+void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
+	if (loc.regularLocation) {
+		handleRegularLocation(req, res, server, loc, clientFd);
+		return;
+	}
 	std::string uploadDir;
 
 	std::cout << req.body << std::endl;

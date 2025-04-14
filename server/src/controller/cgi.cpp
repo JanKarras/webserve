@@ -29,6 +29,16 @@ void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext
 		return;
 	}
 
+	std::string method;
+
+	if (req.method == GET) {
+		method = "REQUEST_METHOD=GET";
+	} else if (req.method == POST) {
+		method = "REQUEST_METHOD=POST";
+	} else {
+		method = "REQUEST_METHOD=DELETE";
+	}
+
 	if (pid == 0) {
 		close(pipeFd[0]);
 		dup2(pipeFd[1], STDOUT_FILENO);
@@ -36,7 +46,9 @@ void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext
 		close(pipeFd[1]);
 
 		char *argv[] = { const_cast<char*>(path.c_str()), NULL };
-		char *envp[] = { NULL };
+		char *envp[] = {	const_cast<char*>("REQUEST_METHOD=POST"),
+							const_cast<char*>("SERVER_PROTOCOL=HTTP/1.1"),
+							NULL };
 
 		execve(argv[0], argv, envp);
 
