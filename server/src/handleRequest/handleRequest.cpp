@@ -18,13 +18,13 @@ void handleRequest(int clientFd, ConfigData &configData) {
 	server &Server = configData.servers[index];
 
 	// Request und Response abrufen
-	std::map<int, HttpRequest&>::iterator it = Server.serverContex.requests.find(clientFd);
+	std::map<int, HttpRequest *>::iterator it = Server.serverContex.requests.find(clientFd);
 	HttpRequest req;
 	if (it != Server.serverContex.requests.end()) {
-		req =  it->second;
+		req =  *it->second;
 	} else {
 		std::cout << "error" << std::endl;
-		return; 
+		return;
 	}
 	HttpResponse &res = Server.serverContex.responses[clientFd];
 
@@ -104,7 +104,7 @@ void handleRequest(int clientFd, ConfigData &configData) {
 				handle405(res);
 			} else {
 				Logger::debug("GET in location %s called", foundLocation->name.c_str());
-				routeRequestGET(req, res, Server, *foundLocation);
+				routeRequestGET(req, res, Server, *foundLocation, clientFd);
 			}
 		} else if (req.method == POST) {
 			if (!foundLocation->post) {

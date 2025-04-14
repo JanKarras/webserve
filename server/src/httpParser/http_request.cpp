@@ -148,13 +148,13 @@ static int distributeRequest(ConfigData &config, HttpRequest &req)
 			if (config.servers[i].server_name == serverName)
 			{
 				req.srv = &config.servers[i];
-				config.servers[i].serverContex.requests.insert(std::pair<int, HttpRequest&>(req.clientFd, req));
+				config.servers[i].serverContex.requests.insert(std::pair<int, HttpRequest *>(req.clientFd, &req));
 				return SUCCESS;
 			}
 		}
 	}
 	req.srv = &config.servers[0];
-	config.servers[0].serverContex.requests.insert(std::pair<int, HttpRequest&>(req.clientFd, req));
+	config.servers[0].serverContex.requests.insert(std::pair<int, HttpRequest *>(req.clientFd, &req));
 	return SUCCESS;
 }
 

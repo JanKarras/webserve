@@ -80,7 +80,7 @@ struct file {
 };
 
 struct ServerContext {
-	std::map<int, HttpRequest&> requests;
+	std::map<int, HttpRequest *> requests;
 	std::map<int, HttpResponse> responses;
 	std::map<int, int> fds;
 	std::map<int, pid_t> pids;
@@ -140,6 +140,7 @@ struct formData{
 void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage);
 std::string getFileExtension(const std::string &filename);
 std::string getContentType(const std::string &extension);
+bool isCGIFile(const std::string &fileName, const std::vector<std::string> &cgi_ext);
 //CONFIC
 bool parseConfic(std::string path, std::map<int, ConfigData> &data);
 void printAll(std::map<int, ConfigData> &data);
@@ -177,7 +178,7 @@ std::map<std::string, std::string> parseSimpleJSON(const std::string& body);
 //POST ROUTES
 void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc);
 //GET ROUTES
-void routeRequestGET(HttpRequest &req, HttpResponse &res, server &server, location &loc);
+void routeRequestGET(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd);
 //DELETE ROUTES
 void routeRequestDELETE(HttpRequest &req, HttpResponse &res, server &server, location &loc);
 //CGI ROUTES
@@ -196,7 +197,7 @@ void delteFile(HttpRequest &req, HttpResponse &res);
 //CGI CONTROLLER
 void handleLs(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
 void handleLoop(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
-void executeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd);
+void executeSkript(HttpRequest &req, HttpResponse &res, server &server, int clientFd, file f);
 //PAGES
 void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage);
 void handle400(HttpResponse &res);

@@ -14,11 +14,17 @@ server {
 	error_page 500 error/500.html;
 	location / {
 		allow_methods GET;
+		cgi_ext .py .sh;
 	}
 	location /put_test/ {
 		root tester/put_test;
 		allow_methods POST;
 		cgi_ext .bla;
+	}
+	location ~ \.bla{
+		root tester
+		index ubuntu_cgi_tester
+		allow_methods POST
 	}
 	location /post_body {
 		allow_methods POST;
@@ -44,10 +50,12 @@ server {
 	error_page 500 error/500.html;
 	location / {
 		allow_methods GET POST;
+		cgi_ext .py .sh;
 	}
 	location /dashboard {
 		index dashboard.html;
 		allow_methods GET POST DELETE;
+		cgi_ext .py .sh;
 	}
 	location /red {
 		return /;

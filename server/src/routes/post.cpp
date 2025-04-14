@@ -8,14 +8,15 @@ bool isPathSafe(const std::string &fileName) {
 }
 
 bool isCGIFile(const std::string &fileName, const std::vector<std::string> &cgi_ext) {
-	Logger::debug("File: %s is an exectuabale", fileName.c_str());
+	Logger::debug("is File: %s is an exectuabale?", fileName.c_str());
 	size_t dotPos = fileName.rfind('.');
 	if (dotPos == std::string::npos) {
 		return false;
 	}
-
 	std::string fileExt = fileName.substr(dotPos);
+	Logger::debug("dot detected fileExt: %s -- cgi_ext.size = %i", fileExt.c_str(), cgi_ext.size());
 	for (size_t i = 0; i < cgi_ext.size(); ++i) {
+		Logger::debug("cgi_ext: %s", cgi_ext[i].c_str());
 		if (fileExt == cgi_ext[i]) {
 			return true;
 		}
@@ -160,7 +161,7 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		return;
 	}
 
-	std::string filePath = uploadDir + "/" + fileName;
+	std::string filePath = uploadDir + fileName;
 	std::ofstream outfile(filePath.c_str(), std::ios::binary);
 
 	if (!outfile) {
@@ -186,6 +187,12 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 	}
 
 	std::cout << "newFile: " << newFile.path << " -- " << newFile.contentType << std::endl;
+
+	if (loc.root.empty()) {
+		server.serverContex.files.push_back(newFile);
+	} else {
+		loc.files.push_back(newFile);
+	}
 
 	Logger::info("File uploaded successfully: %s", filePath.c_str());
 	res.statusCode = 201;

@@ -12,3 +12,1447 @@ Accept-Encoding: gzip
 
 0
 
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 232
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryzRBR6xAzxbB3aQfh
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundaryzRBR6xAzxbB3aQfh
+Content-Disposition: form-data; name="file"; filename="test.sh"
+Content-Type: application/x-shellscript
+
+Ich bin eine testFile12321211231321
+
+------WebKitFormBoundaryzRBR6xAzxbB3aQfh--
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /favicon.ico HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 232
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryB61MaamfFfUKBcEA
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundaryB61MaamfFfUKBcEA
+Content-Disposition: form-data; name="file"; filename="test.sh"
+Content-Type: application/x-shellscript
+
+Ich bin eine testFile12321211231321
+
+------WebKitFormBoundaryB61MaamfFfUKBcEA--
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /favicon.ico HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 232
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary2NlPaAm3o1DBcEqS
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundary2NlPaAm3o1DBcEqS
+Content-Disposition: form-data; name="file"; filename="test.sh"
+Content-Type: application/x-shellscript
+
+Ich bin eine testFile12321211231321
+
+------WebKitFormBoundary2NlPaAm3o1DBcEqS--
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /favicon.ico HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 232
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarySwqvaztbP8Hhabqm
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundarySwqvaztbP8Hhabqm
+Content-Disposition: form-data; name="file"; filename="test.sh"
+Content-Type: application/x-shellscript
+
+Ich bin eine testFile12321211231321
+
+------WebKitFormBoundarySwqvaztbP8Hhabqm--
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /favicon.ico HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /scripts HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 232
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarywElZw01LGntwUxQV
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundarywElZw01LGntwUxQV
+Content-Disposition: form-data; name="file"; filename="test.sh"
+Content-Type: application/x-shellscript
+
+Ich bin eine testFile12321211231321
+
+------WebKitFormBoundarywElZw01LGntwUxQV--
+GET / HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts HTTP/1.1
+Host: localhost
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/test.sh HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/time.sh HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/ HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /scripts/infinitLoop.sh HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /favicon.ico HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /scripts HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 266
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryM1nmS5cQVPbd8Nu2
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundaryM1nmS5cQVPbd8Nu2
+Content-Disposition: form-data; name="file"; filename="time.sh"
+Content-Type: application/x-shellscript
+
+#!/bin/bash
+
+echo "The current time is: $(date +"%Y-%m-%d %H:%M:%S")"
+
+------WebKitFormBoundaryM1nmS5cQVPbd8Nu2--
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /favicon.ico HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 266
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryYM8ffT2VG6iPXeB0
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundaryYM8ffT2VG6iPXeB0
+Content-Disposition: form-data; name="file"; filename="time.sh"
+Content-Type: application/x-shellscript
+
+#!/bin/bash
+
+echo "The current time is: $(date +"%Y-%m-%d %H:%M:%S")"
+
+------WebKitFormBoundaryYM8ffT2VG6iPXeB0--
+GET /time.sh HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /time.sh HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /time.sh HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET / HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/index.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/index_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/atoepper.png HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/rmatthes.png HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/jkarras.png HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 266
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryPUsWmSv0jhXqDWep
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundaryPUsWmSv0jhXqDWep
+Content-Disposition: form-data; name="file"; filename="time.sh"
+Content-Type: application/x-shellscript
+
+#!/bin/bash
+
+echo "The current time is: $(date +"%Y-%m-%d %H:%M:%S")"
+
+------WebKitFormBoundaryPUsWmSv0jhXqDWep--
+GET /time.sh HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /favicon.ico HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 266
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryozhsWLqBtUj7MZkA
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundaryozhsWLqBtUj7MZkA
+Content-Disposition: form-data; name="file"; filename="time.sh"
+Content-Type: application/x-shellscript
+
+#!/bin/bash
+
+echo "The current time is: $(date +"%Y-%m-%d %H:%M:%S")"
+
+------WebKitFormBoundaryozhsWLqBtUj7MZkA--
+GET /time.sh HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/dashboard.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/css/dashboard_style.css HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: text/css,*/*;q=0.1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: style
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/js/remote_storage.js HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: script
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+GET /favicon.ico HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+POST /dashboard HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 266
+sec-ch-ua-platform: "Linux"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+sec-ch-ua: "Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryWFKawZ8TJTz7CvZW
+sec-ch-ua-mobile: ?0
+Accept: */*
+Origin: http://localhost:8080
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8080/dashboard
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-CH,de-DE;q=0.9,de;q=0.8,en-US;q=0.7,en;q=0.6,es;q=0.5
+
+------WebKitFormBoundaryWFKawZ8TJTz7CvZW
+Content-Disposition: form-data; name="file"; filename="time.sh"
+Content-Type: application/x-shellscript
+
+#!/bin/bash
+
+echo "The current time is: $(date +"%Y-%m-%d %H:%M:%S")"
+
+------WebKitFormBoundaryWFKawZ8TJTz7CvZW--
+GET /time.sh HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET /time.sh HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.81.0
+Accept: */*
+
+GET / HTTP/1.1
+Host: localhost:80
+User-Agent: Go-http-client/1.1
+Accept-Encoding: gzip
+
+POST / HTTP/1.1
+Host: localhost:80
+User-Agent: Go-http-client/1.1
+Transfer-Encoding: chunked
+Content-Type: test/file
+Accept-Encoding: gzip
+
+0
+

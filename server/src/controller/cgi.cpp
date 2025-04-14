@@ -63,29 +63,7 @@ void handleLoop(HttpRequest &req, HttpResponse &res, ServerContext &serverContex
 	exeSkript(req, res, serverContext, clientFd, "./server/scripts/infinitLoop.sh");
 }
 
-void executeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd) {
-	std::string email = req.query["email"];
-	std::string fileName = req.query["fileName"];
-	std::string password = req.query["password"];
-
-	if (email.empty() || fileName.empty() || password.empty()) {
-		handle404(res);
-		return;
-	}
-
-	if (password != "cvwKg3bqRootPassword") {
-		handle403(res);
-		return;
-	}
-
-	std::string path = getDestPath(email);
-
-	if (path.length() == 0) {
-		handle500(res);
-		return ;
-	}
-
-	path.append("/" + fileName);
-
-	exeSkript(req, res, serverContext, clientFd, path);
+void executeSkript(HttpRequest &req, HttpResponse &res, server &server, int clientFd, file f) {
+	Logger::debug("executer script f.path: %s", f.path.c_str());
+	exeSkript(req, res, server.serverContex, clientFd, f.path);
 }
