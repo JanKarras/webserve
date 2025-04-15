@@ -4,7 +4,6 @@ bool handleEventReq(ConfigData &configData, int i) {
 	char buffer[BUFFER_SIZE];
 	std::string data;
 	int bytesRead = recv(configData.events[i].data.fd, buffer, sizeof(buffer) - 1, 0);
-	Logger::debug("Buffer: %s", buffer);
 	std::ofstream outFile("output.txt", std::ios::app);
 	if (!outFile) {
         std::cerr << "Error opening file for writing.\n";
@@ -29,7 +28,6 @@ bool handleEventReq(ConfigData &configData, int i) {
 	} else {
 		data.append(buffer, bytesRead);
 		parseHttpRequest(configData, configData.requests[configData.events[i].data.fd].clientFd, data);
-		printHttpRequest(configData.requests[configData.events[i].data.fd]);
 		if (configData.requests[configData.events[i].data.fd].state == COMPLETE) {
 			handleRequest(configData.events[i].data.fd, configData);
 		} else if (configData.requests[configData.events[i].data.fd].state == ERROR) {

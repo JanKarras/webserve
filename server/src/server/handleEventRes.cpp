@@ -36,7 +36,7 @@ bool handleEventRes(ConfigData &data, int i) {
         }
         headers.append("\r\n");
 
-
+		std::cout << headers;
         ssize_t bytesSent = send(clientFd, headers.c_str(), headers.size(), 0);
         if (bytesSent == -1) {
             Logger::error("Error sending headers to clientFd: %d", clientFd);
@@ -101,6 +101,7 @@ bool handleEventRes(ConfigData &data, int i) {
             size_t chunkSize = CHUNK_SIZE;
             while (offset < bodySize) {
                 size_t bytesToSend = std::min(chunkSize, bodySize - offset);
+				std::cout << response.body;
                 ssize_t bytesSent = send(clientFd, response.body.c_str() + offset, bytesToSend, 0);
                 if (bytesSent == -1) {
                     Logger::error("Error sending body to clientFd: %d", clientFd);
@@ -120,6 +121,14 @@ bool handleEventRes(ConfigData &data, int i) {
             close(clientFd);
             serverContext->requests.erase(clientFd);
             serverContext->responses.erase(clientFd);
+			Logger::info("client : %i connection closed. Size of Req: %i. Size of Res: %i", clientFd, serverContext->requests.size(), serverContext->responses.size());
+
+			// std::map<int, HttpRequest *>::iterator it = serverContext->requests.begin();
+			// std::map<int, HttpResponse>::iterator itt = serverContext->responses.begin();
+			// for (size_t i = 0; it != serverContext->requests.end(); ++i) {
+			// 	Logger::info("")
+			// }
+
         }
     }
     return true;

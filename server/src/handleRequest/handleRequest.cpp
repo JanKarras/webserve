@@ -32,8 +32,6 @@ void handleRequest(int clientFd, ConfigData &configData) {
 	size_t longestMatch = 0;
 	std::string &path = req.path;
 
-	printAll(data);
-
 	// Reguläre Pfadprüfung nach Dateiendung
 	for (size_t i = 0; i < Server.locations.size(); i++) {
 		location &loc = Server.locations[i];
@@ -139,8 +137,8 @@ void handleRequest(int clientFd, ConfigData &configData) {
 				routeRequestDELETE(req, res, Server, *foundLocation);
 			}
 		} else {
-			Logger::error("Unknown method: %i", req.method);
-			handle501(res);
+			Logger::error("Method not allowed: %i", req.method);
+			handle405(res);
 		}
 	} else {
 		Logger::error("Unknown location or file for path: %s", req.path.c_str());

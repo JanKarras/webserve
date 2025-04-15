@@ -29,6 +29,7 @@ server {
 		allow_methods POST;
 	}
 	location /directory/ {
+		allow_methods GET;
 		root tester/YoupiBanane;
 		index youpi.bad_extension;
 	}

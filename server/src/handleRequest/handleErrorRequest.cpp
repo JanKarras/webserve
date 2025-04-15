@@ -34,7 +34,7 @@ void handleErrorRequest(int clientFd, ConfigData &data, HttpRequest &req) {
 		res.state = SENDING_HEADERS;
 		break;
 	case HTTP_METHOD_N_ALLOWED:
-		res.statusMessage = "Http method not allowed";
+		res.statusMessage = "Method not allowed";
 		filePath = "public/error/405.html";
 		res.state = SENDING_HEADERS;
 		break;

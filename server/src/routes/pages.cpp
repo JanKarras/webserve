@@ -8,6 +8,9 @@ void handleFileResponse(HttpResponse &res, const std::string &filePath, const st
 	res.statusMessage = defaultMessage;
 	res.headers["Content-Type"] = contentType;
 	res.headers["Content-Length"] = toStringInt(res.body.size());
+	if (statusCode == 405) {
+		res.headers["Allow"] = "GET";
+	}
 	res.statusCode = statusCode;
 }
 
@@ -28,7 +31,7 @@ void handle404(HttpResponse &res) {
 }
 
 void handle405(HttpResponse &res) {
-	handleFileResponse(res, "public/error/405.html", "text/html", 405, "Http method not allowed");
+	handleFileResponse(res, "public/error/405.html", "text/html", 405, "Method not allowed");
 }
 
 void handle500(HttpResponse &res) {
