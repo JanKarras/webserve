@@ -3,7 +3,7 @@ server {
 	server_name localhost;
 	host 127.0.0.1;
 	root public/;
-	client_max_body_size 100;
+	client_max_body_size 1000000000;
 	index index.html;
 	error_page 400 error/400.html;
 	error_page 401 error/401.html;
@@ -19,19 +19,25 @@ server {
 	location /put_test/ {
 		root tester/put_test;
 		allow_methods POST;
+		client_max_body_size 100;
+	}
+	location /directory/ {
+		allow_methods GET;
+		root tester/YoupiBanane;
+		index youpi.bad_extension;
 	}
 	location ~ \.bla$ {
 		root tester;
 		index ubuntu_cgi_tester;
 		allow_methods POST;
 	}
-	location /post_body {
+	location ~ \.sh$ {
+		root server/scripts;
+		index ls.sh;
 		allow_methods POST;
 	}
-	location /directory/ {
-		allow_methods GET;
-		root tester/YoupiBanane;
-		index youpi.bad_extension;
+	location /post_body {
+		allow_methods POST;
 	}
 }
 server {

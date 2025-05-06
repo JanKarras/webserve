@@ -104,7 +104,7 @@ struct HttpRequest {
 	RequestState state;
 	int exitStatus;
 	long long startTime;
-	HttpRequest() : pos (0), folding (false), currentKey(""), srv(NULL), parseState(0), state(REQUEST_LINE) {}
+	HttpRequest() : content_length (0), pos (0), folding (false), currentKey(""), srv(NULL), parseState(0), state(REQUEST_LINE) {}
 };
 
 std::ostream& operator<<(std::ostream& os, const HttpMethod& method);

@@ -2,9 +2,6 @@
 
 void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage) {
 	res.body = getFileContent(filePath);
-	if (res.body.empty()) {
-		res.body = "<html><body><h1>" + defaultMessage + "</h1></body></html>";
-	}
 	res.statusMessage = defaultMessage;
 	res.headers["Content-Type"] = contentType;
 	res.headers["Content-Length"] = toStringInt(res.body.size());
@@ -40,6 +37,18 @@ void handle500(HttpResponse &res) {
 
 void handle501(HttpResponse &res) {
 	handleFileResponse(res, "public/error/501.html", "text/html", 501, "501 Not Implemented");
+}
+
+void handle504(HttpResponse &res) {
+	handleFileResponse(res, "public/error/501.html", "text/html", 504, "Timeout");
+}
+
+void handle502(HttpResponse &res) {
+	handleFileResponse(res, "public/error/501.html", "text/html", 502, "Bad Gateway");
+}
+
+void handle413(HttpResponse &res) {
+	handleFileResponse(res, "public/error/413.html", "text/html", 413, "413 Payload Too Large");
 }
 
 void handleHome(HttpResponse &res) {

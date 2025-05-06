@@ -24,6 +24,5 @@ bool addEvent(ConfigData &configData) {
 	configData.requests[clientFd] = HttpRequest();
 	configData.requests[clientFd].startTime = getCurrentTime();
 	configData.requests[clientFd].clientFd = clientFd;
-	Logger::info("new event added for port: %i with clientFd: %i", configData.port, clientFd);
 	return (true);
 }

@@ -1,5 +1,21 @@
 #include "../../include/webserv.hpp"
 
+void printDirTree(const dir &directory, int depth = 0) {
+	std::string indent(depth * 2, ' ');  // 2 Leerzeichen pro Ebene
+
+	Logger::debug("%s📁 %s", indent.c_str(), directory.path.c_str());
+
+	for (size_t i = 0; i < directory.files.size(); ++i) {
+		const file &f = directory.files[i];
+		Logger::debug("%s  📄 %s (type: %s)", indent.c_str(), f.path.c_str(), f.contentType.c_str());
+	}
+
+	for (size_t j = 0; j < directory.dirs.size(); ++j) {
+		printDirTree(directory.dirs[j], depth + 1);
+	}
+}
+
+
 void printServer(server &Server) {
 	Logger::debug("Port: %i", Server.port);
 	Logger::debug("client_max_body_size: %i", Server.client_max_body_size);
@@ -11,6 +27,10 @@ void printServer(server &Server) {
 	for (size_t i = 0; i < Server.errorpages.size(); i++) {
 		Logger::debug("Error Page %i: errorCode: %i, path: %s", i, Server.errorpages[i].errorCode, Server.errorpages[i].path.c_str());
 	}
+	// Server-Dateisystem anzeigen
+	Logger::debug("Server Dateibaum:");
+	printDirTree(Server.serverContex.tree);
+
 	for (size_t i = 0; i < Server.locations.size(); i++) {
 		const location& loc = Server.locations[i];  // Referenz auf das aktuelle location-Objekt
 		// Ausgabe der verschiedenen Eigenschaften der location
@@ -18,6 +38,7 @@ void printServer(server &Server) {
 		if (loc.regularLocation) {
 			Logger::debug("  Regular Location with pattern: %s and ext: %s", loc.pattern.c_str(), loc.ext.c_str());
 		}
+
 
 		if (loc.get) {
 			Logger::debug("  Get is true");
@@ -36,6 +57,7 @@ void printServer(server &Server) {
 		}
 		Logger::debug("  Root: %s", loc.root.c_str());
 		Logger::debug("  Index: %s", loc.index.c_str());
+		Logger::debug("  BodySize: %i", loc.client_max_body_size);
 
 		// Ausgabe der CGI-Pfade
 		Logger::debug("  CGI Paths: ");
@@ -55,6 +77,9 @@ void printServer(server &Server) {
 		} else {
 			Logger::debug("  Redirect: None");
 		}
+
+		Logger::debug("Dateibaum");
+		printDirTree(loc.tree);
 	}
 }
 
@@ -308,6 +333,7 @@ bool isValidLocation(const std::string &line, location &Location) {
 	Location.get = false;
 	Location.post = false;
 	Location.del = false;
+	Location.client_max_body_size = 0;
 	Location.regularLocation = false;
 	std::istringstream ss(line);
 	std::string keyword;
@@ -339,6 +365,23 @@ bool isValidLocation(const std::string &line, location &Location) {
 		} else if (keyword == "index") {
 			iss >> value;
 			Location.index = value;
+		} else if (keyword == "client_max_body_size") {
+			std::string valStr;
+			iss >> valStr;
+
+			std::istringstream issVal(valStr);
+			int val;
+			char c;
+
+			if (!(issVal >> val) || (issVal >> c)) {
+				Logger::error("Invalid client_max_body_size: '%s'", valStr.c_str());
+				return true;
+			}
+			if (val < 0) {
+				Logger::error("client_max_body_size must not be negative: '%s'", valStr.c_str());
+				return true;
+			}
+	Location.client_max_body_size = val;
 		} else if (keyword == "root") {
 			iss >> value;
 			Location.root = value;
@@ -416,7 +459,7 @@ bool parseServer(std::map<int, ConfigData> &data, std::string serverBlock) {
 		return false;
 	}
 
-	if (isValidIntConfigLine(lines[5], "client_max_body_size", 1, 500000000, Server)) {
+	if (isValidIntConfigLine(lines[5], "client_max_body_size", 0, INT32_MAX, Server)) {
 		Logger::error("Invalid 'client_max_body_size' line");
 		return (false);
 	}

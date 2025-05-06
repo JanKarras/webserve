@@ -39,9 +39,9 @@
 #define MAX_EVENTS 1024
 #define MAX_CLIENTS 1024
 #define PORT 8080
-#define CHUNK_SIZE 10000
-#define BUFFER_SIZE 10000
-#define TIME_TO_KILL_CHILD 50
+#define CHUNK_SIZE 50000
+#define BUFFER_SIZE 50000
+#define TIME_TO_KILL_CHILD 10000000000
 #define BIG_BODY_SIZE 10485760
 
 #define HTTP_BAD_REQUEST 400
@@ -69,9 +69,17 @@ struct HttpResponse {
 	std::string body;
 	ResponseState state;
 	size_t bodySent;
+	size_t CgiBodySent;
 	long long startTime;
+	bool sendingBodyToCgi;
+	bool readFromCgiFinished;
+	bool writeError;
+	bool chunked;
+	std::string cgiBody;
+	size_t cgiBodySize;
 
-	HttpResponse() : version("HTTP/1.1"), statusCode(200), statusMessage("OK"), state(NOT_STARTED), bodySent(0), startTime(0) {}
+
+	HttpResponse() : version("HTTP/1.1"), chunked(false), readFromCgiFinished(false), writeError(false), CgiBodySent(0), sendingBodyToCgi(false), statusCode(200), statusMessage("OK"), state(NOT_STARTED), bodySent(0), startTime(0) {}
 };
 
 struct file {
@@ -79,13 +87,30 @@ struct file {
 	std::string path;
 };
 
+struct dir {
+	std::string path;
+	std::vector<dir> dirs;
+	std::vector<file> files;
+};
+
+
 struct ServerContext {
 	std::map<int, HttpRequest *> requests;
 	std::map<int, HttpResponse> responses;
 	std::map<int, int> fds;
+	std::map<int, int> cgifds;
 	std::map<int, pid_t> pids;
-	std::vector<file> files;
+	dir tree;
 };
+
+struct SearchResult {
+	bool found;
+	bool isDir;
+	file foundFile;
+	dir foundDir;
+	SearchResult() : found(false), isDir(false) {}
+};
+
 
 struct errorPage {
 	size_t errorCode;
@@ -96,13 +121,14 @@ struct location {
 	bool post;
 	bool get;
 	bool del;
+	size_t client_max_body_size;
 	std::string name;
 	std::string root;
 	std::string index;
 	std::vector<std::string> cgi_paths;
 	std::vector<std::string> cgi_ext;
 	std::string redirect;
-	std::vector<file> files;
+	dir tree;
 	bool regularLocation;
 	std::string ext;
 	std::string pattern;
@@ -144,7 +170,8 @@ void handleFileResponse(HttpResponse &res, const std::string &filePath, const st
 std::string getFileExtension(const std::string &filename);
 std::string getContentType(const std::string &extension);
 bool isCGIFile(const std::string &fileName, const std::vector<std::string> &cgi_ext);
-//CONFIC
+bool findInDirTree(const dir &current, const std::string &targetPath, SearchResult &result);//CONFIC
+
 bool parseConfic(std::string path, std::map<int, ConfigData> &data);
 void printAll(std::map<int, ConfigData> &data);
 
@@ -206,7 +233,10 @@ void handleFileResponse(HttpResponse &res, const std::string &filePath, const st
 void handle400(HttpResponse &res);
 void handle401(HttpResponse &res);
 void handle403(HttpResponse &res);
+void handle504(HttpResponse &res);
+void handle502(HttpResponse &res);
 void handle404(HttpResponse &res);
+void handle413(HttpResponse &res);
 void handle405(HttpResponse &res);
 void handle500(HttpResponse &res);
 void handle501(HttpResponse &res);

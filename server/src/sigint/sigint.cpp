@@ -10,7 +10,7 @@ void handle_sigint(int sig, siginfo_t *siginfo, void *context) {
 }
 
 void handleSigPipe(int signal) {
-	std::cout << signal << std::endl;
+	//std::cout << signal << std::endl;
 }
 
 bool initSignal(void) {
@@ -25,3 +25,6 @@ bool initSignal(void) {
 	}
 	return (true);
 }
+
+
+

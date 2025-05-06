@@ -27,3 +27,5 @@ curl -i "$URL/directory" 2>/dev/null
 echo ""
 echo "===== Result Check ====="
 echo "If any response starts directly with '<!DOCTYPE html>' or '<html>', it's missing a proper HTTP status line!"
+
+curl -X POST http://localhost:80/directory/youpi.bla -d @payload.txt > res.txt

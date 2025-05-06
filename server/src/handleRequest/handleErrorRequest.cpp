@@ -43,6 +43,11 @@ void handleErrorRequest(int clientFd, ConfigData &data, HttpRequest &req) {
 		filePath = "public/error/500.html";
 		res.state = SENDING_HEADERS;
 		break;
+	case HTTP_ENTITY_TOO_LARGE:
+		res.statusMessage = "Payload Too Large";
+		filePath = "public/error/413.html";
+		res.state = SENDING_HEADERS;
+		break;
 	default:
 		res.statusMessage = "Http not found";
 		filePath = "public/error/404.html";

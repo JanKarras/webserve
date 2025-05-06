@@ -102,46 +102,52 @@ bool initServerConfigTmp(std::map<int, ConfigData> &data) {
 	return true;
 }
 
-void listFilesRecursive(const std::string &directory, std::vector<std::string> &files) {
-    DIR *dir;
+bool buildDirTree(const std::string &directoryPath, dir &currentDir) {
+    DIR *dirPtr;
     struct dirent *entry;
     struct stat pathStat;
 
-    if ((dir = opendir(directory.c_str())) == NULL) {
-        std::cerr << "Error: Cannot open directory " << directory << std::endl;
-        return;
+    currentDir.path = directoryPath;
+
+    dirPtr = opendir(directoryPath.c_str());
+    if (dirPtr == NULL) {
+        std::cerr << "Cannot open directory: " << directoryPath << std::endl;
+        return false;
     }
 
-    while ((entry = readdir(dir)) != NULL) {
-        std::string fullPath = directory;
-		if (fullPath[fullPath.size() - 1] != '/') {  // Falls kein / am Ende, füge es hinzu
-    		fullPath += "/";
-		}
-		fullPath += entry->d_name;
+    while ((entry = readdir(dirPtr)) != NULL) {
+        std::string name = entry->d_name;
 
+        if (name == "." || name == "..")
+            continue;
+
+        std::string fullPath = directoryPath;
+        if (fullPath.length() == 0 || fullPath[fullPath.length() - 1] != '/')
+            fullPath += "/";
+        fullPath += name;
 
         if (stat(fullPath.c_str(), &pathStat) == -1) {
-            std::cerr << "Error: Cannot access " << fullPath << std::endl;
+            std::cerr << "Cannot access path: " << fullPath << std::endl;
             continue;
         }
-
-        if (std::string(entry->d_name) == "." || std::string(entry->d_name) == "..") {
-            continue;
-        }
-
 
         if (S_ISDIR(pathStat.st_mode)) {
-            listFilesRecursive(fullPath, files);
-        } else if (S_ISREG(pathStat.st_mode)) {
-			if (!fullPath.empty() && fullPath[0] == '/') {
-                fullPath = fullPath.substr(1);
+            dir subDir;
+            if (buildDirTree(fullPath, subDir)) {
+                currentDir.dirs.push_back(subDir);
             }
-            files.push_back(fullPath);
+        } else if (S_ISREG(pathStat.st_mode)) {
+            file f;
+            f.path = fullPath;
+            f.contentType = getContentType(getFileExtension(fullPath));
+            currentDir.files.push_back(f);
         }
     }
 
-    closedir(dir);
+    closedir(dirPtr);
+    return true;
 }
+
 
 std::string getContentType(const std::string &extension) {
 	static std::map<std::string, std::string> mimeTypes;
@@ -189,29 +195,12 @@ bool initLocations(std::map<int, ConfigData> &data) {
 		ConfigData &confgData = it->second;
 		for (size_t i = 0; i < confgData.servers.size(); i++) {
 			server &Server = confgData.servers[i];
-			std::vector<std::string> files;
 
-			listFilesRecursive(Server.root, files);
+			buildDirTree(Server.root, Server.serverContex.tree);
 
-			for (size_t j = 0; j < files.size(); j++) {
-				file newFile;
-				newFile.path = files[j];
-				newFile.contentType = getContentType(getFileExtension(files[j]));
-				Server.serverContex.files.push_back(newFile);
-			}
-
-			std::vector<std::string> LocationFiles;
-
-			for (size_t i = 0; i < Server.locations.size(); i++) {
-				if (Server.locations[i].root.size() != 0) {
-					listFilesRecursive(Server.locations[i].root, LocationFiles);
-
-					for (size_t j = 0; j < LocationFiles.size(); j++) {
-						file newFile;
-						newFile.path = LocationFiles[j];
-						newFile.contentType = getContentType(getFileExtension(LocationFiles[j]));
-						Server.locations[i].files.push_back(newFile);
-					}
+			for (size_t j = 0; j < Server.locations.size(); ++j) {
+				if (!Server.locations[j].root.empty()) {
+					buildDirTree(Server.locations[j].root, Server.locations[j].tree);
 				}
 			}
 
@@ -221,7 +210,72 @@ bool initLocations(std::map<int, ConfigData> &data) {
 	return (true);
 }
 
+void handleCgiRead(ConfigData &data, int i, ServerContext &srv) {
+	int cgifd = data.events[i].data.fd;
+	int clientFd = 0;
+
+
+	for (std::map<int, int>::iterator it = srv.fds.begin(); it != srv.fds.end(); ++it) {
+		if (it->second == cgifd) {
+			clientFd = it->first;
+		}
+	}
+	std::map<int, HttpResponse>::iterator itt = srv.responses.find(clientFd);
+	HttpResponse &res = itt->second;
+
+	char buffer[BUFFER_SIZE];
+
+	ssize_t bytesRead = read(cgifd, buffer, CHUNK_SIZE);
+	Logger::debug("Bytes read from cgi: %i", bytesRead);
+	if (bytesRead == -1) {
+		return;
+	} else if (bytesRead == 0) {
+		res.readFromCgiFinished = true;
+		close(cgifd);
+		srv.fds.erase(clientFd);
+		res.state = SENDING_HEADERS;
+	} else {
+		res.body.append(buffer, bytesRead);
+	}
+
+}
+
+void handleCgiWrite(ConfigData &data, int i, ServerContext &srv) {
+	int cgifd = data.events[i].data.fd;
+	int clientFd= 0;
+	for (std::map<int, int>::iterator it = srv.cgifds.begin(); it != srv.cgifds.end(); ++it) {
+		if (it->second == cgifd) {
+			clientFd = it->first;
+		}
+	}
+	std::map<int, HttpResponse>::iterator itt = srv.responses.find(clientFd);
+	HttpResponse &res = itt->second;
+
+	size_t newBodySize = res.cgiBody.size();
+	if (res.cgiBody.size() > CHUNK_SIZE) {
+		newBodySize = CHUNK_SIZE;
+	}
+	std::string sendString = res.cgiBody.substr(0, newBodySize);
+	ssize_t bytesSent = write(cgifd, sendString.c_str(), newBodySize);
+
+	Logger::debug("Bytes send to cgi: %i", bytesSent);
+	if (bytesSent == -1) {
+		return;
+	} else {
+		res.cgiBody.erase(0, bytesSent);
+	}
+	if (res.cgiBody.size() != 0) {
+		return;
+	}
+	Logger::debug("All body data sent to CGI for clientFd: %d", clientFd);
+	close(cgifd);
+	srv.cgifds.erase(clientFd);
+	res.sendingBodyToCgi = false;
+}
+
 void startServer(std::map<int, ConfigData> &data) {
+
+
 
 	if(!initServerConfigTmp(data)) {
 		Logger::error("Server init doesn't finished successfully");
@@ -234,6 +288,7 @@ void startServer(std::map<int, ConfigData> &data) {
 		return ;
 	}
 
+	//printAll(data);
 
 	while (running) {
 		for (std::map<int, ConfigData>::iterator it = data.begin(); it != data.end(); ++it) {
@@ -245,20 +300,72 @@ void startServer(std::map<int, ConfigData> &data) {
 			}
 			for (int i = 0; i < numEvents; ++i) {
 				if (configData.events[i].data.fd == configData.serverFd) {
-					Logger::info("New client connection detected.");
+					//Logger::info("New client connection detected.");
 					if (!addEvent(configData)) {
 						continue;
 					}
 				} else if (configData.events[i].events & EPOLLIN) {
-					Logger::info("EPOLLIN event for fd: %d", configData.events[i].data.fd);
+					bool tnp = false;
+					for (size_t j = 0; j < configData.servers.size(); j++) {
+						ServerContext &srv = configData.servers[j].serverContex;
+						for (std::map<int, int>::iterator it = srv.fds.begin(); it != srv.fds.end(); it++) {
+							if (it->second == configData.events[i].data.fd) {
+								handleCgiRead(configData, i, srv);
+								tnp = true;
+								break;
+							}
+						}
+						// if (srv.fds.find(configData.events[i].data.fd) != srv.fds.end()) {
+						// 	handleCgiRead(configData, i, srv);
+						// 	tnp = true;
+						// 	break;
+						// }
+					}
+					if (tnp) {
+						continue;
+					}
+					//Logger::info("EPOLLIN event for fd: %d", configData.events[i].data.fd);
 					if (!handleEventReq(configData, i)) {
 						continue;
 					}
 				} else if (configData.events[i].events & EPOLLOUT) {
-					Logger::info("EPOLLOUT event for fd: %d", configData.events[i].data.fd);
+					bool tnp = false;
+					for (size_t j = 0; j < configData.servers.size(); j++) {
+						ServerContext &srv = configData.servers[j].serverContex;
+						for (std::map<int, int>::iterator it = srv.cgifds.begin(); it != srv.cgifds.end(); it++) {
+							if (it->second == configData.events[i].data.fd) {
+								handleCgiWrite(configData, i, srv);
+								tnp = true;
+								break;
+							}
+						}
+					}
+					if (tnp) {
+						continue;
+					}
 					if (!handleEventRes(configData, i)) {
 						continue;
 					}
+				} else if (configData.events[i].events & EPOLLHUP) {
+					for (size_t j = 0; j < configData.servers.size(); ++j) {
+						ServerContext &srv = configData.servers[j].serverContex;
+						for (std::map<int, int>::iterator it = srv.fds.begin(); it != srv.fds.end(); ++it) {
+							if (it->second == configData.events[i].data.fd) {
+								int clientFd = it->first;
+								HttpResponse &res = srv.responses[clientFd];
+
+								close(configData.events[i].data.fd);
+								srv.fds.erase(clientFd);
+								res.readFromCgiFinished = true;
+								res.state = SENDING_HEADERS;
+								res.headers["Content-Type"] = "text/html; charset=utf-8";
+								res.body.erase(0, 58);
+								Logger::debug("EPOLLHUP: CGI closed pipe, clientFd = %d", clientFd);
+								break;
+							}
+						}
+					}
+					continue;
 				}
 			}
 		}
