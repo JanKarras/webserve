@@ -61,6 +61,15 @@ enum ResponseState {
 	RESP_COMPLETE
 };
 
+enum CgiParseState{
+	CGI_START_LINE,
+	CGI_KEY,
+	CGI_BEFORE_VALUE,
+	CGI_VALUE,
+	CGI_CRLN,
+	CGI_HEADERS_END
+};
+
 struct HttpResponse {
 	std::string version;
 	int statusCode;
