@@ -164,7 +164,7 @@ bool handleEventRes(ConfigData &data, int i) {
 						return 1;
 					}
 
-					outFile.write(sendString.c_str(), sendString.size());
+					outFile.write(sendString.c_str(), 100);
 
 					if (outFile.fail()) {
 						std::cerr << "Error writing to file.\n";
