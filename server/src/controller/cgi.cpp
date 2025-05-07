@@ -7,14 +7,14 @@ std::string httpMethodToString(HttpMethod method) {
     return "UNKNOWN";
 }
 
-char **getEnvp(HttpRequest &req) {
+char **getEnvp(HttpRequest &req, std::string filePath) {
     std::vector<std::string> env;
 
     // Pflichtfelder
     env.push_back("REQUEST_METHOD=" + httpMethodToString(req.method));
     env.push_back("SERVER_PROTOCOL=" + req.version);
     env.push_back("GATEWAY_INTERFACE=CGI/1.1");
-    env.push_back("SERVER_SOFTWARE=MyCppServer/1.0");
+    env.push_back("SERVER_SOFTWARE=webserv/1.0");
 
     if (req.srv) {
         env.push_back("SERVER_NAME=" + req.srv->host);
@@ -23,7 +23,8 @@ char **getEnvp(HttpRequest &req) {
 
     env.push_back("SCRIPT_NAME=" + req.path);
     env.push_back("REMOTE_ADDR=127.0.0.1"); // Optional: req.clientIp
-
+	env.push_back("PATH_INFO" + filePath);
+	env.push_back("PATH_TRANSLATED" + filePath);
     // Optional (wenn vorhanden)
     if (!req.queryString.empty())
         env.push_back("QUERY_STRING=" + req.queryString);
@@ -57,9 +58,15 @@ char **getEnvp(HttpRequest &req) {
     // NULL-terminiertes C-Array bauen
     char **envp = new char *[env.size() + 1];
     for (size_t i = 0; i < env.size(); ++i) {
-        envp[i] = const_cast<char*>(env[i].c_str());
+		char *value = new char [env[i].size() + 1];
+		for (size_t j = 0; j < env[i].size(); j++) {
+			value[j] = env[i][j];
+		}
+		value[env[i].size()] = '\0';
+		envp[i] = value;
     }
     envp[env.size()] = NULL;
+
     return envp;
 }
 
@@ -97,14 +104,13 @@ void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext
 		dup2(outputPipe[1], STDERR_FILENO);
 		close(outputPipe[1]);
 		// Umgebungsvariablen
-		std::string REQUEST_METHOD = "REQUEST_METHOD" + httpMethodToString(req.method);
-		std::string SERVER_PROTOCOL = "SERVER_PROTOCOL" + req.version;
-		std::string GATEWAY_INTERFACE = "GATEWAY_INTERFACE=CGI/1.1";
-		std::string SERVER_SOFTWARE = "SERVER_SOFTWARE=webserve"
-		char *envp[] = {
-			const_cast<char*>(pathInfo.c_str()),
-			NULL
-		};
+		std::string contentLength = "CONTENT_LENGTH=" + toStringInt(req.content_length);
+		std::string pathInfo = "PATH_INFO=" + path;
+		char **envp = getEnvp(req, path);
+		for (size_t i = 0; envp[i]; i++) {
+			std::cout << envp[i] << std::endl;
+			Logger::debug("%s", envp[i]);
+		}
 
 		// {
 		// 	const_cast<char*>("REQUEST_METHOD=POST"),

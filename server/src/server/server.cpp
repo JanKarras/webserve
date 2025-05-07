@@ -53,7 +53,7 @@ static int parseCgiContent(HttpResponse &res)
 	size_t			pos = 0;
 	uint8_t			ch;
 	CgiParseState	state = CGI_START_LINE;
-	
+
 	for (; pos < res.body.size(); pos++)
 	{
 		ch = res.body[pos];
@@ -99,7 +99,7 @@ static int parseCgiContent(HttpResponse &res)
 				else
 				{
 					Logger::error("Malformed header value from cgi script");
-					return FAILURE;					
+					return FAILURE;
 				}
 				break;
 			case(CGI_VALUE):
@@ -113,7 +113,7 @@ static int parseCgiContent(HttpResponse &res)
 				else
 				{
 					Logger::error("Malformed header value from cgi script");
-					return FAILURE;					
+					return FAILURE;
 				}
 				break;
 			case(CGI_CRLN):
@@ -125,7 +125,7 @@ static int parseCgiContent(HttpResponse &res)
 				else
 				{
 					Logger::error("Malformed header from cgi script");
-					return FAILURE;	
+					return FAILURE;
 				}
 				break;
 			case(CGI_HEADERS_END):
@@ -137,9 +137,9 @@ static int parseCgiContent(HttpResponse &res)
 				else
 				{
 					Logger::error("Malformed header from cgi script");
-					return FAILURE;	
+					return FAILURE;
 				}
-				break;	
+				break;
 		}
 	}
 	Logger::error("Unexpected EOF in CGI headers");
@@ -457,9 +457,8 @@ void startServer(std::map<int, ConfigData> &data) {
 								srv.fds.erase(clientFd);
 								res.readFromCgiFinished = true;
 								res.state = SENDING_HEADERS;
-								/*parse cgi content
+								std::cout << res.body;
 								parseCgiContent(res);
-								*/
 								Logger::debug("EPOLLHUP: CGI closed pipe, clientFd = %d", clientFd);
 								break;
 							}
