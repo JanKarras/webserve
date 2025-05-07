@@ -226,7 +226,7 @@ void handleCgiRead(ConfigData &data, int i, ServerContext &srv) {
 	char buffer[BUFFER_SIZE];
 
 	ssize_t bytesRead = read(cgifd, buffer, CHUNK_SIZE);
-	Logger::debug("Bytes read from cgi: %i", bytesRead);
+	//Logger::debug("Bytes read from cgi: %i", bytesRead);
 	if (bytesRead == -1) {
 		return;
 	} else if (bytesRead == 0) {
@@ -258,7 +258,7 @@ void handleCgiWrite(ConfigData &data, int i, ServerContext &srv) {
 	std::string sendString = res.cgiBody.substr(0, newBodySize);
 	ssize_t bytesSent = write(cgifd, sendString.c_str(), newBodySize);
 
-	Logger::debug("Bytes send to cgi: %i", bytesSent);
+	//Logger::debug("Bytes send to cgi: %i", bytesSent);
 	if (bytesSent == -1) {
 		return;
 	} else {

@@ -1,5 +1,68 @@
 #include "../../include/webserv.hpp"
 
+std::string httpMethodToString(HttpMethod method) {
+    if (method == GET) return "GET";
+    if (method == POST) return "POST";
+    if (method == DELETE) return "DELETE";
+    return "UNKNOWN";
+}
+
+char **getEnvp(HttpRequest &req) {
+    std::vector<std::string> env;
+
+    // Pflichtfelder
+    env.push_back("REQUEST_METHOD=" + httpMethodToString(req.method));
+    env.push_back("SERVER_PROTOCOL=" + req.version);
+    env.push_back("GATEWAY_INTERFACE=CGI/1.1");
+    env.push_back("SERVER_SOFTWARE=MyCppServer/1.0");
+
+    if (req.srv) {
+        env.push_back("SERVER_NAME=" + req.srv->host);
+        env.push_back("SERVER_PORT=" + toStringInt(req.srv->port)); // to_string ist nicht standard, kannst du durch eine eigene Funktion ersetzen
+    }
+
+    env.push_back("SCRIPT_NAME=" + req.path);
+    env.push_back("REMOTE_ADDR=127.0.0.1"); // Optional: req.clientIp
+
+    // Optional (wenn vorhanden)
+    if (!req.queryString.empty())
+        env.push_back("QUERY_STRING=" + req.queryString);
+
+    if (req.headers.count("Content-Type"))
+        env.push_back("CONTENT_TYPE=" + req.headers["Content-Type"]);
+    if (req.headers.count("Content-Length"))
+        env.push_back("CONTENT_LENGTH=" + req.headers["Content-Length"]);
+
+    // HTTP_* Header
+    for (std::map<std::string, std::string>::iterator it = req.headers.begin(); it != req.headers.end(); ++it) {
+        std::string key = it->first;
+        std::string val = it->second;
+
+        // CGI erfordert HTTP_HEADERNAME in Uppercase mit _ anstelle von -
+        for (size_t i = 0; i < key.length(); ++i) {
+            key[i] = toupper(key[i]); // wandelt jedes Zeichen in Uppercase um
+        }
+
+        for (size_t i = 0; i < key.length(); ++i) {
+            if (key[i] == '-') {
+                key[i] = '_'; // ersetzt '-' durch '_'
+            }
+        }
+
+        if (key != "CONTENT_TYPE" && key != "CONTENT_LENGTH") {
+            env.push_back("HTTP_" + key + "=" + val);
+        }
+    }
+
+    // NULL-terminiertes C-Array bauen
+    char **envp = new char *[env.size() + 1];
+    for (size_t i = 0; i < env.size(); ++i) {
+        envp[i] = const_cast<char*>(env[i].c_str());
+    }
+    envp[env.size()] = NULL;
+    return envp;
+}
+
 void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd, std::string path) {
 
 	int inputPipe[2];   // Body → Kind
@@ -34,15 +97,22 @@ void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext
 		dup2(outputPipe[1], STDERR_FILENO);
 		close(outputPipe[1]);
 		// Umgebungsvariablen
-		std::string contentLength = "CONTENT_LENGTH=" + toStringInt(req.content_length);
-		std::string pathInfo = "PATH_INFO=" + path;
+		std::string REQUEST_METHOD = "REQUEST_METHOD" + httpMethodToString(req.method);
+		std::string SERVER_PROTOCOL = "SERVER_PROTOCOL" + req.version;
+		std::string GATEWAY_INTERFACE = "GATEWAY_INTERFACE=CGI/1.1";
+		std::string SERVER_SOFTWARE = "SERVER_SOFTWARE=webserve"
 		char *envp[] = {
-			const_cast<char*>("REQUEST_METHOD=POST"),
-			const_cast<char*>("SERVER_PROTOCOL=HTTP/1.1"),
-			const_cast<char*>(contentLength.c_str()),
 			const_cast<char*>(pathInfo.c_str()),
 			NULL
 		};
+
+		// {
+		// 	const_cast<char*>("REQUEST_METHOD=POST"),
+		// 	const_cast<char*>("SERVER_PROTOCOL=HTTP/1.1"),
+		// 	const_cast<char*>(contentLength.c_str()),
+		// 	const_cast<char*>(pathInfo.c_str()),
+		// 	NULL
+		// };
 
 		char *argv[] = { const_cast<char*>(path.c_str()), NULL };
 		execve(argv[0], argv, envp);
@@ -101,15 +171,11 @@ void debugExeSkript(HttpRequest &req, std::string path) {
         close(outPipe[0]);
         close(outPipe[1]);
 
-        std::string contentLength = "CONTENT_LENGTH=" + toStringInt(req.content_length);
-		std::string pathInfo = "PATH_INFO=" + path;  // oder was auch immer dein Request-Pfad war
         char *envp[] = {
-            const_cast<char*>("REQUEST_METHOD=POST"),
-            const_cast<char*>("SERVER_PROTOCOL=HTTP/1.1"),
-			const_cast<char*>(pathInfo.c_str()),
-            const_cast<char*>(contentLength.c_str()),
-            NULL
-        };
+			const_cast<char*>("REQUEST_METHOD=POST"),
+			const_cast<char*>("SERVER_PROTOCOL=HTTP/1.1"),
+			NULL
+		};
 
         char *argv[] = { const_cast<char*>(path.c_str()), NULL };
         execve(argv[0], argv, envp);
