@@ -69,10 +69,12 @@ void handleErrorRequest(int clientFd, ConfigData &data, HttpRequest &req) {
 
 	if (epoll_ctl(data.epollFd, EPOLL_CTL_MOD, clientFd, &event) == -1) {
 		std::cerr << "Failed to modify epoll event for EPOLLOUT." << std::endl;
+		epoll_ctl(data.epollFd, EPOLL_CTL_DEL, clientFd, NULL);
 		close(clientFd);
 		serverContext->requests.erase(clientFd);
 		serverContext->responses.erase(clientFd);
 		return;
 	}
+	
 	res.startTime = getCurrentTime();
 }

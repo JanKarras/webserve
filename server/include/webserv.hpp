@@ -175,6 +175,35 @@ struct formData{
 	std::string fileContent;
 };
 
+//SERVER
+void startServer(std::map<int, ConfigData> &data);
+	//SERVERINIT
+		bool initServerConfigTmp(std::map<int, ConfigData> &data);
+		bool initLocations(std::map<int, ConfigData> &data);
+	//HANDLEEVENTS
+		bool addEvent(ConfigData &configData);
+		bool handleEventReq(ConfigData &configData, int i);
+		bool handleEventRes(ConfigData &data, int i);
+		void handleCgiWrite(ConfigData &data, int i, ServerContext &srv);
+		void handleCgiRead(ConfigData &data, int i, ServerContext &srv);
+	//SERVERSHUTDOWN
+		void closeEverything(std::map<int, ConfigData> &data);
+	//EPOLLS
+		void epollHup(ConfigData &configData, int i);
+		void epollOut(ConfigData &configData, int i);
+		void epollIn(ConfigData &configData, int i);
+
+//HANDLE_REQUEST
+void handleRequest(int clientFd, ConfigData &configData);
+void handleErrorRequest(int clientFd, ConfigData &configData, HttpRequest &req);
+void addResponseEpoll(server &Server, int clientFd, ConfigData &configData, HttpResponse &res);
+server &getServer(int clientFd, ConfigData &configData);
+HttpRequest getReq(server &Server, int clientFd);
+void normelaizePaths(HttpRequest &req, server &Server);
+location* matchLocation(server &Server, const std::string &path, HttpRequest &req) ;
+
+
+
 void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage);
 std::string getFileExtension(const std::string &filename);
 std::string getContentType(const std::string &extension);
@@ -188,22 +217,22 @@ void printAll(std::map<int, ConfigData> &data);
 void printHttpRequest(const HttpRequest& request);
 void parseHttpRequest(ConfigData &config, int client_fd, std::string &data);
 
-//SERVER
-void startServer(std::map<int, ConfigData> &data);
-bool initServer(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event);
-bool initServerConfic(ServerContext &ServerContext, struct sockaddr_in &serverAddress, struct epoll_event &event, ConfigData &conficData);
-bool addEvent(ConfigData &configData);
-bool handleEventReq(ConfigData &configData, int i);
-bool handleEventRes(ConfigData &data, int i);
+
+
+
+//CGI
+	int parseCgiContent(HttpResponse &res);
+
 //SIG
 void handle_sigint(int sig, siginfo_t *siginfo, void *context);
 bool initSignal(void);
 //HANDLE REQ
-void handleRequest(int clientFd, ConfigData &configData);
-void handleErrorRequest(int clientFd, ConfigData &configData, HttpRequest &req);
+
 //helper
 bool setsetExecutable(std::string &filePath);
+void redirectOutfile(std::string content, std::string filePath, size_t length, size_t bytesRead);
 std::string toStringInt(int number);
+std::string sizeTToHex(size_t number);
 int toIntString(const std::string &str);
 std::string toString(long long number);
 std::string getDestPath(std::string email);

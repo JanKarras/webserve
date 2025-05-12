@@ -4,6 +4,33 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Index</title>
+	<script>
+async function kek() {
+  const url = 'http://localhost:80/post_body'; // Deine Ziel-URL
+  const headers = {
+    'User-Agent': 'TestClient/1.0',
+    'Transfer-Encoding': 'chunked',  // Dieser Header für Chunked-Encoding
+    'Content-Type': 'test/file',  // Dein benutzerdefinierter Content-Type
+    'Accept-Encoding': 'gzip',  // Gzip-Kompression
+  };
+  const body = ''; // Leerer Body
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: body
+    });
+
+    console.log(response); // Hier protokollierst du die Antwort der Anfrage
+  } catch (error) {
+    console.error('Fehler:', error); // Fehler in der Anfrage werden hier protokolliert
+  }
+}
+
+
+
+	</script>
 </head>
 <body>
 	Index

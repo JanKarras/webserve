@@ -7,9 +7,8 @@ std::string httpMethodToString(HttpMethod method) {
     return "UNKNOWN";
 }
 
-char **getEnvp(HttpRequest &req, std::string filePath) {
+std::vector<std::string> getEnvp(HttpRequest &req, std::string filePath) {
     std::vector<std::string> env;
-
     // Pflichtfelder
     env.push_back("REQUEST_METHOD=" + httpMethodToString(req.method));
     env.push_back("SERVER_PROTOCOL=" + req.version);
@@ -21,22 +20,23 @@ char **getEnvp(HttpRequest &req, std::string filePath) {
         env.push_back("SERVER_PORT=" + toStringInt(req.srv->port)); // to_string ist nicht standard, kannst du durch eine eigene Funktion ersetzen
     }
 
-    env.push_back("SCRIPT_NAME=" + req.path);
+    //env.push_back("SCRIPT_NAME=" + req.path);
     env.push_back("REMOTE_ADDR=127.0.0.1"); // Optional: req.clientIp
-	env.push_back("PATH_INFO" + filePath);
-	env.push_back("PATH_TRANSLATED" + filePath);
+	env.push_back("PATH_INFO=/");
+	//env.push_back("PATH_TRANSLATED=" + filePath);
     // Optional (wenn vorhanden)
     if (!req.queryString.empty())
-        env.push_back("QUERY_STRING=" + req.queryString);
-
-    if (req.headers.count("Content-Type"))
-        env.push_back("CONTENT_TYPE=" + req.headers["Content-Type"]);
-    if (req.headers.count("Content-Length"))
-        env.push_back("CONTENT_LENGTH=" + req.headers["Content-Length"]);
+        //env.push_back("QUERY_STRING=" + req.queryString);
+	if (req.method == POST) {
+		if (req.headers.find("content-type") != req.headers.end())
+			env.push_back("CONTENT_TYPE=" + req.headers["content-type"]);
+		if (req.headers.find("content-Length") != req.headers.end());
+			env.push_back("CONTENT_LENGTH=" + req.headers["content-length"]);
+	}
 
     // HTTP_* Header
     for (std::map<std::string, std::string>::iterator it = req.headers.begin(); it != req.headers.end(); ++it) {
-        std::string key = it->first;
+		std::string key = it->first;
         std::string val = it->second;
 
         // CGI erfordert HTTP_HEADERNAME in Uppercase mit _ anstelle von -
@@ -56,18 +56,9 @@ char **getEnvp(HttpRequest &req, std::string filePath) {
     }
 
     // NULL-terminiertes C-Array bauen
-    char **envp = new char *[env.size() + 1];
-    for (size_t i = 0; i < env.size(); ++i) {
-		char *value = new char [env[i].size() + 1];
-		for (size_t j = 0; j < env[i].size(); j++) {
-			value[j] = env[i][j];
-		}
-		value[env[i].size()] = '\0';
-		envp[i] = value;
-    }
-    envp[env.size()] = NULL;
 
-    return envp;
+
+    return env;
 }
 
 void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext, int clientFd, std::string path) {
@@ -106,13 +97,23 @@ void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext
 		// Umgebungsvariablen
 		std::string contentLength = "CONTENT_LENGTH=" + toStringInt(req.content_length);
 		std::string pathInfo = "PATH_INFO=" + path;
-		char **envp = getEnvp(req, path);
-		for (size_t i = 0; envp[i]; i++) {
-			std::cout << envp[i] << std::endl;
-			Logger::debug("%s", envp[i]);
+		std::vector<std::string> env = getEnvp(req, path);
+		char **envp = new char *[env.size() + 1];
+		for (size_t i = 0; i < env.size(); ++i) {
+			char *value = new char [env[i].size() + 1];
+			for (size_t j = 0; j < env[i].size(); j++) {
+				value[j] = env[i][j];
+			}
+			value[env[i].size()] = '\0';
+			envp[i] = value;
 		}
+		envp[env.size()] = NULL;
+		// Logger::debug("my: %s", pathInfo.c_str());
+		// for (size_t i = 0; envp[i]; i++) {
+		// 	Logger::debug("%s", envp[i]);
+		// }
 
-		// {
+		// char *envp[] = {
 		// 	const_cast<char*>("REQUEST_METHOD=POST"),
 		// 	const_cast<char*>("SERVER_PROTOCOL=HTTP/1.1"),
 		// 	const_cast<char*>(contentLength.c_str()),

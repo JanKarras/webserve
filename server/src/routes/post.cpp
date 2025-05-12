@@ -198,71 +198,86 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		handleRegularLocation(req, res, server, loc, clientFd);
 		return;
 	}
-	std::string uploadDir;
+
+	if (req.headers["Cotent-Type"] == "multipart/form-data") {
+		std::string uploadDir;
 
 
-	if (loc.root.size() != 0) {
-		uploadDir = loc.root;
+		if (loc.root.size() != 0) {
+			uploadDir = loc.root;
+		} else {
+			uploadDir = server.root;
+		}
+
+		formData form;
+
+		if (parseFormData(req, res, form) == false) {
+			return;
+		}
+
+		if (uploadDir.empty()) {
+			Logger::error("Upload directory is not set.");
+			handle500(res);
+			return;
+		}
+
+		std::string fileName = form.filename;
+		if (fileName.empty() || !isPathSafe(fileName)) {
+			Logger::error("Invalid or unsafe filename");
+			handle400(res);
+			return;
+		}
+
+		std::string filePath = uploadDir + fileName;
+		std::ofstream outfile(filePath.c_str(), std::ios::binary);
+
+		if (!outfile) {
+			Logger::error("Failed to open file for writing: %s", filePath.c_str());
+			handle500(res);
+			return;
+		}
+
+		outfile.write(form.fileContent.c_str(), form.fileContent.size());
+		outfile.close();
+
+		file newFile;
+
+		newFile.path = filePath;
+		newFile.contentType = getContentType(getFileExtension(filePath));
+
+		if (isCGIFile(fileName, loc.cgi_ext)) {
+			Logger::info("Making CGI script executable: %s", filePath.c_str());
+
+			if (!setsetExecutable(filePath)) {
+				Logger::error("Failed to set file as executable: %s", filePath.c_str());
+			}
+		}
+
+		std::cout << "newFile: " << newFile.path << " -- " << newFile.contentType << std::endl;
+
+		dir &targetTree = loc.root.empty() ? server.serverContex.tree : loc.tree;
+
+		if (!insertFileIntoDirTree(targetTree, newFile)) {
+			Logger::error("Failed to insert uploaded file into tree structure: %s", filePath.c_str());
+			handle500(res);
+			return;
+		}
+
+		Logger::info("File uploaded successfully: %s", filePath.c_str());
+		res.statusCode = 201;
+		res.statusMessage = "Created";
+		res.body = "File uploaded successfully.";
 	} else {
-		uploadDir = server.root;
-	}
-
-	formData form;
-
-	if (parseFormData(req, res, form) == false) {
-		return;
-	}
-
-	if (uploadDir.empty()) {
-		Logger::error("Upload directory is not set.");
-		handle500(res);
-		return;
-	}
-
-	std::string fileName = form.filename;
-	if (fileName.empty() || !isPathSafe(fileName)) {
-		Logger::error("Invalid or unsafe filename");
-		handle400(res);
-		return;
-	}
-
-	std::string filePath = uploadDir + fileName;
-	std::ofstream outfile(filePath.c_str(), std::ios::binary);
-
-	if (!outfile) {
-		Logger::error("Failed to open file for writing: %s", filePath.c_str());
-		handle500(res);
-		return;
-	}
-
-	outfile.write(form.fileContent.c_str(), form.fileContent.size());
-	outfile.close();
-
-	file newFile;
-
-	newFile.path = filePath;
-	newFile.contentType = getContentType(getFileExtension(filePath));
-
-	if (isCGIFile(fileName, loc.cgi_ext)) {
-		Logger::info("Making CGI script executable: %s", filePath.c_str());
-
-		if (!setsetExecutable(filePath)) {
-			Logger::error("Failed to set file as executable: %s", filePath.c_str());
+		if (req.body.size() == 0) {
+			res.statusCode = 204;
+			res.statusMessage = "No Content";
+			res.body = "";
+		} else {
+			res.statusCode = 200;
+			res.statusMessage = "OK";
+			res.body = "OK";
+			res.headers["Content-Length"] = toStringInt(res.body.size());
 		}
 	}
 
-	std::cout << "newFile: " << newFile.path << " -- " << newFile.contentType << std::endl;
-
-	dir &targetTree = loc.root.empty() ? server.serverContex.tree : loc.tree;
-
-	if (!insertFileIntoDirTree(targetTree, newFile)) {
-		Logger::error("Failed to insert uploaded file into tree structure: %s", filePath.c_str());
-		handle500(res);
-		return;
-	}
-
-	Logger::info("File uploaded successfully: %s", filePath.c_str());
-	res.statusCode = 201;
-	res.statusMessage = "Created";
-	res.body = "File uploaded successfully.";
 }

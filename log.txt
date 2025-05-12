@@ -1,0 +1,133 @@
+[2025-05-09T10:02:18Z] [INFO] Server started and listening on port: 80
+[2025-05-09T10:02:18Z] [INFO] Server started and listening on port: 8080
+[2025-05-09T10:02:18Z] [INFO] Server init finished successfully
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0
+[2025-05-09T10:02:19Z] [INFO] Request was found for server: localhost index = 0
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Regular Location (extension-based)
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .bla, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Location ext: .sh, path: /
+[2025-05-09T10:02:19Z] [DEBUG] Checking for Path Prefix Match
+[2025-05-09T10:02:19Z] [DEBUG] Prefix match found: /
+[2025-05-09T10:02:19Z] [DEBUG] Matched location: /
+[2025-05-09T10:02:19Z] [DEBUG] GET in location / called
+[2025-05-09T10:02:19Z] [DEBUG] Get with the server root called for loc: / with path: /
+[2025-05-09T10:02:19Z] [DEBUG] Empty or only / path detected
+[2025-05-09T10:02:19Z] [DEBUG] Requested relative file path: public/index.html
+[2025-05-09T10:02:19Z] [DEBUG] 📄 File found: public/index.html (Content-Type: text/html)
+[2025-05-09T10:02:19Z] [INFO] client : 7 connection closed. Size of Req: 0. Size of Res: 0

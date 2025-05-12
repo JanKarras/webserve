@@ -18,3 +18,9 @@ int toIntString(const std::string &str) {
     ss >> number;
     return number;
 }
+
+std::string sizeTToHex(size_t number) {
+	std::stringstream ss;
+	ss << std::hex << number;
+	return ss.str();
+}
