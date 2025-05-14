@@ -28,7 +28,7 @@ void sendHeader(HttpResponse &response, ServerContext *serverContext, ConfigData
 	}
 	headers.append("\r\n");
 
-	redirectOutfile(headers, "output_response.txt", headers.size(), headers.size());
+	redirectOutfile(headers, "./debugFiles/output_response.txt", headers.size(), headers.size());
 
 	ssize_t bytesSent = send(clientFd, headers.c_str(), headers.size(), 0);
 	if (bytesSent == -1) {
@@ -51,7 +51,7 @@ void sendBodyCunkend(HttpResponse &response, ServerContext *serverContext, Confi
 		sendString.append(response.body.substr(0, newBodySize));
 		sendString.append("\r\n");
 		response.body.erase(0, newBodySize);
-		redirectOutfile(sendString, "output_response.txt", 100, sendString.size());
+		redirectOutfile(sendString, "./debugFiles/output_response.txt", 100, sendString.size());
 		ssize_t bytesSent = send(clientFd, sendString.c_str(), sendString.size(), 0);
 		if (bytesSent == -1) {
 			Logger::error("Error sending body to clientFd: %d", clientFd);
@@ -91,7 +91,7 @@ void sendBody(HttpResponse &response, ServerContext *serverContext, ConfigData &
 	close(clientFd);
 	serverContext->requests.erase(clientFd);
 	serverContext->responses.erase(clientFd);
-	Logger::info("client : %i connection closed. Size of Req: %i. Size of Res: %i", clientFd, serverContext->requests.size(), serverContext->responses.size());
+	Logger::info("client : %i connection closed. Size of Req: %i. Size of Res: %i. Size of CgiFds: %i. Size of Fds: %i. Size of Pids: %i.", clientFd, serverContext->requests.size(), serverContext->responses.size(), serverContext->cgifds.size(), serverContext->fds.size(), serverContext->pids.size());
 }
 
 bool handleEventRes(ConfigData &data, int i) {

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DATEI1="output.txt"
-DATEI2="output_response.txt"
+DATEI1="./debugFiles/output.txt"
+DATEI2="./debugFiles/output_response.txt"
 
 # Funktion zum Leeren einer Datei, wenn sie existiert
 leere_datei() {

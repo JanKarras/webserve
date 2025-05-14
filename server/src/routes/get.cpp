@@ -1,42 +1,7 @@
 #include "../../include/webserv.hpp"
 
 
-std::string stripTrailingSlash(const std::string &path) {
-	if (path.length() > 1 && path[path.length() - 1] == '/')
-		return path.substr(0, path.length() - 1);
-	return path;
-}
 
-bool findInDirTree(const dir &current, const std::string &targetPath, SearchResult &result) {
-	std::string normalizedTarget = stripTrailingSlash(targetPath);
-
-	// Check current dir itself
-	if (current.path == normalizedTarget) {
-		result.found = true;
-		result.isDir = true;
-		result.foundDir = current;
-		return true;
-	}
-
-	// Check files in current dir
-	for (size_t i = 0; i < current.files.size(); ++i) {
-		if (current.files[i].path == normalizedTarget) {
-			result.found = true;
-			result.isDir = false;
-			result.foundFile = current.files[i];
-			return true;
-		}
-	}
-
-	// Recursively check subdirectories
-	for (size_t i = 0; i < current.dirs.size(); ++i) {
-		if (findInDirTree(current.dirs[i], normalizedTarget, result)) {
-			return true;
-		}
-	}
-
-	return false;
-}
 
 
 
@@ -60,7 +25,6 @@ void buildHtmlForDir(const dir& directory, std::string& html, const std::string&
 
 	html += indent + "<ul>\n";
 
-	// Unterverzeichnisse
 	for (size_t i = 0; i < directory.dirs.size(); ++i) {
 		const dir& subdir = directory.dirs[i];
 		std::string name = subdir.path.substr(basePath.size());
@@ -68,7 +32,6 @@ void buildHtmlForDir(const dir& directory, std::string& html, const std::string&
 		buildHtmlForDir(subdir, html, basePath, depth + 1);
 	}
 
-	// Dateien
 	for (size_t i = 0; i < directory.files.size(); ++i) {
 		const file& f = directory.files[i];
 		std::string name = f.path.substr(basePath.size());
@@ -122,11 +85,9 @@ void handleDirResponse(HttpResponse &res, dir directory, std::string index) {
 }
 
 void handleGet(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
-	Logger::debug("Get with the server root called for loc: %s with path: %s", loc.name.c_str(), req.path.c_str());
 
 	std::string filePath = req.path.substr(loc.name.size());
 	if (filePath.empty() || filePath[0] == '/') {
-		Logger::debug("Empty or only / path detected");
 		if (loc.index.empty()) {
 			filePath = server.root + server.index;
 		} else {
@@ -136,34 +97,26 @@ void handleGet(HttpRequest &req, HttpResponse &res, server &server, location &lo
 		filePath = server.root + filePath;
 	}
 
-
-	Logger::debug("Requested relative file path: %s", filePath.c_str());
-
 	SearchResult result;
 	if (findInDirTree(server.serverContex.tree, filePath, result)) {
 		if (result.isDir) {
-			Logger::debug("📁 Directory found: %s", result.foundDir.path.c_str());
 			if (loc.index.empty()) {
 				handleDirResponse(res, result.foundDir, server.index);
 			} else {
 				handleDirResponse(res, result.foundDir, loc.index);
 			}
 		} else {
-			Logger::debug("📄 File found: %s (Content-Type: %s)", result.foundFile.path.c_str(), result.foundFile.contentType.c_str());
 			handleFileResponse(res, result.foundFile.path, result.foundFile.contentType, 200, "OK");
 		}
 	} else {
-		Logger::debug("❌ Nothing found for: %s", filePath.c_str());
 		handle404(res);
 	}
 }
 
 void handleGetWithAnotherRoot(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
-	Logger::debug("Get with another root called for loc: %s with path: %s", loc.name.c_str(), req.path.c_str());
 
 	std::string filePath = req.path.substr(loc.name.size());
 	if (filePath.empty() || filePath[0] == '/') {
-		Logger::debug("Empty or only / path detected");
 		if (loc.index.empty()) {
 			filePath = loc.root + "/" + server.index;
 		} else {
@@ -173,24 +126,18 @@ void handleGetWithAnotherRoot(HttpRequest &req, HttpResponse &res, server &serve
 		filePath = loc.root + "/" + filePath;
 	}
 
-
-	Logger::debug("Requested relative file path: %s", filePath.c_str());
-
 	SearchResult result;
 	if (findInDirTree(loc.tree, filePath, result)) {
 		if (result.isDir) {
-			Logger::debug("📁 Directory found: %s", result.foundDir.path.c_str());
 			if (loc.index.empty()) {
 				handleDirResponse(res, result.foundDir, server.index);
 			} else {
 				handleDirResponse(res, result.foundDir, loc.index);
 			}
 		} else {
-			Logger::debug("📄 File found: %s (Content-Type: %s)", result.foundFile.path.c_str(), result.foundFile.contentType.c_str());
 			handleFileResponse(res, result.foundFile.path, result.foundFile.contentType, 200, "OK");
 		}
 	} else {
-		Logger::debug("❌ Nothing found for: %s", filePath.c_str());
 		handle404(res);
 	}
 }

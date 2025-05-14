@@ -1,87 +1,6 @@
 #include "../../include/webserv.hpp"
 
-void printDirTree(const dir &directory, int depth = 0) {
-	std::string indent(depth * 2, ' ');  // 2 Leerzeichen pro Ebene
 
-	Logger::debug("%s📁 %s", indent.c_str(), directory.path.c_str());
-
-	for (size_t i = 0; i < directory.files.size(); ++i) {
-		const file &f = directory.files[i];
-		Logger::debug("%s  📄 %s (type: %s)", indent.c_str(), f.path.c_str(), f.contentType.c_str());
-	}
-
-	for (size_t j = 0; j < directory.dirs.size(); ++j) {
-		printDirTree(directory.dirs[j], depth + 1);
-	}
-}
-
-
-void printServer(server &Server) {
-	Logger::debug("Port: %i", Server.port);
-	Logger::debug("client_max_body_size: %i", Server.client_max_body_size);
-	Logger::debug("server_name: %s", Server.server_name.c_str());
-	Logger::debug("host: %s", Server.host.c_str());
-	Logger::debug("root: %s", Server.root.c_str());
-	Logger::debug("index: %s", Server.index.c_str());
-	Logger::debug("%s", Server.errorpages[0].path.c_str());
-	for (size_t i = 0; i < Server.errorpages.size(); i++) {
-		Logger::debug("Error Page %i: errorCode: %i, path: %s", i, Server.errorpages[i].errorCode, Server.errorpages[i].path.c_str());
-	}
-	// Server-Dateisystem anzeigen
-	Logger::debug("Server Dateibaum:");
-	printDirTree(Server.serverContex.tree);
-
-	for (size_t i = 0; i < Server.locations.size(); i++) {
-		const location& loc = Server.locations[i];  // Referenz auf das aktuelle location-Objekt
-		// Ausgabe der verschiedenen Eigenschaften der location
-		Logger::debug("Location %d:", i);
-		if (loc.regularLocation) {
-			Logger::debug("  Regular Location with pattern: %s and ext: %s", loc.pattern.c_str(), loc.ext.c_str());
-		}
-
-
-		if (loc.get) {
-			Logger::debug("  Get is true");
-		}
-
-		if (loc.post) {
-			Logger::debug("  post is true");
-		}
-
-		if (loc.del) {
-			Logger::debug("  del is true");
-		}
-
-		if (!loc.regularLocation) {
-			Logger::debug("  Name: %s", loc.name.c_str());
-		}
-		Logger::debug("  Root: %s", loc.root.c_str());
-		Logger::debug("  Index: %s", loc.index.c_str());
-		Logger::debug("  BodySize: %i", loc.client_max_body_size);
-
-		// Ausgabe der CGI-Pfade
-		Logger::debug("  CGI Paths: ");
-		for (size_t j = 0; j < loc.cgi_paths.size(); j++) {
-			Logger::debug("    - %s", loc.cgi_paths[j].c_str());
-		}
-
-		// Ausgabe der CGI-Erweiterungen
-		Logger::debug("  CGI Extensions: ");
-		for (size_t k = 0; k < loc.cgi_ext.size(); k++) {
-			Logger::debug("    - %s", loc.cgi_ext[k].c_str());
-		}
-
-		// Ausgabe des Redirects (falls vorhanden)
-		if (!loc.redirect.empty()) {
-			Logger::debug("  Redirect: %s", loc.redirect.c_str());
-		} else {
-			Logger::debug("  Redirect: None");
-		}
-
-		Logger::debug("Dateibaum");
-		printDirTree(loc.tree);
-	}
-}
 
 bool checkPath(std::string path) {
 	if (access(path.c_str(), F_OK) != 0) {
@@ -515,24 +434,6 @@ bool validateLines(const std::string &filetxt) {
 	return true;
 }
 
-
-void printAll(std::map<int, ConfigData> &data) {
-	for (std::map<int, ConfigData>::iterator it = data.begin(); it != data.end(); ++it) {
-		std::cout << "-------------------------------------------------------------\n";
-		std::cout << "Port:             " << it->second.port << std::endl;
-		std::cout << "Keyvalue:         " << it->first << std::endl;
-		std::cout << "Server number:    " << it->second.servers.size() << std::endl;
-		int i = 0;
-		for (std::vector<server>::iterator itt = it->second.servers.begin(); itt != it->second.servers.end(); ++itt) {
-			std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~" << "Server: " << i << "~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-			printServer(*itt);
-			std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-			i++;
-		}
-		std::cout << "-------------------------------------------------------------\n";
-	}
-}
-
 bool isDirectoryAndReadable(const char* path) {
     struct stat pathStat;
     if (stat(path, &pathStat) == -1) {
@@ -673,7 +574,7 @@ bool checkConfig(std::map<int, ConfigData> &data) {
 	return true;
 }
 
-bool parseConfic(std::string path, std::map<int, ConfigData> &data) {
+bool parseConfig(std::string path, std::map<int, ConfigData> &data) {
 	if (!checkPath(path)) {
 		return (true);
 	}

@@ -840,33 +840,7 @@ void parseHttpRequest(ConfigData &configData, int client_fd, std::string &data)
     }
 }
 
-void printHttpRequest(const HttpRequest& request)
-{
-	std::cout << "===== HTTP REQUEST =====" << std::endl;
-	std::cout << "Method: " << request.method << std::endl;
-	std::cout << "URI: " << request.uri << std::endl;
-	std::cout << "Path: " << request.path << std::endl;
-	std::cout << "Query string: " << request.queryString << std::endl;
 
-	std::cout << "Version: " << request.version << std::endl;
-	std::cout << std::endl << "--- HEADERS ---" << std::endl;
-
-	// Map durchlaufen mit einem klassischen Iterator
-	std::map<std::string, std::string>::const_iterator it;
-	for (it = request.headers.begin(); it != request.headers.end(); ++it) {
-		std::cout << it->first << ": " << it->second << std::endl;
-	}
-
-	std::cout << std::endl << "--- BODY ---" << std::endl;
-	if (!request.body.empty()) {
-		std::cout << request.body << std::endl;
-	} else {
-		std::cout << "(No Body)" << std::endl;
-	}
-
-	std::cout << std::endl << "State: " << request.state << std::endl;
-	std::cout << "========================" << std::endl;
-}
 
 /* void parseHttpRequestOld(HttpRequest &req, std::string &data)
 {

@@ -12,6 +12,7 @@ void epollHup(ConfigData &configData, int i) {
 				epoll_ctl(configData.epollFd, EPOLL_CTL_DEL, configData.events[i].data.fd, NULL);
 				close(configData.events[i].data.fd);
 				srv.fds.erase(clientFd);
+				srv.pids.erase(clientFd);
 				res.readFromCgiFinished = true;
 				res.state = SENDING_HEADERS;
 				tmp = true;

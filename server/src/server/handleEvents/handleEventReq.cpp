@@ -6,7 +6,7 @@ bool handleEventReq(ConfigData &configData, int i) {
 
 	int bytesRead = recv(configData.events[i].data.fd, buffer, sizeof(buffer) - 1, 0);
 
-	redirectOutfile(buffer, "output.txt", 1000, bytesRead);
+	redirectOutfile(buffer, "./debugFiles/output.txt", 1000, bytesRead);
 
 	if (bytesRead == -1) {
 		return (false);

@@ -20,6 +20,7 @@ void coreLoop(std::map<int, ConfigData> &data) {
 					epollHup(configData, i);
 				}
 			}
+			checkCgiTimeouts(configData);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 
 bool isPathSafe(const std::string &fileName) {
 	if (fileName.find("..") != std::string::npos) {
-		return false;  // Verhindert Pfad-Traversal
+		return false; 
 	}
 	return true;
 }
@@ -25,127 +25,116 @@ bool isCGIFile(const std::string &fileName, const std::vector<std::string> &cgi_
 }
 
 void printFormData(formData &data) {
-    Logger::debug("boundary: %s", data.boundary.c_str());
-    Logger::debug("Content-Disposition: %s", data.dis.c_str());
-    Logger::debug("name: %s", data.name.c_str());
-    Logger::debug("filename: %s", data.filename.c_str());
-    Logger::debug("Content-Type: %s", data.contentType.c_str());
-    Logger::debug("fileContent:\n%s", data.fileContent.c_str());
+	Logger::debug("boundary: %s", data.boundary.c_str());
+	Logger::debug("Content-Disposition: %s", data.dis.c_str());
+	Logger::debug("name: %s", data.name.c_str());
+	Logger::debug("filename: %s", data.filename.c_str());
+	Logger::debug("Content-Type: %s", data.contentType.c_str());
+	Logger::debug("fileContent:\n%s", data.fileContent.c_str());
 }
 
 bool parseFormData(HttpRequest &req, HttpResponse &res, formData &formData) {
-    // 1. Extract boundary from the header
-    std::map<std::string, std::string>::iterator it = req.headers.find("content-type");
-    if (it == req.headers.end()) {
-        Logger::error("Error: No Content-Type header found.");
-        handle500(res);
-        return false;
-    }
+	std::map<std::string, std::string>::iterator it = req.headers.find("content-type");
+	if (it == req.headers.end()) {
+		Logger::error("Error: No Content-Type header found.");
+		handle500(res);
+		return false;
+	}
 
-    std::string contentType = it->second;
-    std::string boundaryPrefix = "boundary=";
-    size_t pos = contentType.find("multipart/form-data");
+	std::string contentType = it->second;
+	std::string boundaryPrefix = "boundary=";
+	size_t pos = contentType.find("multipart/form-data");
 
-    if (pos == std::string::npos) {
-        Logger::error("Error: Content-Type is not multipart/form-data.");
-        handle500(res);
-        return false;
-    }
+	if (pos == std::string::npos) {
+		Logger::error("Error: Content-Type is not multipart/form-data.");
+		handle500(res);
+		return false;
+	}
 
-    pos = contentType.find(boundaryPrefix);
-    if (pos == std::string::npos) {
-        Logger::error("Error: No boundary found in Content-Type.");
-        handle500(res);
-        return false;
-    }
+	pos = contentType.find(boundaryPrefix);
+	if (pos == std::string::npos) {
+		Logger::error("Error: No boundary found in Content-Type.");
+		handle500(res);
+		return false;
+	}
 
-    formData.boundary = "--" + contentType.substr(pos + boundaryPrefix.length());
+	formData.boundary = "--" + contentType.substr(pos + boundaryPrefix.length());
 
-    // 2. Split body into sections
-    std::string body = req.body;
-    size_t start = body.find(formData.boundary);
-    if (start == std::string::npos) {
-        Logger::error("Error: Boundary not found in the body.");
-        handle500(res);
-        return false;
-    }
-    start += formData.boundary.length(); // Move past the boundary
+	std::string body = req.body;
+	size_t start = body.find(formData.boundary);
+	if (start == std::string::npos) {
+		Logger::error("Error: Boundary not found in the body.");
+		handle500(res);
+		return false;
+	}
+	start += formData.boundary.length();
 
-    // 3. Parse headers
-    size_t end = body.find("\r\n\r\n", start);
-    if (end == std::string::npos) {
-        Logger::error("Error: No double CRLF found (Headers missing or malformed).");
-        handle500(res);
-        return false;
-    }
+	size_t end = body.find("\r\n\r\n", start);
+	if (end == std::string::npos) {
+		Logger::error("Error: No double CRLF found (Headers missing or malformed).");
+		handle500(res);
+		return false;
+	}
 
-    std::string headers = body.substr(start, end - start);
-    start = end + 4; // Move past CRLF
+	std::string headers = body.substr(start, end - start);
+	start = end + 4;
 
-    // Find Content-Disposition
-    pos = headers.find("Content-Disposition:");
-    if (pos == std::string::npos) {
-        Logger::error("Error: Content-Disposition header missing.");
-        handle500(res);
-        return false;
-    }
+	pos = headers.find("Content-Disposition:");
+	if (pos == std::string::npos) {
+		Logger::error("Error: Content-Disposition header missing.");
+		handle500(res);
+		return false;
+	}
 
-    // Extract name
-    pos = headers.find("name=\"", pos);
-    if (pos == std::string::npos) {
-        Logger::error("Error: Name parameter missing in Content-Disposition.");
-        handle500(res);
-        return false;
-    }
-    size_t nameStart = pos + 6;
-    size_t nameEnd = headers.find("\"", nameStart);
-    formData.name = headers.substr(nameStart, nameEnd - nameStart);
+	pos = headers.find("name=\"", pos);
+	if (pos == std::string::npos) {
+		Logger::error("Error: Name parameter missing in Content-Disposition.");
+		handle500(res);
+		return false;
+	}
+	size_t nameStart = pos + 6;
+	size_t nameEnd = headers.find("\"", nameStart);
+	formData.name = headers.substr(nameStart, nameEnd - nameStart);
 
-    // Extract filename (optional)
-    pos = headers.find("filename=\"", nameEnd);
-    if (pos != std::string::npos) {
-        size_t fileStart = pos + 10;
-        size_t fileEnd = headers.find("\"", fileStart);
-        formData.filename = headers.substr(fileStart, fileEnd - fileStart);
-    }
+	pos = headers.find("filename=\"", nameEnd);
+	if (pos != std::string::npos) {
+		size_t fileStart = pos + 10;
+		size_t fileEnd = headers.find("\"", fileStart);
+		formData.filename = headers.substr(fileStart, fileEnd - fileStart);
+	}
 
-    // Extract Content-Type (optional)
-    pos = headers.find("Content-Type:");
-    if (pos != std::string::npos) {
-        size_t typeStart = pos + 14;
-        size_t typeEnd = headers.find("\r\n", typeStart);
-        formData.contentType = headers.substr(typeStart, typeEnd - typeStart);
-    }
+	pos = headers.find("Content-Type:");
+	if (pos != std::string::npos) {
+		size_t typeStart = pos + 14;
+		size_t typeEnd = headers.find("\r\n", typeStart);
+		formData.contentType = headers.substr(typeStart, typeEnd - typeStart);
+	}
 
-    // 4. Extract file content
-    end = body.find(formData.boundary, start);
-    if (end == std::string::npos) {
-        Logger::error("Error: No closing boundary found.");
-        handle500(res);
-        return false;
-    }
+	end = body.find(formData.boundary, start);
+	if (end == std::string::npos) {
+		Logger::error("Error: No closing boundary found.");
+		handle500(res);
+		return false;
+	}
 
-    formData.fileContent = body.substr(start, end - start - 2); // -2 to remove \r\n before boundary
+	formData.fileContent = body.substr(start, end - start - 2);
 
-    printFormData(formData);
-    return true;
+	printFormData(formData);
+	return true;
 }
 
 bool insertFileIntoDirTree(dir &root, const file &newFile) {
 	Logger::debug("Insert file: %s into dir: %s", newFile.path.c_str(), root.path.c_str());
 
-	// Normalize root.path to avoid trailing slash issues
 	std::string normalizedRoot = root.path;
 	if (!normalizedRoot.empty() && normalizedRoot[normalizedRoot.size() - 1] == '/')
 		normalizedRoot = normalizedRoot.substr(0, normalizedRoot.size() - 1);
 
-	// Check if file belongs to this subtree
 	if (newFile.path == normalizedRoot || newFile.path.find(normalizedRoot + "/") != 0) {
 		Logger::debug("❌ File path doesn't belong to this root: %s", root.path.c_str());
 		return false;
 	}
 
-	// Datei direkt in diesem Verzeichnis?
 	size_t pos = newFile.path.find('/', normalizedRoot.size() + 1);
 	if (pos == std::string::npos) {
 		Logger::debug("📄 File is directly inside this directory: %s", root.path.c_str());
@@ -153,21 +142,17 @@ bool insertFileIntoDirTree(dir &root, const file &newFile) {
 		return true;
 	}
 
-	// Verzeichnisname extrahieren
 	std::string nextDirName = newFile.path.substr(normalizedRoot.size() + 1, pos - normalizedRoot.size() - 1);
 	std::string subPath = normalizedRoot + "/" + nextDirName;
 
 	Logger::debug("➡️ Searching for subdir: %s", subPath.c_str());
 
-	// Suche passenden Subdir
 	for (size_t i = 0; i < root.dirs.size(); ++i) {
 		if (root.dirs[i].path == subPath) {
 			Logger::debug("📁 Subdir exists, recursing into: %s", subPath.c_str());
 			return insertFileIntoDirTree(root.dirs[i], newFile);
 		}
 	}
-
-	// Wenn Subdir nicht existiert, erstelle es
 	Logger::debug("📁 Subdir doesn't exist, creating new: %s", subPath.c_str());
 	dir newSubDir;
 	newSubDir.path = subPath;

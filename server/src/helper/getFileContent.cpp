@@ -2,8 +2,7 @@
 
 
 std::string getFileContent(std::string filePath) {
-	// std::string publicPath = "../../../";
-	// publicPath.append(filePath);
+
 	std::ifstream file(filePath.c_str());
 	std::string body;
 
@@ -14,7 +13,8 @@ std::string getFileContent(std::string filePath) {
 		}
 		file.close();
 	} else {
-		std::cerr << "File not found\n";
+		Logger::error("File in getFileContent for path %s not found", filePath);
+		return ("");
 	}
 	return body;
 }
