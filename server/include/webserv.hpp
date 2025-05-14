@@ -233,6 +233,7 @@ struct formData{
 	//FILES
 		std::string getDestPath(std::string email);
 		std::string getFileContent(std::string filePath);
+		std::string joinPath(const std::string &base, const std::string &suffix);
 	//SET_NONBLOCKING
 		int setNonBlocking(int fd);
 	//FIND_IN_DIR_TREE
@@ -276,8 +277,19 @@ struct formData{
 
 //PARSE_CONFIG
 	bool parseConfig(std::string path, std::map<int, ConfigData> &data);
-
-
-
-
+	bool parseServer(std::map<int, ConfigData> &data, std::string serverBlock);
+	//IS_VALID
+		bool isValidConfigLine(const std::string &line, const std::string &expectedKeyword, server &Server);
+		bool isValidIntConfigLine(const std::string &line, const std::string &expectedKeyword, int minValue, int maxValue, server &Server);
+		bool isValidErrorPageLine(const std::string &line, server &Server);
+		bool isValidLocation(const std::string &line, location &Location);
+	//INPUTFILE
+		bool checkPath(std::string path);
+		std::string readFile(std::string path);
+		bool validateLines(const std::string &filetxt);
+	//EXTRACT_BLOCKS
+		std::vector<std::string> extractServerBlocks(std::string &file);
+		std::vector<std::string> extractLocationBlocks(std::string &serverBlock);
+	//CHECK_CONFIG
+		bool checkConfig(std::map<int, ConfigData> &data);
 #endif

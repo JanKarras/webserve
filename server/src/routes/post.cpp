@@ -2,7 +2,7 @@
 
 bool isPathSafe(const std::string &fileName) {
 	if (fileName.find("..") != std::string::npos) {
-		return false; 
+		return false;
 	}
 	return true;
 }

@@ -1,4 +1,9 @@
 #!/bin/bash
-echo "You reached the ls cgi"
+
+# CGI-Header mit CRLF
+printf "Status: 200 OK\r\n"
+printf "Content-Type: text/plain; charset=UTF-8\r\n"
+printf "\r\n"
+
+# Body
 ls
-echo "I hope the response came through?"

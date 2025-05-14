@@ -1,6 +1,7 @@
 #include "../../include/webserv.hpp"
 
 int parseCgiContent(HttpResponse &res) {
+	std::cout << res.body << std::endl;
 	std::string		key, value;
 	size_t			pos = 0;
 	uint8_t			ch;

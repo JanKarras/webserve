@@ -1,0 +1,49 @@
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Status: 200 OK
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=UTF-8
+Status: 200 OK
+
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=UTF-8
+Status: 200 OK
+
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=UTF-8
+Status: 200 OK
+
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=UTF-8
+Status: 200 OK
+
+HTTP/1.1 405 Method not allowed
+Allow: GET
+Content-Length: 374
+Content-Type: text/html
+
