@@ -110,7 +110,7 @@ static int extractQuery(HttpRequest &req)
 		endPos = req.queryString.find('&', startPos);
 
 		if (endPos == std::string::npos)
-			value = req.queryString.substr(startPos); // Last key=value pair
+			value = req.queryString.substr(startPos);
 		else
 			value = req.queryString.substr(startPos, endPos - startPos);
 
@@ -121,26 +121,9 @@ static int extractQuery(HttpRequest &req)
 	return SUCCESS;
 }
 
-// static bool	isCgi(const std::string &path, const server &s)
-// {
-// 	size_t pathLen = path.length();
-
-// 	for (size_t i = 0; i < s.locations.size(); i++)
-// 	{
-// 		const std::vector<std::string> &cgiExtension = s.locations[i].cgi_ext;
-// 		for (size_t j = 0; j < cgiExtension.size(); j++)
-// 		{
-// 			size_t extensionLen = cgiExtension[j].length();
-// 			if (pathLen >= extensionLen && !path.compare(pathLen -  extensionLen, extensionLen, cgiExtension[j]))
-// 				return (true);
-// 		}
-// 	}
-// 	return false;
-// }
-
 static int distributeRequest(ConfigData &config, HttpRequest &req)
 {
-	if (req.headers.find("host") != req.headers.end()) //statt server-name host? Der browser sendet kein server-name header sondern host.
+	if (req.headers.find("host") != req.headers.end())
 	{
 		std::string serverName = req.headers["host"];
 		for (int i = 0; i < config.servers.size(); i++)
@@ -539,11 +522,7 @@ static int parseHttpHeaderLine(ConfigData &configData, HttpRequest &req)
 				break;
 			case (HL_ESCAPE_CHAR):
 				if (c == '\"' || c == '\\')
-				{
-					// req.buffer.replace(pos - 1, 2, "\"");
-					// pos--;
 					state = HL_DOUBLE_QUOTES;
-				}
 				else
 				{
 					setRequestError(configData, req, HTTP_BAD_REQUEST);
@@ -569,7 +548,6 @@ static int parseHttpHeaderLine(ConfigData &configData, HttpRequest &req)
 					state = HL_DONE;
 				else if (c > 33 && c < 126 && req.folding)
 				{
-					// req.valuePos = pos;
 					req.folding = false;
 					if (c == '\"')
 						state = HL_DOUBLE_QUOTES;
@@ -644,7 +622,6 @@ static int parseHttpNoBody(ConfigData &configData, HttpRequest &req)
 
 static int parseHttpBody(ConfigData &configData, HttpRequest &req)
 {
-	//size_t pos = req.pos;
 	size_t bufferLen = req.buffer.length();
 
 	size_t remainingBytes = req.content_length - req.body.size();
@@ -668,7 +645,6 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 	size_t pos = req.pos;
 	BodyState state = static_cast<BodyState>(req.parseState);
 	size_t buffer_length = req.buffer.length();
-	//Logger::debug("pos: %i, state: %i, bufferLength: %i, buffer: %s", pos, req.state, buffer_length, req.buffer.c_str());
 	for (; pos < buffer_length; pos++)
 	{
 		u_char c = req.buffer[pos];
@@ -698,7 +674,6 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 					req.chunkSize = strtol(hexSize.c_str(), &endptr, 16);
 					if (*endptr != '\0' || req.chunkSize < 0)
 					{
-						//Logger::error("HTTP_BAD_REQUEST");
 						setRequestError(configData, req, HTTP_BAD_REQUEST);
 						return FAILURE;
 					}
@@ -741,7 +716,6 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 			case (B_CHUNK_DATA_CRLF):
 				if (c == '\n' )
 				{
-					//Logger::debug("BufferLength %i, chunkSize: %i, client_max_body_size %i, pos: %i", buffer_length, req.chunkSize, req.srv->client_max_body_size, pos);
 					if (pos - 1 == req.chunkSize)
 					{
 						if (req.body.size() + req.chunkSize > req.srv->client_max_body_size)
@@ -839,106 +813,3 @@ void parseHttpRequest(ConfigData &configData, int client_fd, std::string &data)
         //Logger::debug("Body parsed successfully for client %i", client_fd);
     }
 }
-
-
-
-/* void parseHttpRequestOld(HttpRequest &req, std::string &data)
-{
-	req.buffer.append(data);
-
-	if (req.state == REQUEST_LINE)
-		if (parseHttpRequestLine(req) == FAILURE) return;
-
-	if (req.state == HEADERS)
-		if (parseHttpHeaderLine(req) == FAILURE) return;
-
-	if (req.state == NO_BODY)
-		if (parseHttpNoBody(req) == FAILURE) return;
-
-	if (req.state == BODY_CHUNKED)
-		if (parseHttpBodyChunked(req) == FAILURE) return;
-
-	if (req.state == BODY)
-		if (parseHttpBody(req) == FAILURE) return;
-} */
-
-// void printRequest(const HttpRequest &req)
-// {
-// 	std::cout << "Method: " << req.method << "\n";
-// 	std::cout << "URI: " << req.uri << "\n";
-// 	std::cout << "Path: " << req.path << "\n";
-// 	std::cout << "HTTP Version: " << req.version << "\n";
-// 	std::cout << "Headers: " << "\n";
-// 	for (const auto &header : req.headers)
-// 	{
-// 		if (!header.second.empty())
-// 			std::cout << "  " << header.first << ": " << header.second[0] << "\n";
-// 	}
-// 	std::cout << "Body: " << req.body << "\n";
-// 	std::cout << "State: " << req.state << "\n";
-// 	std::cout << "---------------------------\n";
-// }
-
-// void testRequest(const std::string &rawRequest)
-// {
-//     HttpRequest req;
-//     size_t chunkSize = 100; // Simulate receiving data in chunks
-//     for (size_t i = 0; i < rawRequest.size(); i += chunkSize)
-//     {
-//         std::string chunk = rawRequest.substr(i, chunkSize);
-//         parseHttpRequest(req, chunk);
-//     }
-//     printRequest(req);
-// }
-
-// int main()
-// {
-//     std::vector<std::string> testCases = {
-//         // Valid GET request
-//         "GET /index.html HTTP/1.1\r\nHost: example.com\r\nUser-Agent: TestClient\r\n\r\n",
-
-//         // Valid POST request with body
-//         "POST /submit HTTP/1.1\r\nHost: example.com\r\nContent-Length: 13\r\n\r\nHello, world!",
-
-//         // Invalid request: missing HTTP version
-//         "GET /index.html\r\nHost: example.com\r\n\r\n",
-
-//         // Invalid request: unknown method
-//         "FOO /bar HTTP/1.1\r\nHost: example.com\r\n\r\n",
-
-//         // Valid request with header continuation (folded header)
-//         "GET /index HTTP/1.1\r\nHost: example.com\r\nX-Header: value\r\n  continued-value\r\n\r\n",
-
-//         // Invalid: No headers, should be rejected in HTTP/1.1
-//         "GET / HTTP/1.1\r\n\r\n",
-
-// 		// Invalid request: malformed header
-//         "GET /home HTTP/1.1\r\nHost example.com\r\n\r\n",
-
-//         // Valid request with multiple header values
-//         "GET / HTTP/1.1\r\nHost: example.com\r\nAccept: text/html, application/json\r\n\r\n",
-
-//         // Valid request with header key duplicates
-//         "GET / HTTP/1.1\r\nHost: example.com\r\nAccept: text/html\r\nAccept: application/json\r\n\r\n",
-
-// 		// Invalid request with empty header values
-//         "GET / HTTP/1.1\r\nHost: example.com\r\nAccept: , , application/json\r\nrandom-key-with-space-after-colon: \r\n\r\n",
-
-// 		// Valid request with empty header values
-// 		"GET / HTTP/1.1\r\nHost: example.com\r\nAccept:	 ,		,  	q,\r\nTest:\r\n\r\n",
-
-//         // Valid chunked transfer encoding request
-//         "POST /upload HTTP/1.1\r\nHost: example.com\r\nTransfer-Encoding: chunked\r\n\r\n4\r\nWiki\r\n5\r\npedia\r\n0\r\n\r\n",
-
-//         // // Invalid chunked body with incorrect size
-//         "POST /upload HTTP/1.1\r\nHost: example.com\r\nTransfer-Encoding: chunked\r\n\r\nZ\r\nHello\r\n0\r\n\r\n"
-
-//     };
-
-//     for (const auto &testCase : testCases)
-//     {
-//         testRequest(testCase);
-//     }
-
-//     return 0;
-// }
