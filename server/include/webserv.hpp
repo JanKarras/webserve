@@ -271,6 +271,7 @@ struct formData{
 //POST_ROUTE
 	void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd);
 	bool isCGIFile(const std::string &fileName, const std::vector<std::string> &cgi_ext);
+	void handleRegularLocation(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd);
 
 //DELETE_ROUTE
 	void routeRequestDELETE(HttpRequest &req, HttpResponse &res, server &server, location &loc);

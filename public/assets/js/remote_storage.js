@@ -73,7 +73,7 @@ async function uploadFileBackend(file) {
 			console.log(pair[0], pair[1]); // Key und Wert ausgeben
 		}
 
-		const response = await fetch(`/dashboard`, {
+		const response = await fetch(`/files`, {
 			method: 'POST',
 			body: formData
 		});

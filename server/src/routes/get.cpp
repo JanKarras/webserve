@@ -1,10 +1,5 @@
 #include "../../include/webserv.hpp"
 
-
-
-
-
-
 std::string escapeHtml(const std::string& input) {
 	std::string escaped;
 	for (size_t i = 0; i < input.length(); ++i) {
@@ -86,15 +81,19 @@ void handleDirResponse(HttpResponse &res, dir directory, std::string index) {
 
 void handleGet(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
 
-	std::string filePath = req.path.substr(loc.name.size());
-	if (filePath.empty() || filePath[0] == '/') {
-		if (loc.index.empty()) {
-			filePath = server.root + server.index;
-		} else {
-			filePath = server.root + loc.index;
-		}
+std::string filePath = req.path.substr(loc.name.size()); // z.B. "/ls.sh"
+	if (!filePath.empty() && filePath[0] == '/') {
+	    filePath.erase(0, 1);
+	}
+
+	if (filePath.empty()) {
+	    if (loc.index.empty()) {
+	        filePath = server.root + server.index;
+	    } else {
+	        filePath = server.root + loc.index;
+	    }
 	} else {
-		filePath = server.root + filePath;
+	    filePath = server.root + filePath;
 	}
 
 	SearchResult result;
@@ -116,7 +115,11 @@ void handleGet(HttpRequest &req, HttpResponse &res, server &server, location &lo
 void handleGetWithAnotherRoot(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
 
 	std::string filePath = req.path.substr(loc.name.size());
-	if (filePath.empty() || filePath[0] == '/') {
+	if (!filePath.empty() && filePath[0] == '/') {
+		filePath.erase(0, 1);
+	}
+
+	if (filePath.empty()) {
 		if (loc.index.empty()) {
 			filePath = loc.root + "/" + server.index;
 		} else {
@@ -143,7 +146,9 @@ void handleGetWithAnotherRoot(HttpRequest &req, HttpResponse &res, server &serve
 }
 
 void routeRequestGET(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
-	if (loc.root.empty()) {
+	if (loc.regularLocation) {
+		handleRegularLocation(req, res, server, loc, clientFd);
+	} else if (loc.root.empty()) {
 		handleGet(req, res, server, loc, clientFd);
 	} else {
 		handleGetWithAnotherRoot(req, res, server, loc, clientFd);

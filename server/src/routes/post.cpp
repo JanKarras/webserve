@@ -184,19 +184,24 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		return;
 	}
 
-	if (req.headers["Cotent-Type"] == "multipart/form-data") {
+	printHttpRequest(req);
+	std::cout << req.headers["content-type"] << "\n";
+	if (req.headers["content-type"].find("multipart/form-data") != std::string::npos) {
 		std::string uploadDir;
 
 
 		if (loc.root.size() != 0) {
-			uploadDir = loc.root;
+			uploadDir = loc.root + "/";
 		} else {
-			uploadDir = server.root;
+			uploadDir = server.root + "/";
 		}
 
 		formData form;
 
+		std::cout << uploadDir << "\n";
+
 		if (parseFormData(req, res, form) == false) {
+			handle400(res);
 			return;
 		}
 
@@ -254,8 +259,8 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		res.body = "File uploaded successfully.";
 	} else {
 		if (req.body.size() == 0) {
-			res.statusCode = 204;
-			res.statusMessage = "No Content";
+			res.statusCode = 200;
+			res.statusMessage = "OK";
 			res.body = "";
 		} else {
 			res.statusCode = 200;

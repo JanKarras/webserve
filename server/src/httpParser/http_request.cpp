@@ -56,6 +56,7 @@ static int resolvePath(ConfigData &configData, HttpRequest &req, bool resolvePat
 
 	while (std::getline(stream, token, '/'))
 	{
+		// std::cout << token << std::endl;
 		if (token == "." || token.empty())
 			continue;
 		else if (token == "..")
@@ -151,6 +152,7 @@ static int parseUri(ConfigData &configData, HttpRequest &req)
 	for (size_t pos = 0; pos < uriLen; pos++)
 	{
 		char c = req.uri[pos];
+		std::cout << c << std::endl;
 		switch (state)
 		{
 		case URI_START:
@@ -281,7 +283,6 @@ static int parseUri(ConfigData &configData, HttpRequest &req)
 			break;
 		}
 	}
-
 	if ((state == URI_PATH_SEGMENT || state == URI_AFTER_SLASH) && resolvePath(configData, req, resolve) == SUCCESS)
 	{
 		req.path = req.uri;

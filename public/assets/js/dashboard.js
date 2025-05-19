@@ -1,16 +1,7 @@
-function getEmailFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('email');
-}
+
 
 async function initDashboard() {
-    //const email = getEmailFromURL();
-    //if (email) {
-    //    document.getElementById('username').innerText = email;
-    //    await renderFiles(email);
-    //} else {
-    //    console.error('No email found in the URL.');
-    //}
+
 }
 
 function openUploadDialog() {
@@ -31,32 +22,48 @@ async function uploadFileTmp(event) {
         alert("Invalid file type. Please upload JPG, PNG, or SH files.");
         return;
     }
-
 	const tmp = await uploadFileBackend(file);
 	console.log(tmp);
 }
 
-async function handleFileUpload(event) {
-    const file = event.target.files[0];
 
-    if (!file) {
-        return;
-    }
 
-    console.log('Selected file MIME type:', file.type);
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'application/x-sh', 'application/x-shellscript'];
-    if (!allowedTypes.includes(file.type)) {
-        alert("Invalid file type. Please upload JPG, PNG, or SH files.");
-        return;
-    }
 
-	await uploadFile(file, getEmailFromURL());
-	renderFiles(getEmailFromURL())
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 async function renderFiles(email) {
-    const fileNames = await getFileNames(email);
+    const fileNames = await getFileNames();
     const fileContainer = document.getElementById('file-container');
     fileContainer.innerHTML = '';
 
