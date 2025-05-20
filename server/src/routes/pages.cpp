@@ -2,7 +2,6 @@
 
 void handleFileResponse(HttpResponse &res, const std::string &filePath, const std::string &contentType, int statusCode, const std::string &defaultMessage) {
 	res.body = getFileContent(filePath);
-	std::cout << toStringInt(res.body.size()) << "\n";
 	res.statusMessage = defaultMessage;
 	res.headers["Content-Type"] = contentType;
 	res.headers["Content-Length"] = toStringInt(res.body.size());

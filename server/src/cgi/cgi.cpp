@@ -111,7 +111,7 @@ void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext
 
 	serverContext.cgifds[clientFd] = inputPipe[1];
 	serverContext.fds[clientFd] = outputPipe[0];
-	Logger::debug("Fd inputPipe %i", serverContext.cgifds[clientFd]);
+	//Logger::debug("Fd inputPipe %i", serverContext.cgifds[clientFd]);
 	serverContext.pids[clientFd] = pid;
 	setNonBlocking(serverContext.fds[clientFd]);
 	setNonBlocking(serverContext.cgifds[clientFd]);
@@ -123,6 +123,6 @@ void exeSkript(HttpRequest &req, HttpResponse &res, ServerContext &serverContext
 }
 
 void executeSkript(HttpRequest &req, HttpResponse &res, server &server, int clientFd, file f) {
-	Logger::debug("executer script f.path: %s", f.path.c_str());
+	//Logger::debug("executer script f.path: %s", f.path.c_str());
 	exeSkript(req, res, server.serverContex, clientFd, f.path);
 }

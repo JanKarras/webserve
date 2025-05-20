@@ -24,11 +24,11 @@ location* matchLocation(server &Server, const std::string &path, HttpRequest &re
 	location *prefixMatch = NULL;
 	size_t longestPrefix = 0;
 
-	Logger::debug("Checking for Regular Location (extension-based)");
+	// Logger::debug("Checking for Regular Location (extension-based)");
 	for (size_t i = 0; i < Server.locations.size(); i++) {
 		location &loc = Server.locations[i];
 		if (loc.regularLocation) {
-			Logger::debug("Location ext: %s, path: %s", loc.ext.c_str(), path.c_str());
+			// Logger::debug("Location ext: %s, path: %s", loc.ext.c_str(), path.c_str());
 			if (path.size() >= loc.ext.size() &&
 				path.compare(path.size() - loc.ext.size(), loc.ext.size(), loc.ext) == 0) {
 
@@ -38,16 +38,16 @@ location* matchLocation(server &Server, const std::string &path, HttpRequest &re
 					(req.method == DELETE && loc.del);
 
 				if (methodAllowed) {
-					Logger::debug("Regex match found (method allowed): %s", loc.name.c_str());
+					// Logger::debug("Regex match found (method allowed): %s", loc.name.c_str());
 					return &loc;
 				} else {
-					Logger::debug("Regex match found, but method not allowed => ignoring");
+					// Logger::debug("Regex match found, but method not allowed => ignoring");
 				}
 			}
 		}
 	}
 
-	Logger::debug("Checking for Path Prefix Match");
+	// Logger::debug("Checking for Path Prefix Match");
 	for (size_t i = 0; i < Server.locations.size(); i++) {
 		location &loc = Server.locations[i];
 		if (!loc.regularLocation && path.find(loc.name) == 0) {
@@ -59,15 +59,15 @@ location* matchLocation(server &Server, const std::string &path, HttpRequest &re
 	}
 
 	if (prefixMatch) {
-		Logger::debug("Prefix match found: %s", prefixMatch->name.c_str());
+		// Logger::debug("Prefix match found: %s", prefixMatch->name.c_str());
 		return prefixMatch;
 	}
 
-	Logger::debug("No Prefix or Regex Match. Checking Dir Tree...");
+	// Logger::debug("No Prefix or Regex Match. Checking Dir Tree...");
 	for (size_t i = 0; i < Server.locations.size(); i++) {
 		location &loc = Server.locations[i];
 		if (matchPathInDirTree(loc.tree, path)) {
-			Logger::debug("DirTree match found: %s", loc.name.c_str());
+			// Logger::debug("DirTree match found: %s", loc.name.c_str());
 			return &loc;
 		}
 	}

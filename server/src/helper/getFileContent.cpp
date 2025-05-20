@@ -13,7 +13,7 @@ std::string getFileContent(std::string filePath) {
 		}
 		file.close();
 	} else {
-		Logger::error("File in getFileContent for path %s not found", filePath);
+		Logger::error("File in getFileContent for path %s not found", filePath.c_str());
 		return ("");
 	}
 	return body;

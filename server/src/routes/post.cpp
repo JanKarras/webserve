@@ -8,15 +8,15 @@ bool isPathSafe(const std::string &fileName) {
 }
 
 bool isCGIFile(const std::string &fileName, const std::vector<std::string> &cgi_ext) {
-	Logger::debug("is File: %s is an exectuabale?", fileName.c_str());
+	//Logger::debug("is File: %s is an exectuabale?", fileName.c_str());
 	size_t dotPos = fileName.rfind('.');
 	if (dotPos == std::string::npos) {
 		return false;
 	}
 	std::string fileExt = fileName.substr(dotPos);
-	Logger::debug("dot detected fileExt: %s -- cgi_ext.size = %i", fileExt.c_str(), cgi_ext.size());
+	//Logger::debug("dot detected fileExt: %s -- cgi_ext.size = %i", fileExt.c_str(), cgi_ext.size());
 	for (size_t i = 0; i < cgi_ext.size(); ++i) {
-		Logger::debug("cgi_ext: %s", cgi_ext[i].c_str());
+		//Logger::debug("cgi_ext: %s", cgi_ext[i].c_str());
 		if (fileExt == cgi_ext[i]) {
 			return true;
 		}
@@ -124,20 +124,20 @@ bool parseFormData(HttpRequest &req, HttpResponse &res, formData &formData) {
 }
 
 bool insertFileIntoDirTree(dir &root, const file &newFile) {
-	Logger::debug("Insert file: %s into dir: %s", newFile.path.c_str(), root.path.c_str());
+	//Logger::debug("Insert file: %s into dir: %s", newFile.path.c_str(), root.path.c_str());
 
 	std::string normalizedRoot = root.path;
 	if (!normalizedRoot.empty() && normalizedRoot[normalizedRoot.size() - 1] == '/')
 		normalizedRoot = normalizedRoot.substr(0, normalizedRoot.size() - 1);
 
 	if (newFile.path == normalizedRoot || newFile.path.find(normalizedRoot + "/") != 0) {
-		Logger::debug("❌ File path doesn't belong to this root: %s", root.path.c_str());
+		//Logger::debug("❌ File path doesn't belong to this root: %s", root.path.c_str());
 		return false;
 	}
 
 	size_t pos = newFile.path.find('/', normalizedRoot.size() + 1);
 	if (pos == std::string::npos) {
-		Logger::debug("📄 File is directly inside this directory: %s", root.path.c_str());
+		//Logger::debug("📄 File is directly inside this directory: %s", root.path.c_str());
 		root.files.push_back(newFile);
 		return true;
 	}
@@ -145,15 +145,15 @@ bool insertFileIntoDirTree(dir &root, const file &newFile) {
 	std::string nextDirName = newFile.path.substr(normalizedRoot.size() + 1, pos - normalizedRoot.size() - 1);
 	std::string subPath = normalizedRoot + "/" + nextDirName;
 
-	Logger::debug("➡️ Searching for subdir: %s", subPath.c_str());
+	//Logger::debug("➡️ Searching for subdir: %s", subPath.c_str());
 
 	for (size_t i = 0; i < root.dirs.size(); ++i) {
 		if (root.dirs[i].path == subPath) {
-			Logger::debug("📁 Subdir exists, recursing into: %s", subPath.c_str());
+			//Logger::debug("📁 Subdir exists, recursing into: %s", subPath.c_str());
 			return insertFileIntoDirTree(root.dirs[i], newFile);
 		}
 	}
-	Logger::debug("📁 Subdir doesn't exist, creating new: %s", subPath.c_str());
+	//Logger::debug("📁 Subdir doesn't exist, creating new: %s", subPath.c_str());
 	dir newSubDir;
 	newSubDir.path = subPath;
 	root.dirs.push_back(newSubDir);
@@ -167,7 +167,7 @@ bool insertFileIntoDirTree(dir &root, const file &newFile) {
 void handleRegularLocation(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
 	std::string path = loc.root + "/" + loc.index;
 
-	Logger::debug("%s", path.c_str());
+	//Logger::debug("%s", path.c_str());
 
 	SearchResult result;
 	if (findInDirTree(loc.tree, path, result) && !result.isDir) {
@@ -185,7 +185,6 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 	}
 
 	printHttpRequest(req);
-	std::cout << req.headers["content-type"] << "\n";
 	if (req.headers["content-type"].find("multipart/form-data") != std::string::npos) {
 		std::string uploadDir;
 
@@ -198,7 +197,6 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 
 		formData form;
 
-		std::cout << uploadDir << "\n";
 
 		if (parseFormData(req, res, form) == false) {
 			handle400(res);
@@ -236,14 +234,13 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		newFile.contentType = getContentType(getFileExtension(filePath));
 
 		if (isCGIFile(fileName, loc.cgi_ext)) {
-			Logger::info("Making CGI script executable: %s", filePath.c_str());
+			//Logger::info("Making CGI script executable: %s", filePath.c_str());
 
 			if (!setsetExecutable(filePath)) {
 				Logger::error("Failed to set file as executable: %s", filePath.c_str());
 			}
 		}
 
-		std::cout << "newFile: " << newFile.path << " -- " << newFile.contentType << std::endl;
 
 		dir &targetTree = loc.root.empty() ? server.serverContex.tree : loc.tree;
 
@@ -265,8 +262,6 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		} else {
 			res.statusCode = 200;
 			res.statusMessage = "OK";
-			res.body = "OK";
-			res.headers["Content-Length"] = toStringInt(res.body.size());
 		}
 	}
 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Index</title>
+	<script src="./assets/js/index.js"></script>
+	<script src="./assets/js/remote_storage.js"></script>
+	<link rel="stylesheet" href="./assets/css/index_style.css">
+</head>
+<body>
+	<header>
+		<img src="./assets/img/42Wolfsburg_Logo_ver_pos_black.pdf.jpg" alt="Logo">
+	</header>
+
+<!-- Login Popup -->
+	<div class="popup" id="loginPopup" onclick="closePopup(event, 'loginPopup')">
+	    <div class="popup-content" onclick="event.stopPropagation()">
+	        <h2>Login</h2>
+	        <div id="error-message" style="color: red; display: none;"></div> <!-- Fehleranzeige -->
+	        <form>
+	            <input type="email" id="email" placeholder="E-Mail" required><br><br>
+	            <input type="password" id="password" placeholder="Passwort" required><br><br>
+	            <button onclick="login(event)" type="submit" class="btn">Einloggen</button>
+	            <button type="button" class="btn" onclick="togglePopup('loginPopup')">Schließen</button>
+	        </form>
+	    </div>
+	</div>
+
+
+	<!-- Register Popup -->
+	<div class="popup" id="registerPopup" onclick="closePopup(event, 'registerPopup')">
+	    <div class="popup-content" onclick="event.stopPropagation()">
+	        <h2>Registrierung</h2>
+			<div id="error-messageReq" style="color: red; display: none;"></div> <!-- Fehleranzeige -->
+	        <form>
+	            <input id="emailReq" type="email" placeholder="E-Mail" required><br><br>
+	            <input id="passwordReq" type="password" placeholder="Password" required><br><br>
+	            <input id="confirmPasswordReq" type="password" placeholder="Confirm Password" required><br><br>
+	            <button onclick="register(event)" type="submit" class="btn">Registrieren</button>
+	            <button type="button" class="btn" onclick="togglePopup('registerPopup')">Schließen</button>
+	        </form>
+	    </div>
+	</div>
+
+	<main>
+		<section id="content" style="padding: 20px; text-align: center;">
+			<h1>Welcome to our Webserv Project!</h1>
+		</section>
+
+		<section id="contributors" style="display: flex; justify-content: center; gap: 20px; padding: 20px;">
+			<div class="dFlexCenter">
+				<img src="./assets/img/atoepper.png" alt="Alex" class="profilePng">
+				<p>Alex</p>
+			</div>
+			<div class="dFlexCenter">
+				<img src="./assets/img/rmatthes.png" alt="Rene" class="profilePng">
+				<p>Rene</p>
+			</div>
+			<div class="dFlexCenter">
+				<img src="./assets/img/jkarras.png" alt="Jan" class="profilePng">
+				<p>Jan</p>
+			</div>
+		</section>
+
+		<section id="description" style="padding: 20px; text-align: center; max-width: 800px; margin: 0 auto;">
+			<p>Webserv is one of the final projects of 42 School. The task is to program a server in C++. The server should support different routes and pages. The available HTTP methods are GET, POST, and DELETE. To test these methods, users can create an account or log in if they already have one.</p>
+		</section>
+
+    	<div style="text-align: center; padding: 20px;">
+        	<a href="dashboard">Dashboard</a>
+    	</div>
+	</main>
+
+
+	<footer>
+		<div>
+			<a href="index.html">Impressum</a>
+			<a href="index.html">Datenschutz</a>
+			<p>&copy; YSL Club</p>
+		</div>
+	</footer>
+</body>
+</html>

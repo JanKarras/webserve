@@ -30,7 +30,7 @@ void normelaizePaths(HttpRequest &req, server &Server) {
 		location &loc = Server.locations[i];
 		if (!loc.regularLocation && loc.name.length() > 1 && loc.name[loc.name.length() - 1] == '/') {
 			if (req.path + "/" == loc.name) {
-				Logger::debug("Normalizing path: %s => %s", req.path.c_str(), (req.path + "/").c_str());
+				//Logger::debug("Normalizing path: %s => %s", req.path.c_str(), (req.path + "/").c_str());
 				req.path += "/";
 				break;
 			}

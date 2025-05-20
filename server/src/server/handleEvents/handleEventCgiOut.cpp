@@ -26,7 +26,7 @@ void handleCgiWrite(ConfigData &data, int i, ServerContext &srv) {
 	if (res.cgiBody.size() != 0) {
 		return;
 	}
-	Logger::debug("All body data sent to CGI for clientFd: %d", clientFd);
+	//Logger::debug("All body data sent to CGI for clientFd: %d", clientFd);
 	epoll_ctl(data.epollFd, EPOLL_CTL_DEL, data.events[i].data.fd, NULL);
 	close(cgifd);
 	srv.cgifds.erase(clientFd);

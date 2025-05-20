@@ -49,7 +49,6 @@ server {
 	location /put_test/ {
 		root tester/put_test;
 		allow_methods POST;
-		client_max_body_size 100;
 	}
 	location /directory/ {
 		allow_methods GET;
@@ -68,6 +67,7 @@ server {
 	}
 	location /post_body {
 		allow_methods POST;
+		client_max_body_size 100;
 	}
 	location /del {
 		allow_methods DELETE;

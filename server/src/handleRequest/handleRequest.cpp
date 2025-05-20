@@ -20,65 +20,66 @@ void handleRequest(int clientFd, ConfigData &configData) {
 	location *foundLocation = matchLocation(Server, req.path, req);
 
 	if (foundLocation) {
-
+		bool error = false;
 		if (foundLocation->client_max_body_size != 0) {
-			if (req.content_length >= foundLocation->client_max_body_size) {
+			if (req.content_length > foundLocation->client_max_body_size) {
 				handle413(res);
-				return;
+				error = true;
 			}
 		} else if (Server.client_max_body_size != 0) {
-			if (req.content_length >= Server.client_max_body_size) {
+			if (req.content_length > Server.client_max_body_size) {
 				handle413(res);
-				return;
+				error = true;
 			}
 		}
-
-		if (!foundLocation->redirect.empty()) {
-			bool isValidLocationName = false;
-			std::string red = foundLocation->redirect;
-			for (size_t i = 0; i < Server.locations.size(); i++) {
-				if (red == Server.locations[i].name) {
-					req.path = foundLocation->redirect + req.path.substr(foundLocation->name.size());
-					foundLocation = &Server.locations[i];
-					isValidLocationName = true;
-					break;
+		if (!error) {
+			if (!foundLocation->redirect.empty()) {
+				bool isValidLocationName = false;
+				std::string red = foundLocation->redirect;
+				for (size_t i = 0; i < Server.locations.size(); i++) {
+					if (red == Server.locations[i].name) {
+						req.path = foundLocation->redirect + req.path.substr(foundLocation->name.size());
+						foundLocation = &Server.locations[i];
+						isValidLocationName = true;
+						break;
+					}
+				}
+				if (isValidLocationName == false) {
+					handle404(res);
+					return;
 				}
 			}
-			if (isValidLocationName == false) {
-				handle404(res);
-				return;
-			}
-		}
 
-		Logger::debug("Matched location: %s", foundLocation->name.c_str());
+			//Logger::debug("Matched location: %s", foundLocation->name.c_str());
 
-		if (req.method == GET) {
-			if (!foundLocation->get) {
-				Logger::error("Method GET not allowed for location %s", foundLocation->name.c_str());
-				handle405(res);
+			if (req.method == GET) {
+				if (!foundLocation->get) {
+					Logger::error("Method GET not allowed for location %s", foundLocation->name.c_str());
+					handle405(res);
+				} else {
+					// Logger::debug("GET in location %s called", foundLocation->name.c_str());
+					routeRequestGET(req, res, Server, *foundLocation, clientFd);
+				}
+			} else if (req.method == POST) {
+				if (!foundLocation->post) {
+					Logger::error("Method POST not allowed for location %s", foundLocation->name.c_str());
+					handle405(res);
+				} else {
+					// Logger::debug("POST in location %s called", foundLocation->name.c_str());
+					routeRequestPOST(req, res, Server, *foundLocation, clientFd);
+				}
+			} else if (req.method == DELETE) {
+				if (!foundLocation->del) {
+					Logger::error("Method DELETE not allowed for location %s", foundLocation->name.c_str());
+					handle405(res);
+				} else {
+					// Logger::debug("DELETE in location %s called", foundLocation->name.c_str());
+					routeRequestDELETE(req, res, Server, *foundLocation);
+				}
 			} else {
-				Logger::debug("GET in location %s called", foundLocation->name.c_str());
-				routeRequestGET(req, res, Server, *foundLocation, clientFd);
-			}
-		} else if (req.method == POST) {
-			if (!foundLocation->post) {
-				Logger::error("Method POST not allowed for location %s", foundLocation->name.c_str());
+				Logger::error("Method not allowed: %i", req.method);
 				handle405(res);
-			} else {
-				Logger::debug("POST in location %s called", foundLocation->name.c_str());
-				routeRequestPOST(req, res, Server, *foundLocation, clientFd);
 			}
-		} else if (req.method == DELETE) {
-			if (!foundLocation->del) {
-				Logger::error("Method DELETE not allowed for location %s", foundLocation->name.c_str());
-				handle405(res);
-			} else {
-				Logger::debug("DELETE in location %s called", foundLocation->name.c_str());
-				routeRequestDELETE(req, res, Server, *foundLocation);
-			}
-		} else {
-			Logger::error("Method not allowed: %i", req.method);
-			handle405(res);
 		}
 	} else {
 		Logger::error("Unknown location or file for path: %s", req.path.c_str());
