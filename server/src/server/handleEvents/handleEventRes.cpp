@@ -74,7 +74,7 @@ void sendBodyCunkend(HttpResponse &response, ServerContext *serverContext, Confi
 	close(clientFd);
 	serverContext->requests.erase(clientFd);
 	serverContext->responses.erase(clientFd);
-	Logger::info("client : %i connection closed. Size of Req: %i. Size of Res: %i", clientFd, serverContext->requests.size(), serverContext->responses.size());
+	Logger::info("client : %i connection closed", clientFd);
 }
 
 void sendBody(HttpResponse &response, ServerContext *serverContext, ConfigData &data, int clientFd) {
@@ -91,7 +91,7 @@ void sendBody(HttpResponse &response, ServerContext *serverContext, ConfigData &
 	close(clientFd);
 	serverContext->requests.erase(clientFd);
 	serverContext->responses.erase(clientFd);
-	Logger::info("client : %i connection closed. Size of Req: %i. Size of Res: %i. Size of CgiFds: %i. Size of Fds: %i. Size of Pids: %i.", clientFd, serverContext->requests.size(), serverContext->responses.size(), serverContext->cgifds.size(), serverContext->fds.size(), serverContext->pids.size());
+	Logger::info("client : %i connection closed", clientFd);
 }
 
 bool handleEventRes(ConfigData &data, int i) {

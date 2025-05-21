@@ -18,6 +18,11 @@ header img {
     height: 100px;
 }
 
+.dashboardLink{
+	text-decoration: none;
+	color: black;
+}
+
 .btn {
     background-color: #007BFF;
     color: white;

@@ -785,33 +785,33 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 
 void parseHttpRequest(ConfigData &configData, int client_fd, std::string &data)
 {
-    HttpRequest &req = configData.requests[client_fd];
+	HttpRequest &req = configData.requests[client_fd];
 
-    req.buffer.append(data);
-    //Logger::debug("Data appended to buffer for client %i", client_fd);
+	req.buffer.append(data);
+	//Logger::debug("Data appended to buffer for client %i", client_fd);
 
-    if (req.state == REQUEST_LINE) {
-        if (parseHttpRequestLine(configData, req) == FAILURE) return;
-        //Logger::debug("Request line parsed successfully for client %i", client_fd);
-    }
+	if (req.state == REQUEST_LINE) {
+		if (parseHttpRequestLine(configData, req) == FAILURE) return;
+		//Logger::debug("Request line parsed successfully for client %i", client_fd);
+	}
 
-    if (req.state == HEADERS) {
-        if (parseHttpHeaderLine(configData, req) == FAILURE) return;
-        //Logger::debug("Headers parsed successfully for client %i", client_fd);
-    }
+	if (req.state == HEADERS) {
+		if (parseHttpHeaderLine(configData, req) == FAILURE) return;
+		//Logger::debug("Headers parsed successfully for client %i", client_fd);
+	}
 
-    if (req.state == NO_BODY) {
-        if (parseHttpNoBody(configData, req) == FAILURE) return;
-        //Logger::debug("No-body request handled successfully for client %i", client_fd);
-    }
+	if (req.state == NO_BODY) {
+		if (parseHttpNoBody(configData, req) == FAILURE) return;
+		//Logger::debug("No-body request handled successfully for client %i", client_fd);
+	}
 
-    if (req.state == BODY_CHUNKED) {
-        if (parseHttpBodyChunked(configData, req) == FAILURE) return;
-        //Logger::debug("Chunked body parsed successfully for client %i", client_fd);
-    }
+	if (req.state == BODY_CHUNKED) {
+		if (parseHttpBodyChunked(configData, req) == FAILURE) return;
+		//Logger::debug("Chunked body parsed successfully for client %i", client_fd);
+	}
 
-    if (req.state == BODY) {
-        if (parseHttpBody(configData, req) == FAILURE) return;
-        //Logger::debug("Body parsed successfully for client %i", client_fd);
-    }
+	if (req.state == BODY) {
+		if (parseHttpBody(configData, req) == FAILURE) return;
+		//Logger::debug("Body parsed successfully for client %i", client_fd);
+	}
 }

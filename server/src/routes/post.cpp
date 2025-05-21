@@ -119,7 +119,6 @@ bool parseFormData(HttpRequest &req, HttpResponse &res, formData &formData) {
 
 	formData.fileContent = body.substr(start, end - start - 2);
 
-	printFormData(formData);
 	return true;
 }
 
@@ -184,7 +183,6 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 		return;
 	}
 
-	printHttpRequest(req);
 	if (req.headers["content-type"].find("multipart/form-data") != std::string::npos) {
 		std::string uploadDir;
 
@@ -250,7 +248,7 @@ void routeRequestPOST(HttpRequest &req, HttpResponse &res, server &server, locat
 			return;
 		}
 
-		Logger::info("File uploaded successfully: %s", filePath.c_str());
+		//Logger::info("File uploaded successfully: %s", filePath.c_str());
 		res.statusCode = 201;
 		res.statusMessage = "Created";
 		res.body = "File uploaded successfully.";

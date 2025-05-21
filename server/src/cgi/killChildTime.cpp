@@ -29,7 +29,7 @@ void checkCgiTimeouts(ConfigData &data) {
                     kill(childPid, SIGKILL);
                     ctx.pids.erase(toErase);
                     handle504(respIt->second);
-					Logger::info("Child von clientFd: %i wurde wegen zeituberschreitung beendet", clientFd);
+					//Logger::info("Child von clientFd: %i wurde wegen zeituberschreitung beendet", clientFd);
                     continue;
                 }
             }

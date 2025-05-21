@@ -43,7 +43,7 @@ void killChildProcesses(std::map<int, pid_t> &pids) {
 		if (kill(childPid, SIGTERM) == -1) {
 			Logger::error("Failed to send SIGTERM to child PID %d", childPid);
 		} else {
-			Logger::info("Sent SIGTERM to child PID %d", childPid);
+			//Logger::info("Sent SIGTERM to child PID %d", childPid);
 		}
 		int status = 0;
 		waitpid(childPid, &status, 0);

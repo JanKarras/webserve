@@ -4,9 +4,9 @@ bool handleEventReq(ConfigData &configData, int i) {
 	char buffer[BUFFER_SIZE];
 	std::string data;
 
-	int bytesRead = recv(configData.events[i].data.fd, buffer, sizeof(buffer) - 1, 0);
+	int bytesRead = recv(configData.events[i].data.fd, buffer, sizeof(buffer), 0);
 
-	//redirectOutfile(buffer, "./debugFiles/output.txt", 1000, bytesRead);
+	redirectOutfile(buffer, "./debugFiles/output.txt", 1000, bytesRead);
 
 	if (bytesRead == -1) {
 		return (false);

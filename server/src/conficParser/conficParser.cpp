@@ -22,7 +22,7 @@ bool parseConfig(std::string path, std::map<int, ConfigData> &data) {
 	}
 
 	if(!validateLines(file)) {
-		Logger::error("Malformed line found kek");
+		Logger::error("Malformed line found");
 		return (true);
 	}
 

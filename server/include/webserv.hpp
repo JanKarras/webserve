@@ -16,6 +16,7 @@
 #include <sstream>
 #include <fstream>
 #include <cerrno>
+#include <string.h>
 #include <sys/time.h>
 #include <ctime>
 #include <cstdlib>

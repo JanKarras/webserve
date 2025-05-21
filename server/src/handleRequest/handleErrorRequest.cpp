@@ -4,7 +4,7 @@ void handleErrorRequest(int clientFd, ConfigData &data, HttpRequest &req) {
 
 	ServerContext *serverContext = &data.servers[0].serverContex;
 
-	Logger::info("Error request detected for clientFd %i, error code %i", clientFd, req.exitStatus);
+	//Logger::info("Error request detected for clientFd %i, error code %i", clientFd, req.exitStatus);
 
 	HttpResponse &res = serverContext->responses[clientFd];
 
@@ -75,6 +75,6 @@ void handleErrorRequest(int clientFd, ConfigData &data, HttpRequest &req) {
 		serverContext->responses.erase(clientFd);
 		return;
 	}
-	
+
 	res.startTime = getCurrentTime();
 }

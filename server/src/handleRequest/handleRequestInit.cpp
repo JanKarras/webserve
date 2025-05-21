@@ -5,7 +5,7 @@ server &getServer(int clientFd, ConfigData &configData) {
 		server &server = configData.servers[i];
 		ServerContext &serverContext = server.serverContex;
 		if (serverContext.requests.find(clientFd) != serverContext.requests.end()) {
-			Logger::info("Request was found for server: %s", server.server_name.c_str());
+			//Logger::info("Request was found for server: %s", server.server_name.c_str());
 			return (server);
 		}
 	}

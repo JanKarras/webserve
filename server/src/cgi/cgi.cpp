@@ -26,10 +26,12 @@ std::vector<std::string> getEnvp(HttpRequest &req, std::string filePath) {
 	if (!req.queryString.empty())
 		//env.push_back("QUERY_STRING=" + req.queryString);
 	if (req.method == POST) {
-		if (req.headers.find("content-type") != req.headers.end())
+		if (req.headers.find("content-type") != req.headers.end()) {
 			env.push_back("CONTENT_TYPE=" + req.headers["content-type"]);
-		if (req.headers.find("content-Length") != req.headers.end());
+		}
+		if (req.headers.find("content-Length") != req.headers.end()) {
 			env.push_back("CONTENT_LENGTH=" + req.headers["content-length"]);
+		}
 	}
 
 	for (std::map<std::string, std::string>::iterator it = req.headers.begin(); it != req.headers.end(); ++it) {
