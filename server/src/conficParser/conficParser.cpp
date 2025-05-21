@@ -1,15 +1,5 @@
 #include "../../include/webserv.hpp"
 
-
-
-
-
-
-
-
-
-
-
 bool parseConfig(std::string path, std::map<int, ConfigData> &data) {
 	if (!checkPath(path)) {
 		return (true);

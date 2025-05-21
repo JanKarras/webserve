@@ -27,8 +27,5 @@ bool addEvent(ConfigData &configData) {
 	configData.requests[clientFd].startTime = getCurrentTime();
 	configData.requests[clientFd].clientFd = clientFd;
 	Logger::info("client : %i connection added", clientFd);
-	static int tmp = 1;
-	std::cout << tmp << "\n";
-	tmp++;
 	return (true);
 }
