@@ -8,6 +8,7 @@ std::string httpMethodToString(HttpMethod method) {
 }
 
 std::vector<std::string> getEnvp(HttpRequest &req, std::string filePath) {
+	(void) filePath;
 	std::vector<std::string> env;
 	env.push_back("REQUEST_METHOD=" + httpMethodToString(req.method));
 	env.push_back("SERVER_PROTOCOL=" + req.version);

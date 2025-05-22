@@ -126,7 +126,7 @@ static int distributeRequest(ConfigData &config, HttpRequest &req)
 	if (req.headers.find("host") != req.headers.end())
 	{
 		std::string serverName = req.headers["host"];
-		for (int i = 0; i < config.servers.size(); i++)
+		for (size_t i = 0; i < config.servers.size(); i++)
 		{
 			if (config.servers[i].server_name == serverName)
 			{
@@ -500,7 +500,7 @@ static int parseHttpHeaderLine(ConfigData &configData, HttpRequest &req)
 				}
 				else if (c == '\"')
 					state = HL_DOUBLE_QUOTES;
-				else if (c < 32 || c > 126 && c != '\t')
+				else if (c < 32 || ( c > 126 && c != '\t'))
 				{
 					setRequestError(configData, req, HTTP_BAD_REQUEST);
 					return FAILURE;
@@ -583,8 +583,9 @@ static int parseHttpHeaderLine(ConfigData &configData, HttpRequest &req)
 				}
 				else if (req.headers.find("content-length") != req.headers.end())
 				{
-					req.content_length = atol(req.headers["content-length"].c_str());
-					if (req.content_length < 0)
+					long tmp = atol(req.headers["content-length"].c_str());
+					req.content_length = tmp;
+					if (tmp < 0)
 					{
 						setRequestError(configData, req, HTTP_BAD_REQUEST);
 						return FAILURE;
@@ -670,8 +671,9 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 				{
 					std::string hexSize = req.buffer.substr(0, pos);
 					char *endptr;
-					req.chunkSize = strtol(hexSize.c_str(), &endptr, 16);
-					if (*endptr != '\0' || req.chunkSize < 0)
+					long tmp = strtol(hexSize.c_str(), &endptr, 16);
+					req.chunkSize = tmp;
+					if (*endptr != '\0' || tmp < 0)
 					{
 						setRequestError(configData, req, HTTP_BAD_REQUEST);
 						return FAILURE;

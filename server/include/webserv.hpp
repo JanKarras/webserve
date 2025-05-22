@@ -74,18 +74,18 @@ enum CgiParseState{
 
 struct HttpResponse {
 	std::string version;
-	int statusCode;
-	std::string statusMessage;
-	std::map<std::string, std::string> headers;
-	std::string body;
-	ResponseState state;
-	size_t bodySent;
-	size_t CgiBodySent;
-	long long startTime;
-	bool sendingBodyToCgi;
+	bool chunked;
 	bool readFromCgiFinished;
 	bool writeError;
-	bool chunked;
+	size_t CgiBodySent;
+	bool sendingBodyToCgi;
+	int statusCode;
+	std::string statusMessage;
+	ResponseState state;
+	size_t bodySent;
+	long long startTime;
+	std::map<std::string, std::string> headers;
+	std::string body;
 	std::string cgiBody;
 	size_t cgiBodySize;
 

@@ -80,8 +80,8 @@ void handleDirResponse(HttpResponse &res, dir directory, std::string index) {
 }
 
 void handleGet(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
-
-std::string filePath = req.path.substr(loc.name.size()); // z.B. "/ls.sh"
+	(void) clientFd;
+	std::string filePath = req.path.substr(loc.name.size()); // z.B. "/ls.sh"
 	if (!filePath.empty() && filePath[0] == '/') {
 	    filePath.erase(0, 1);
 	}
@@ -113,7 +113,7 @@ std::string filePath = req.path.substr(loc.name.size()); // z.B. "/ls.sh"
 }
 
 void handleGetWithAnotherRoot(HttpRequest &req, HttpResponse &res, server &server, location &loc, int clientFd) {
-
+	(void) clientFd;
 	std::string filePath = req.path.substr(loc.name.size());
 	if (!filePath.empty() && filePath[0] == '/') {
 		filePath.erase(0, 1);

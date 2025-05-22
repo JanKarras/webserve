@@ -90,7 +90,7 @@ struct HttpRequest {
 	std::map<std::string, std::string> query;
 	std::string		body;
 	std::string		buffer;
-	size_t			content_length;
+	size_t		content_length;
 	size_t			pos;
 	bool			folding;
 	std::string		currentKey;

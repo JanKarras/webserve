@@ -20,7 +20,6 @@ bool matchPathInDirTree(const dir &currentDir, const std::string &reqPath) {
 }
 
 location* matchLocation(server &Server, const std::string &path, HttpRequest &req) {
-	location *regexMatch = NULL;
 	location *prefixMatch = NULL;
 	size_t longestPrefix = 0;
 

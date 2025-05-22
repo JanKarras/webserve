@@ -1,6 +1,7 @@
 #include "../../include/webserv.hpp"
 
 void closeCgiConnection(server &Server, int clientFd, ConfigData &configData, HttpResponse &res, int state) {
+	(void) res;
 	if (Server.serverContex.pids.find(clientFd) != Server.serverContex.pids.end()) {
 		kill(Server.serverContex.pids[clientFd], SIGKILL);
 		waitpid(Server.serverContex.pids[clientFd], NULL, 0);

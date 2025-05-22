@@ -10,7 +10,7 @@ void handle_sigint(int sig, siginfo_t *siginfo, void *context) {
 }
 
 void handleSigPipe(int signal) {
-	//std::cout << signal << std::endl;
+	Logger::info("singal: %i", signal);
 }
 
 bool initSignal(void) {
