@@ -97,7 +97,6 @@ struct HttpRequest {
 	size_t			valuePos;
 	size_t			chunkSize;
 	server			*srv;
-
 	int clientFd;
 
 	unsigned int parseState;

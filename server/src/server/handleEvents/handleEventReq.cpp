@@ -14,6 +14,7 @@ bool handleEventReq(ConfigData &configData, int i) {
 		close(configData.events[i].data.fd);
 		configData.requests.erase(configData.events[i].data.fd);
 		epoll_ctl(configData.epollFd, EPOLL_CTL_DEL, configData.events[i].data.fd, NULL);
+		Logger::info("client : %i connection closed", configData.events[i].data.fd);
 	} else {
 		data.append(buffer, bytesRead);
 		parseHttpRequest(configData, configData.requests[configData.events[i].data.fd].clientFd, data);

@@ -12,7 +12,6 @@ void handleCgiRead(ConfigData &data, int i, ServerContext &srv) {
 	}
 	std::map<int, HttpResponse>::iterator itt = srv.responses.find(clientFd);
 	HttpResponse &res = itt->second;
-
 	char buffer[BUFFER_SIZE];
 
 	ssize_t bytesRead = read(cgifd, buffer, CHUNK_SIZE);

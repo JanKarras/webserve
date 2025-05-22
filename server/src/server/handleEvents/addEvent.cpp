@@ -16,7 +16,7 @@ bool addEvent(ConfigData &configData) {
 	}
 
 	struct epoll_event event;
-	event.events = EPOLLIN;
+	event.events = EPOLLIN | EPOLLHUP;
 	event.data.fd = clientFd;
 	if (epoll_ctl(configData.epollFd, EPOLL_CTL_ADD, clientFd, &event) == -1) {
 		std::cerr << "Failed to add client socket to epoll instance: " << strerror(errno) << std::endl;

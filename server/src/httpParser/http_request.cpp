@@ -788,7 +788,7 @@ static int parseHttpBodyChunked(ConfigData &configData, HttpRequest &req)
 void parseHttpRequest(ConfigData &configData, int client_fd, std::string &data)
 {
 	HttpRequest &req = configData.requests[client_fd];
-
+	req.startTime = getCurrentTime();
 	req.buffer.append(data);
 	//Logger::debug("Data appended to buffer for client %i", client_fd);
 

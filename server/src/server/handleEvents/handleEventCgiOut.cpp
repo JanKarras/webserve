@@ -10,7 +10,6 @@ void handleCgiWrite(ConfigData &data, int i, ServerContext &srv) {
 	}
 	std::map<int, HttpResponse>::iterator itt = srv.responses.find(clientFd);
 	HttpResponse &res = itt->second;
-
 	size_t newBodySize = res.cgiBody.size();
 	if (res.cgiBody.size() > CHUNK_SIZE) {
 		newBodySize = CHUNK_SIZE;

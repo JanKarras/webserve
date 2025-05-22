@@ -110,7 +110,7 @@ bool handleEventRes(ConfigData &data, int i) {
 	}
 
 	HttpResponse &response = serverContext->responses.at(clientFd);
-
+	response.startTime = getCurrentTime();
 	if (response.state == SENDING_HEADERS) {
 		sendHeader(response, serverContext, data, clientFd);
 	} else if (response.state == SENDING_BODY) {

@@ -25,4 +25,24 @@ void epollHup(ConfigData &configData, int i) {
 			break;
 		}
 	}
+	if (!tmp) {
+		std::map<int, HttpRequest>::iterator itReqData = configData.requests.begin();
+
+		for (; itReqData != configData.requests.end(); itReqData++) {
+			int clientFd = itReqData->second.clientFd;
+			if (clientFd == configData.events[i].data.fd) {
+				for (size_t i = 0; i < configData.servers.size(); i++) {
+					ServerContext &ctx = configData.servers[i].serverContex;
+					if (ctx.requests.find(clientFd) != ctx.requests.end()) {
+						ctx.requests.erase(clientFd);
+					}
+				}
+				epoll_ctl(configData.epollFd, EPOLL_CTL_DEL, clientFd, NULL);
+				configData.requests.erase(clientFd);
+				close(clientFd);
+			}
+			Logger::info("Epoll Hup called for req with clientFd %i", clientFd);
+			break;
+		}
+	}
 }
